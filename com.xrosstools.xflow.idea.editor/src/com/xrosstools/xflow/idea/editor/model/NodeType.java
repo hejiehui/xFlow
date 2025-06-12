@@ -5,14 +5,20 @@ import com.xrosstools.xflow.idea.editor.XflowIcons;
 import javax.swing.*;
 
 public enum NodeType implements XflowIcons {
-    AUTO_TASK(AutoTask.class, AUTO_TASK_ICON),
-    MANUAL_TASK(ManualTask.class, MANUAL_TASK_ICON),
+    START(StartNode.class, START_ICON),
+    END(EndNode.class, END_ICON),
 
-    VALIDATOR(Validator.class, VALIDATOR_ICON),
-    LOCATOR(Locator.class, LOCATOR_ICON),
-    DISPATCHER(Dispatcher.class, DISPATCHER_ICON),
+    AUTO_ACTIVITY(AutoActivityNode.class, AUTO_ACTIVITY_ICON),
+    TASK_ACTIVITY(TaskActivityNode.class, TASK_ACTIVITY_ICON),
+    EVENT_ACTIVITY(EventActivityNode.class, EVENT_ACTIVITY_ICON),
+    WAIT_ACTIVITY(WaitActivityNode.class, WAIT_ACTIVITY_ICON),
+    SUB_FLOW(SubFlowNode.class, SUB_FLOW_ICON),
+
+    BINARY_ROUTER(BinaryRouterNode.class, BINARY_ROUTER_ICON),
+    INCLUSIVE_ROUTER(InclusiveRouterNode.class, INCLUSIVE_ROUTER__ICON),
+    EXCLUSIVE_ROUTER(ExclusiveRouterNode.class, EXCLUSIVE_ROUTER_ICON),
+    PARALLEL_ROUTER(ParallelRouterNode.class, PARALLEL_ROUTER_ICON),
     ;
-
 
     private String displayName;
     private String nodeName;
@@ -51,5 +57,37 @@ public enum NodeType implements XflowIcons {
                 return type;
         }
         throw new IllegalArgumentException(nodeName);
+    }
+
+    public static final NodeType[] REFER_TO_CLASS_METHOD = new NodeType[] {
+            AUTO_ACTIVITY,
+            BINARY_ROUTER,
+            INCLUSIVE_ROUTER,
+            EXCLUSIVE_ROUTER,
+    };
+
+    public static final NodeType[] REFER_TO_CLASS = new NodeType[] {
+            TASK_ACTIVITY,
+            EVENT_ACTIVITY,
+    };
+
+    public static boolean isPropertiesSupported(NodeType type) {
+        return isReferToClassMethod(type) || isReferToClass(type);
+    }
+
+    public static boolean isReferToClass(NodeType type) {
+        for(NodeType test: REFER_TO_CLASS)
+            if(test == type)
+                return true;
+
+        return false;
+    }
+
+    public static boolean isReferToClassMethod(NodeType type) {
+        for(NodeType test: REFER_TO_CLASS_METHOD)
+            if(test == type)
+                return true;
+
+        return false;
     }
 }

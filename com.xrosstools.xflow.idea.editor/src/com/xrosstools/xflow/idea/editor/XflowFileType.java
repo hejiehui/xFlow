@@ -40,7 +40,7 @@ public class XflowFileType extends XmlLikeFileType {
     @Nullable
     @Override
     public Icon getIcon() {
-        return XflowIcons.XFLOW;
+        return XflowIcons.XFLOW_ICON;
     }
 
     @Override

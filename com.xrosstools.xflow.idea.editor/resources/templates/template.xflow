@@ -2,11 +2,9 @@
 
 <xflow>
     <description/>
-    <workflows>
-        <workflow>
-            <description/>
-            <nodes/>
-            <links/>
-        </workflow>
-    </workflows>
+    <flow>
+        <description/>
+        <nodes/>
+        <links/>
+    </flow>
 </xflow>

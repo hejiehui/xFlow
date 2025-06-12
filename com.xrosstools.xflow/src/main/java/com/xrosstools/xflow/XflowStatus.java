@@ -5,5 +5,7 @@ public enum XflowStatus {
 	RUNNING,
 	SUSPENDED,
 	SUCCEED,
-	FAILED;
+	FAILED,
+	//
+	ABANDONED;
 }

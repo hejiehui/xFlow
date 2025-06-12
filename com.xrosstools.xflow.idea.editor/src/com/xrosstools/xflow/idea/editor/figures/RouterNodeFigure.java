@@ -3,23 +3,22 @@ package com.xrosstools.xflow.idea.editor.figures;
 import com.xrosstools.idea.gef.figures.*;
 import com.xrosstools.xflow.idea.editor.model.NodeType;
 
-public class RouterNodeFigure extends RoundedRectangle {
+public class RouterNodeFigure extends Rhombus {
+    private static final int TOP = 10;
+    private static final int LEFT = 10;
+    private static final int BOTTOM= 10;
+    private static final int RIGHT = 10;
     private IconFigure icon;
 
     public RouterNodeFigure(NodeType type) {
         ToolbarLayout layout= new ToolbarLayout();
         layout.setHorizontal(false);
-        layout.setSpacing(5);
         layout.setStretchMinorAxis(false);
         layout.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
         setLayoutManager(layout);
-        this.getInsets().set(5,5,5,5);
+        this.getInsets().set(TOP,LEFT,BOTTOM,RIGHT);
 
-        Label typeAndName = new Label();
-        typeAndName.setIcon(type.getTypeIcon());
-        add(typeAndName);
-
-        icon = new IconFigure();
+        icon = new IconFigure(type.getTypeIcon());
         add(icon);
     }
 }

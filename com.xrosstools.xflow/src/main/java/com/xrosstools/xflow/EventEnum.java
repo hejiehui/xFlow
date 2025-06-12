@@ -1,7 +1,7 @@
 package com.xrosstools.xflow;
 
 public enum EventEnum {
-	CREAT,
+	CREATE,
 	START,
 	PAUSE,
 	RESUME,

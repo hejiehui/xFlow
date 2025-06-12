@@ -1,0 +1,29 @@
+package !PACKAGE!;
+
+import com.xrosstools.xflow.Xflow;
+import com.xrosstools.xflow.XflowFactory;
+
+/**
+    IMPORTANT NOTE!
+    This is generated code based on Xross Flow model file "!MODEL_PATH!".
+    In case the model file changes, regenerate this file.
+    Do Not Modify It.
+
+    !DESCRIPTION!
+
+    Last generated time:
+    !LAST_GENERATE_TIME!
+*/
+public class !FACTORY_CLASS! {
+    !FLOW_DEFINITIONS!
+    private static volatile XflowFactory factory;
+    private static XflowFactory load()  {
+        if(factory == null) {
+            synchronized(!FACTORY_CLASS!.class) {
+                if(factory == null)
+                    factory = XflowFactory.load("!MODEL_PATH!");
+            }
+        }
+        return factory;
+    }
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xflow evaluator="">
+ <description/>
+ <properties>
+  <property key="globalB" type="Integer" value="100"/>
+  <property key="globalA" type="String" value="abc"/>
+  <property key="gBool" type="Boolean" value="true"/>
+ </properties>
+ <flow id="auto activity">
+  <description/>
+  <properties>
+   <property key="flowA" type="Long" value="1000"/>
+   <property key="flowB" type="Double" value="10.1234"/>
+  </properties>
+  <nodes>
+   <start id="start" location="76,190"/>
+   <auto_activity id="a" implementation="com.xrosstools.xflow.sample.TestAutoActivity" location="233,197">
+    <properties>
+     <property key="step" type="Integer" value="10"/>
+    </properties>
+   </auto_activity>
+   <end id="end" location="449,193"/>
+  </nodes>
+  <links>
+   <link source_index="0" style="DEFAULT" target_index="1"/>
+   <link source_index="1" style="DEFAULT" target_index="2"/>
+  </links>
+ </flow>
+ <flow id="task activity">
+  <description/>
+  <properties>
+   <property key="assignee" type="String" value="Jerry"/>
+  </properties>
+  <nodes>
+   <start id="start" location="61,157"/>
+   <end id="end" location="414,148"/>
+   <task_activity implementation="com.xrosstools.xflow.sample.TestTaskActivity" location="201,145">
+    <properties>
+     <property key="count" type="Integer" value="5"/>
+    </properties>
+   </task_activity>
+  </nodes>
+  <links>
+   <link source_index="0" style="DEFAULT" target_index="2"/>
+   <link source_index="2" style="DEFAULT" target_index="1"/>
+  </links>
+ </flow>
+ <flow id="event activity">
+  <description/>
+  <properties/>
+  <nodes>
+   <start id="start" location="105,218"/>
+   <end id="end" location="593,203"/>
+   <event_activity id="event activity" implementation="com.xrosstools.xflow.sample.TestEventActivity" location="348,193">
+    <properties>
+     <property key="event id" type="String" value="test event"/>
+    </properties>
+   </event_activity>
+  </nodes>
+  <links>
+   <link source_index="0" style="DEFAULT" target_index="2"/>
+   <link source_index="2" style="DEFAULT" target_index="1"/>
+  </links>
+ </flow>
+ <flow id="wait activity">
+  <description/>
+  <properties/>
+  <nodes>
+   <start id="start" location="81,193"/>
+   <end id="end" location="466,193"/>
+   <wait_activity delay="100" location="242,176" time_unit="MILLISECONDS"/>
+  </nodes>
+  <links>
+   <link source_index="0" style="DEFAULT" target_index="2"/>
+   <link source_index="2" style="DEFAULT" target_index="1"/>
+  </links>
+ </flow>
+</xflow>
