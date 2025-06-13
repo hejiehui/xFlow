@@ -171,13 +171,13 @@ public class XflowFactory implements ElementConstants {
             	def = NodeDef.waitActivityNodeDef(name, delay, unit);
 				break;
             case BINARY_ROUTER_NODE:
-            	def = NodeDef.binaryRouteNodeDef(name, new ImplementationDef<BinaryRouter>(implementation));
+            	def = NodeDef.binaryRouteNodeDef(name, implementation == null ? null : new ImplementationDef<BinaryRouter>(implementation));
 				break;
             case INCLUSIVE_ROUTER_NODE:
-            	def = NodeDef.inclusiveRouteNodeDef(name, new ImplementationDef<InclusiveRouter>(implementation));
+            	def = NodeDef.inclusiveRouteNodeDef(name, implementation == null ? null : new ImplementationDef<InclusiveRouter>(implementation));
 				break;
             case EXCLUSIVE_ROUTER_NODE:
-            	def = NodeDef.exclusiveRouteNodeDef(name, new ImplementationDef<ExclusiveRouter>(implementation));
+            	def = NodeDef.exclusiveRouteNodeDef(name, implementation == null ? null : new ImplementationDef<ExclusiveRouter>(implementation));
 				break;
             case PARALLE_ROUTER_NODE:
             	def = NodeDef.paralleRouterNodeDef(name);

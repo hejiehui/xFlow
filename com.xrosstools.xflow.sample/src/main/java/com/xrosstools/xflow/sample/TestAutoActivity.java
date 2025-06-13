@@ -8,15 +8,18 @@ import com.xrosstools.xflow.NodeConfigAware;
 import com.xrosstools.xflow.XflowContext;
 
 public class TestAutoActivity implements AutoActivity, NodeConfigAware {
+	public static final String PROP_KEY_COUNTER = "counter";
+	public static final String PROP_KEY_STEP = "step";
+
 	private int step;
 	@Override
 	public void execute(XflowContext context) {
-		AtomicInteger counter = context.get("counter");
+		AtomicInteger counter = context.get(PROP_KEY_COUNTER);
 		counter.addAndGet(step);
 	}
 
 	@Override
 	public void initNodeConfig(DataMap config) {
-		step = config.get("step");
+		step = config.get(PROP_KEY_STEP);
 	}
 }

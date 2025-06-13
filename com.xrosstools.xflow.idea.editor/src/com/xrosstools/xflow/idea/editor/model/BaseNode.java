@@ -3,6 +3,7 @@ package com.xrosstools.xflow.idea.editor.model;
 import com.xrosstools.idea.gef.model.Node;
 import com.xrosstools.idea.gef.util.PropertyEntry;
 import com.xrosstools.idea.gef.util.PropertyEntrySource;
+import org.apache.commons.lang.text.StrBuilder;
 
 import java.awt.*;
 
@@ -39,10 +40,16 @@ public abstract class BaseNode extends Node<Link> implements PropertyConstants {
     public String getDisplayText() {
         String labelVal = label.get();
         String idVal = id.get();
-        return labelVal != null && labelVal.length() == 0 ? (idVal == null ? "" : idVal) : labelVal;
+        return labelVal == null || labelVal.length() == 0 ? (idVal == null ? "" : idVal) : labelVal;
     }
 
     public String getTooltips() {
-        return String.format("%s/n%s", getDisplayText(), description.get());
+        StrBuilder sb = new StrBuilder();
+        if(getDisplayText() != null)
+            sb.append(getDisplayText());
+
+        if(description.get() != null)
+            sb.append(sb.size() == 0 ? description.get() : "\n" +  description.get());
+        return sb.toString();
     }
 }

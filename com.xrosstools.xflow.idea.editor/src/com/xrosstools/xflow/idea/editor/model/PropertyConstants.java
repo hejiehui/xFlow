@@ -26,5 +26,7 @@ public interface PropertyConstants {
 
     String PROPERTIES_CATEGORY = "Properties";
 
+    String PROPERTY_KEY_PREFIX = "PROP_KEY";
+
     TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
 }

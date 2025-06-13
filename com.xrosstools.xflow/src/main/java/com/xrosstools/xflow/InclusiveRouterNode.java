@@ -10,12 +10,19 @@ public class InclusiveRouterNode extends Node {
 	private InclusiveRouter router;
 	private Map<String, Link> linkMap = new HashMap<>();
 
+	public InclusiveRouterNode(String name) {
+		this(name, null);
+	}
+			
 	public InclusiveRouterNode(String name, InclusiveRouter router) {
 		super(name);
 		this.router = router;
 	}
 
 	public void setOutputs(Link[] outputs) {
+		if(router == null && outputs.length > 1)
+			throw new IllegalArgumentException("Router implementation is reqired for node: " + getId());
+			
 		super.setOutputs(outputs);
 		List<String> defaultOutputList = new ArrayList<>();
 		for(Link link: outputs) {
@@ -43,6 +50,14 @@ public class InclusiveRouterNode extends Node {
 		if(!token.checkInput())
 			return;
 
+		if(getOutputs() == null)
+			return;
+
+		if(router == null) {
+			token.submit(getOutputs()[0].getTarget());
+			return;
+		}
+		
 		String[] ids = router.route(token.getContext());
 		RouteToken rt = new RouteToken(this, ids.length);
 		for(String id: ids) {

@@ -20,10 +20,10 @@ public class XflowUintTest {
 	public void testAutoActivity() throws Exception {
 		Xflow f = UnitTest.AutoActivity.create();
 		XflowContext context = new XflowContext();
-		context.put("counter", new AtomicInteger(10));
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
 		f.start(context);
 		waitToEnd(f);
-		AtomicInteger counter = context.get("counter");
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
 		assertEquals(20, counter.get());
 	}
 
@@ -77,6 +77,38 @@ public class XflowUintTest {
 		dur = System.currentTimeMillis() - dur;
 		System.out.println(dur);
 		assertTrue(dur > 100 && dur < 105);
+	}
+
+	@Test
+	public void testBinaryRouterTrue() throws Exception {
+		Xflow f = UnitTest.BinaryRouter.create();
+		
+		//True path
+		XflowContext context = new XflowContext();
+		context.put(TestBinaryRouter.PROP_KEY_RESULT, true);
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+		f.start(context);
+		waitToEnd(f);
+
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(20, counter.get());
+	}
+	
+	@Test
+	public void testBinaryRouterFalse() throws Exception {
+		Xflow f = UnitTest.BinaryRouter.create();
+
+		//False path
+		XflowContext context = new XflowContext();
+		context.put(TestBinaryRouter.PROP_KEY_RESULT, false);
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+		f.start(context);
+		waitToEnd(f);
+
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(30, counter.get());
 	}
 
 	private void sleep1() throws Exception {

@@ -96,7 +96,7 @@ public abstract class NodeDef {
 		return new NodeDef() {
 			@Override
 			public Node create() {
-				return new BinaryRouterNode(name, implDef.create(BinaryRouteMethodWrapper.class));
+				return implDef == null ? new BinaryRouterNode(name) : new BinaryRouterNode(name, implDef.create(BinaryRouteMethodWrapper.class));
 			}
 		};
 	}
@@ -105,7 +105,7 @@ public abstract class NodeDef {
 		return new NodeDef() {
 			@Override
 			public Node create() {
-				return new InclusiveRouterNode(name, implDef.create(InclusiveRouteMethodWrapper.class));
+				return implDef == null ? new InclusiveRouterNode(name) : new InclusiveRouterNode(name, implDef.create(InclusiveRouteMethodWrapper.class));
 			}
 		};
 	}
@@ -114,7 +114,7 @@ public abstract class NodeDef {
 		return new NodeDef() {
 			@Override
 			public Node create() {
-				return new ExclusiveRouterNode(name, implDef.create(ExclusiveRouteMethodWrapper.class));
+				return implDef == null ? new ExclusiveRouterNode(name) : new ExclusiveRouterNode(name, implDef.create(ExclusiveRouteMethodWrapper.class));
 			}
 		};
 	}

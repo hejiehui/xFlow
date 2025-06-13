@@ -7,12 +7,19 @@ public class ExclusiveRouterNode extends Node {
 	private ExclusiveRouter router;
 	private Map<String, Link> linkMap = new HashMap<>();
 
+	public ExclusiveRouterNode(String name) {
+		this(name, null);
+	}
+
 	public ExclusiveRouterNode(String name, ExclusiveRouter router) {
 		super(name);
 		this.router = router;
 	}
 	
 	public void setOutputs(Link[] outputs) {
+		if(router == null && outputs.length > 1)
+			throw new IllegalArgumentException("Router implementation is reqired for node: " + getId());
+			
 		super.setOutputs(outputs);
 		for(Link link: outputs) {
 			String linkName = link.getId();
@@ -28,6 +35,14 @@ public class ExclusiveRouterNode extends Node {
 	}
 
 	public void handle(ActiveToken token) {
+		if(getOutputs() == null)
+			return;
+
+		if(router == null) {
+			token.submit(getOutputs()[0].getTarget());
+			return;
+		}
+
 		String id = router.route(token.getContext());
 		Link link = getLink(id);
 		token.submit(link.getTarget());

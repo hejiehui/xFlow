@@ -40,6 +40,12 @@ public class UnitTest {
         }
     }
     
+    public static class BinaryRouter {
+        public static Xflow create() {
+            return load().create("binary router");
+        }
+    }
+    
     private static volatile XflowFactory factory;
     private static XflowFactory load()  {
         if(factory == null) {
