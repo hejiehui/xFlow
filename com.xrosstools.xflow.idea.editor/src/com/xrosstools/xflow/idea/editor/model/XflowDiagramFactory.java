@@ -54,7 +54,7 @@ public class XflowDiagramFactory implements PropertyConstants {
         register.register(NodeType.TASK_ACTIVITY).attributes(PROP_ID, PROP_LABEL, PROP_IMPLEMENTATION).nodes(PROP_DESCRIPTION);
         register.register(NodeType.EVENT_ACTIVITY).attributes(PROP_ID, PROP_LABEL, PROP_IMPLEMENTATION).nodes(PROP_DESCRIPTION);
         register.register(NodeType.WAIT_ACTIVITY).attributes(PROP_ID, PROP_LABEL, PROP_DELAY, PROP_TIME_UNIT).nodes(PROP_DESCRIPTION);
-        register.register(NodeType.SUB_FLOW).attributes(PROP_ID, PROP_LABEL).nodes(PROP_DESCRIPTION);
+        register.register(NodeType.SUBFLOW_ACTIVITY).attributes(PROP_ID, PROP_LABEL, PROP_IMPLEMENTATION, PROP_SUBFLOW).nodes(PROP_DESCRIPTION);
 
         register.register(NodeType.BINARY_ROUTER).attributes(PROP_ID, PROP_LABEL, PROP_IMPLEMENTATION).nodes(PROP_DESCRIPTION);
         register.register(NodeType.EXCLUSIVE_ROUTER).attributes(PROP_ID, PROP_LABEL, PROP_IMPLEMENTATION).nodes(PROP_DESCRIPTION);

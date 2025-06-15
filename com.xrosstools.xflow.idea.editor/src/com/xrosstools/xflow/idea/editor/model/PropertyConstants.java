@@ -15,14 +15,14 @@ public interface PropertyConstants {
     String PROP_DESCRIPTION = "Description";
     String PROP_EVALUATOR = "Evaluator";
     String PROP_IMPLEMENTATION = "Implementation";
-    String PROP_DEFAULT_LINK = "Default_link";
-    String PROP_TRUE_LINK = "True_link";
+    String PROP_DEFAULT_LINK = "Default link";
+    String PROP_TRUE_LINK = "True link";
     String PROP_STYLE = "Style";
 
     String PROP_DELAY = "Delay";
     String PROP_TIME_UNIT = "Time unit";
 
-    String PROP_SUB_FLOW = "Sub flow";
+    String PROP_SUBFLOW = "Subflow";
 
     String PROPERTIES_CATEGORY = "Properties";
 

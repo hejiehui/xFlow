@@ -5,14 +5,17 @@ import com.xrosstools.idea.gef.util.PropertyEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubFlowNode extends ActivityNode {
+public class SubflowActivityNode extends ActivityNode {
+    private PropertyEntry<String> implementation = stringProperty(PROP_IMPLEMENTATION);
     private XflowDiagram diagram;
-    private PropertyEntry<String> subFlow = enumProperty(PROP_SUB_FLOW, "", ()-> getCandidates());
+    private PropertyEntry<String> subFlow = enumProperty(PROP_SUBFLOW, "", ()-> getCandidates());
+
     public NodeType getType() {
-        return NodeType.SUB_FLOW;
+        return NodeType.SUBFLOW_ACTIVITY;
     }
 
-    public SubFlowNode() {
+    public SubflowActivityNode() {
+        register(implementation);
         register(subFlow);
     }
     private String[] getCandidates() {
@@ -24,10 +27,6 @@ public class SubFlowNode extends ActivityNode {
             names.add(xflow.getName());
         }
         return names.toArray(new String[names.size()]);
-    }
-
-    public XflowDiagram getDiagram() {
-        return diagram;
     }
 
     public void setDiagram(XflowDiagram diagram) {

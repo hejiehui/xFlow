@@ -7,5 +7,12 @@ public class EndNode extends Node {
 
 	public void handle(ActiveToken token) {
 		token.getContext().getFlow().succeed();
+		
+		ActiveToken parentToken = token.getContext().getParentToken();
+		if(parentToken == null)
+			return;
+
+		SubflowActivityNode parentNode = (SubflowActivityNode)parentToken.getNode();
+		parentNode.finish(token.getContext()); 
 	}
 }

@@ -17,7 +17,7 @@ public class ActiveToken implements Runnable {
 	
 	public ActiveToken(XflowContext context, Node node) {
 		this.context = context;
-		this.node = node;
+		this.setNode(node);
 		routeTokens = new ConcurrentLinkedDeque<>();
 	}
 
@@ -32,7 +32,7 @@ public class ActiveToken implements Runnable {
 
 	@Override
 	public void run() {
-		node.handle(this);
+		getNode().handle(this);
 	}
 	
 	public XflowContext getContext() {
@@ -50,6 +50,14 @@ public class ActiveToken implements Runnable {
 			
 		routeTokens.removeLast();
 		return true;
+	}
+
+	public Node getNode() {
+		return node;
+	}
+
+	public void setNode(Node node) {
+		this.node = node;
 	}
 
 	public void submit(Node node) {

@@ -45,6 +45,10 @@ public class ExclusiveRouterNode extends Node {
 
 		String id = router.route(token.getContext());
 		Link link = getLink(id);
+		
+		if(link == null)
+			throw new IllegalArgumentException(String.format("Linke id: \"%s\" is undefined", id));
+		
 		token.submit(link.getTarget());
 	}
 }

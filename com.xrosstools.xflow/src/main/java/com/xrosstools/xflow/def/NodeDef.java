@@ -17,9 +17,12 @@ import com.xrosstools.xflow.InclusiveRouterNode;
 import com.xrosstools.xflow.Node;
 import com.xrosstools.xflow.ParallelRouterNode;
 import com.xrosstools.xflow.StartNode;
+import com.xrosstools.xflow.SubflowActivity;
+import com.xrosstools.xflow.SubflowActivityNode;
 import com.xrosstools.xflow.TaskActivity;
 import com.xrosstools.xflow.TaskActivityNode;
 import com.xrosstools.xflow.WaitActivityNode;
+import com.xrosstools.xflow.XflowFactory;
 import com.xrosstools.xflow.def.MethodWrapper.ActivityMethodWrapper;
 import com.xrosstools.xflow.def.MethodWrapper.BinaryRouteMethodWrapper;
 import com.xrosstools.xflow.def.MethodWrapper.ExclusiveRouteMethodWrapper;
@@ -70,6 +73,15 @@ public abstract class NodeDef {
 			@Override
 			public Node create() {
 				return new WaitActivityNode(name, delay, unit);
+			}
+		};
+	}
+	
+	public static NodeDef subflowActivityNodeDef(final String name, final String subflowId, final ImplementationDef<SubflowActivity> implDef, final XflowFactory factory) {
+		return new NodeDef() {
+			@Override
+			public Node create() {
+				return new SubflowActivityNode(name, subflowId, implDef.create(), factory);
 			}
 		};
 	}

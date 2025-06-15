@@ -15,7 +15,7 @@ public interface XflowIcons {
     Icon TASK_ACTIVITY_ICON = IconLoader.getIcon("/icons/task_activity.png", XflowIcons.class);
     Icon EVENT_ACTIVITY_ICON = IconLoader.getIcon("/icons/event_activity.png", XflowIcons.class);
     Icon WAIT_ACTIVITY_ICON = IconLoader.getIcon("/icons/wait_activity.png", XflowIcons.class);
-    Icon SUB_FLOW_ICON = IconLoader.getIcon("/icons/sub_flow.png", XflowIcons.class);
+    Icon SUBFLOW_ACTIVITY_ICON = IconLoader.getIcon("/icons/subflow_activity.png", XflowIcons.class);
 
     Icon INCLUSIVE_ROUTER__ICON = IconLoader.getIcon("/icons/inclusive_router.png", XflowIcons.class);
     Icon EXCLUSIVE_ROUTER_ICON = IconLoader.getIcon("/icons/exclusive_router.png", XflowIcons.class);

@@ -46,6 +46,30 @@ public class UnitTest {
         }
     }
     
+    public static class ExclusiveRouter {
+        public static Xflow create() {
+            return load().create("exclusive router");
+        }
+    }
+
+    public static class InclusiveRouter {
+        public static Xflow create() {
+            return load().create("inclusive router");
+        }
+    }
+
+    public static class ParallelRouter {
+        public static Xflow create() {
+            return load().create("parallel router");
+        }
+    }
+
+    public static class SubflowActivity {
+        public static Xflow create() {
+            return load().create("subflow activity");
+        }
+    }
+
     private static volatile XflowFactory factory;
     private static XflowFactory load()  {
         if(factory == null) {

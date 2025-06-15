@@ -9,6 +9,9 @@ public class ParallelRouterNode extends Node {
 		if(!token.checkInput())
 			return;
 
+		if(getOutputs() == null)
+			return;
+
 		RouteToken rt = new RouteToken(this, getOutputs().length);
 		for(Link link: getOutputs()) {
 			token.submit(link.getTarget(), rt);

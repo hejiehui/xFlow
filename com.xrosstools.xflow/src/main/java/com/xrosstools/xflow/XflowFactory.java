@@ -170,6 +170,10 @@ public class XflowFactory implements ElementConstants {
             	TimeUnit unit = TimeUnit.valueOf(getAttribute(nodeNode, PROP_TIME_UNIT));
             	def = NodeDef.waitActivityNodeDef(name, delay, unit);
 				break;
+            case SUBFLOW_ACTIVITY_NODE:
+            	String subflowId = getAttribute(nodeNode, PROP_SUBFLOW);
+            	def = NodeDef.subflowActivityNodeDef(name, subflowId, new ImplementationDef<SubflowActivity>(implementation), this);
+				break;
             case BINARY_ROUTER_NODE:
             	def = NodeDef.binaryRouteNodeDef(name, implementation == null ? null : new ImplementationDef<BinaryRouter>(implementation));
 				break;

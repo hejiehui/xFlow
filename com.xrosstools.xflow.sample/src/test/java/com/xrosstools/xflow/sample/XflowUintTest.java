@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
@@ -109,6 +111,72 @@ public class XflowUintTest {
 
 		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
 		assertEquals(30, counter.get());
+	}
+
+	@Test
+	public void testExclusiveRouterTrue() throws Exception {
+		for(int i = 1; i <= 3; i++) {
+			Xflow f = UnitTest.ExclusiveRouter.create();
+			
+			XflowContext context = new XflowContext();
+			//p1, p2, p3
+			context.put(TestExclusiveRouter.PROP_KEY_PATH, "p" + i);
+			context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+	
+			f.start(context);
+			waitToEnd(f);
+	
+			AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+			assertEquals(10 * (i + 1), counter.get());
+		}
+	}
+	
+	@Test
+	public void testInclusiveRouterTrue() throws Exception {
+		Map<String, Integer> data = new HashMap<>();
+		data.put("p1,p2", 40);
+		data.put("p1,p3", 50);
+		data.put("p3,p2", 60);
+//		data.put("", 40);
+		for(String pathes: data.keySet()) {
+			int value = data.get(pathes);
+			Xflow f = UnitTest.InclusiveRouter.create();
+			
+			XflowContext context = new XflowContext();
+			context.put(TestInclusiveRouter.PROP_KEY_PATHES, pathes);
+			context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+	
+			f.start(context);
+			waitToEnd(f);
+	
+			AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+			assertEquals(value, counter.get());
+		}
+	}
+	
+	@Test
+	public void testParallelRouterTrue() throws Exception {
+		Xflow f = UnitTest.ParallelRouter.create();
+		
+		XflowContext context = new XflowContext();
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+		f.start(context);
+		waitToEnd(f);
+
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(10+10+20+30, counter.get());
+	}
+	
+	@Test
+	public void testSubflowActivity() throws Exception {
+		Xflow f = UnitTest.SubflowActivity.create();
+		XflowContext context = new XflowContext();
+		context.put(TestSubflowActivity.COUNT, 10);
+		f.start(context);
+		waitToEnd(f);
+		int counter = context.get(TestSubflowActivity.COUNT);
+		assertEquals(10+10+20+30, counter);
 	}
 
 	private void sleep1() throws Exception {

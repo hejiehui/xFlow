@@ -32,8 +32,8 @@ public class XflowPartFactory implements EditPartFactory {
         } else if(model instanceof ActivityNode) {
             part = new ActivityNodePart();
             ((ActivityNodePart) part).setProject(project);
-            if(model instanceof SubFlowNode)
-                ((SubFlowNode)model).setDiagram(diagram);
+            if(model instanceof SubflowActivityNode)
+                ((SubflowActivityNode)model).setDiagram(diagram);
         } else if(model instanceof RouterNode) {
             part = new RouterNodePart();
             ((RouterNodePart) part).setProject(project);

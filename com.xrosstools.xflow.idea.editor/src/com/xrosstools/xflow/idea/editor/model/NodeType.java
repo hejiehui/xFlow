@@ -12,7 +12,7 @@ public enum NodeType implements XflowIcons {
     TASK_ACTIVITY(TaskActivityNode.class, TASK_ACTIVITY_ICON),
     EVENT_ACTIVITY(EventActivityNode.class, EVENT_ACTIVITY_ICON),
     WAIT_ACTIVITY(WaitActivityNode.class, WAIT_ACTIVITY_ICON),
-    SUB_FLOW(SubFlowNode.class, SUB_FLOW_ICON),
+    SUBFLOW_ACTIVITY(SubflowActivityNode.class, SUBFLOW_ACTIVITY_ICON),
 
     BINARY_ROUTER(BinaryRouterNode.class, BINARY_ROUTER_ICON),
     INCLUSIVE_ROUTER(InclusiveRouterNode.class, INCLUSIVE_ROUTER__ICON),
@@ -69,6 +69,7 @@ public enum NodeType implements XflowIcons {
     public static final NodeType[] REFER_TO_CLASS = new NodeType[] {
             TASK_ACTIVITY,
             EVENT_ACTIVITY,
+            SUBFLOW_ACTIVITY,
     };
 
     public static boolean isPropertiesSupported(NodeType type) {

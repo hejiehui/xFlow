@@ -16,6 +16,7 @@ public interface ElementConstants {
 	String TASK_ACTIVITY_NODE = "task_activity";
 	String EVENT_ACTIVITY_NODE = "event_activity";
 	String WAIT_ACTIVITY_NODE = "wait_activity";
+	String SUBFLOW_ACTIVITY_NODE = "subflow_activity";
 
 	String BINARY_ROUTER_NODE = "binary_router";
 	String INCLUSIVE_ROUTER_NODE = "inclusive_router";
@@ -37,6 +38,8 @@ public interface ElementConstants {
     
     String PROP_DELAY = "delay";
     String PROP_TIME_UNIT = "time_unit";
+    
+    String PROP_SUBFLOW = "subflow";
     
     String SEPARATOR = "::";
 
