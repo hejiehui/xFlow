@@ -18,6 +18,7 @@ public interface PropertyConstants {
     String PROP_DEFAULT_LINK = "Default link";
     String PROP_TRUE_LINK = "True link";
     String PROP_STYLE = "Style";
+    String PROP_DISTANCE = "Distance";
 
     String PROP_DELAY = "Delay";
     String PROP_TIME_UNIT = "Time unit";

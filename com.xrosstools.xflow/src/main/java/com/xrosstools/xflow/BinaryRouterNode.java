@@ -1,6 +1,8 @@
 package com.xrosstools.xflow;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BinaryRouterNode extends Node {
@@ -16,6 +18,10 @@ public class BinaryRouterNode extends Node {
 		this.router = router;
 	}
 	
+	public boolean isSinglePhased() {
+		return true;
+	}
+
 	public void setOutputs(Link[] outputs) {
 		if(router == null && outputs.length == 2)
 			throw new IllegalArgumentException("Router implementation is reqired for node: " + getId());
@@ -34,13 +40,9 @@ public class BinaryRouterNode extends Node {
 		return linkMap.get(value);
 	}
 
-	public void handle(ActiveToken token) {
-		if(getOutputs() == null)
-			return;
-
+	public List<ActiveToken> handle(ActiveToken token) {
 		if(router == null) {
-			token.submit(getOutputs()[0].getTarget());
-			return;
+			return next(token);
 		}
 
 		Boolean id = router.route(token.getContext());
@@ -49,6 +51,6 @@ public class BinaryRouterNode extends Node {
 		if(link == null)
 			throw new IllegalArgumentException(String.format("Linke id: \"%s\" is undefined", id));
 
-		token.submit(link.getTarget());
+		return next(token, link.getTarget());
 	}
 }

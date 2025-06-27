@@ -2,14 +2,14 @@ package com.xrosstools.xflow.idea.editor.parts;
 
 import com.xrosstools.idea.gef.figures.*;
 import com.xrosstools.idea.gef.parts.AbstractNodeConnectionEditPart;
-import com.xrosstools.idea.gef.routers.BendpointConnectionRouter;
-import com.xrosstools.idea.gef.routers.CommonStyleLocator;
-import com.xrosstools.idea.gef.routers.CommonStyleRouter;
-import com.xrosstools.idea.gef.routers.RouterStyle;
+import com.xrosstools.idea.gef.parts.EditPolicy;
+import com.xrosstools.idea.gef.policies.NodeConnectionEditPolicy;
+import com.xrosstools.idea.gef.routers.*;
 import com.xrosstools.xflow.idea.editor.model.ActivityNode;
 import com.xrosstools.xflow.idea.editor.model.BaseNode;
 import com.xrosstools.xflow.idea.editor.model.Link;
 import com.xrosstools.xflow.idea.editor.model.RouterNode;
+import com.xrosstools.xflow.idea.editor.policies.LinkEditPolicy;
 
 public class LinkPart extends AbstractNodeConnectionEditPart {
     private Link link;
@@ -26,6 +26,9 @@ public class LinkPart extends AbstractNodeConnectionEditPart {
         router = new CommonStyleRouter(link.getStyle());
         conn.setRouter(router);
 
+        if(router.getInternalRouter(conn) instanceof HomolateralRouter)
+            ((HomolateralRouter)router.getInternalRouter(conn)).setDistance(link.getDistance());
+
         label = new Label();
         label.setText(link.getDisplayText());
         label.setOpaque(true);
@@ -40,5 +43,9 @@ public class LinkPart extends AbstractNodeConnectionEditPart {
         label.setText(link.getDisplayText());
         router.setStyle(link.getStyle());
         locator.setStyle(link.getStyle());
+    }
+
+    protected EditPolicy createEditPolicy() {
+        return new LinkEditPolicy();
     }
 }

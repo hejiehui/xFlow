@@ -1,6 +1,7 @@
 package com.xrosstools.xflow;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,10 @@ public class InclusiveRouterNode extends Node {
 	public InclusiveRouterNode(String name, InclusiveRouter router) {
 		super(name);
 		this.router = router;
+	}
+
+	public boolean isSinglePhased() {
+		return true;
 	}
 
 	public void setOutputs(Link[] outputs) {
@@ -46,23 +51,21 @@ public class InclusiveRouterNode extends Node {
 		return defaultOutputs.clone();
 	}
 
-	public void handle(ActiveToken token) {
+	public List<ActiveToken> handle(ActiveToken token) {
 		if(!token.checkInput())
-			return;
-
-		if(getOutputs() == null)
-			return;
+			return Collections.emptyList();
 
 		if(router == null) {
-			token.submit(getOutputs()[0].getTarget());
-			return;
+			return next(token);
 		}
 		
 		String[] ids = router.route(token.getContext());
 		RouteToken rt = new RouteToken(this, ids.length);
+		List<ActiveToken> nextTokens = new ArrayList<>(ids.length);
 		for(String id: ids) {
 			Link link = getLink(id);
-			token.submit(link.getTarget(), rt);
+			nextTokens.add(token.next(link.getTarget(), rt));
 		}
+		return nextTokens;
 	}
 }

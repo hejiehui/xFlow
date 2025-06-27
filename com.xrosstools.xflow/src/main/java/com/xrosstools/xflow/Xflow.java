@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+
+import com.xrosstools.xflow.imp.XflowListenerAdapter;
+import com.xrosstools.xflow.imp.XflowSystemOutListener;
 
 /**
  * The flow will schedule its pending tasks into TaskEngine.
@@ -17,44 +23,64 @@ import java.util.concurrent.atomic.AtomicReference;
  * is suspended, the the task should return directly and be moved to pending task queue.
  */
 public class Xflow {
-	private XflowFactory fafactory;
 	private String id;
 	private Map<String, Node> nodes = new HashMap<String, Node>();
-	private Queue<Node> pendingNodes = new ConcurrentLinkedQueue<>();
+	private XflowListener listener;
+
+	private Queue<ActiveToken> pendingNodes = new ConcurrentLinkedQueue<>();
 	private Map<String, Exception> failedTasks = new ConcurrentHashMap<>();
 	
 	private XflowContext context;
-	private AtomicReference<XflowStatus> statusRef = new AtomicReference<>();
+	private AtomicReference<XflowStatus> statusRef = new AtomicReference<>(XflowStatus.CREATED);
+	private AtomicLong lastTickRef = new AtomicLong(-1);
 	
-	public Xflow(XflowFactory fafactory, String flowId, List<Node> nodeList) {
+	public Xflow(XflowFactory factory, String flowId, List<Node> nodeList, XflowListener listener) {
 		this.id = flowId;
 		for(Node node: nodeList) {
 			String id = node.getId();
 			if(nodes.containsKey(id))
 				throw new IllegalArgumentException(String.format("Node id : \"%s\" is duplicated", id));
 			nodes.put(id, node);
+			node.setListener(listener);
 		}
-		statusRef.set(XflowStatus.CREATED);
+		this.listener = listener;
+		listener.flowCreated(flowId);
+	}
+
+	public Xflow(XflowFactory factory, String flowId, List<Node> nodeList) {
+		this(factory, flowId, nodeList, new XflowSystemOutListener());
 	}
 
 	public String getId() {
 		return id;
 	}
+	
+	public XflowContext getContext() {
+		return context;
+	}
+	
+	public XflowStatus getStatus() {
+		return statusRef.get();
+	}
+	
+	public XflowListener getListener() {
+		return listener;
+	}
 
 	public void start(XflowContext context) {
+		reqire(XflowStatus.CREATED);
+
 		this.context = context;
 		context.setFlow(this);
 		for(Node node: nodes.values())
 			if(node instanceof StartNode) {
+				changeTo(XflowStatus.RUNNING);
 				XflowEngine.submit(context, node);
+				listener.flowStarted(context, getId());
 				return;
 			}
 
 		throw new IllegalArgumentException("No start node found");
-	}
-	
-	public XflowContext getContext() {
-		return context;
 	}
 
 	/**
@@ -63,11 +89,23 @@ public class Xflow {
 	 * @param pendingActivities
 	 */
 	public void restore(XflowContext context, Set<String> pendingActivityIds) {
+		if(pendingActivityIds.isEmpty())
+			throw new IllegalArgumentException("There is no activity to be restored");
+		
+		for(String id: pendingActivityIds) {
+			if(!nodes.containsKey(id))
+				throw new NoSuchElementException("There is no activity called " + id);
+		}
+
+		reqire(XflowStatus.CREATED);
+
 		this.context = context;
 		for(String id: pendingActivityIds) {
 			Node node = nodes.get(id);
 			XflowEngine.submit(context, node);
 		}
+		
+		changeTo(XflowStatus.RUNNING);
 	}
 	
 	public List<String> getPendingNodes() {
@@ -79,49 +117,108 @@ public class Xflow {
 	}
 
 	public void suspend() {
-		if(getStatus() != XflowStatus.RUNNING)
-			throw new IllegalStateException("Flow is not running. Current status is " + getStatus());
-
-		statusRef.set(XflowStatus.SUSPENDED);
+		reqire(XflowStatus.RUNNING);
+		changeTo(XflowStatus.SUSPENDED);
+		listener.flowSuspended(context, id);
 	}
 
 	public void resume() {
-		if(getStatus() != XflowStatus.SUSPENDED)
-			throw new IllegalStateException("Flow is not suspended. Current status is " + getStatus());
+		reqire(XflowStatus.SUSPENDED);
+		changeTo(XflowStatus.RUNNING);
+		listener.flowResumed(context, id);
+	}
 
-		statusRef.set(XflowStatus.RUNNING);
-	}
-	
 	public void succeed() {
-		statusRef.set(XflowStatus.SUCCEED);
+		reqire(XflowStatus.RUNNING);
+		changeTo(XflowStatus.SUCCEED);
+		listener.flowSucceed(context, id);
 	}
 	
-	public void fail(Exception ex) {
-		statusRef.set(XflowStatus.FAILED);
+	public void abort(String reason) {
+		reqire(XflowStatus.RUNNING);
+		changeTo(XflowStatus.ABORTED);
+		listener.flowAborted(context, id, reason);
+	}
+
+	/**
+	 * When there is no active token.
+	 */
+	public void fail() {
+		reqire(XflowStatus.RUNNING);
+		changeTo(XflowStatus.FAILED);
+		listener.flowFailed(context, id);
 	}
 	
-	public void pending(Node node) {
+	public void pending(ActiveToken node) {
 		pendingNodes.add(node);
+	}
+	
+	public void pending(List<ActiveToken> nodes) {
+		if(nodes == null)
+			return;
+		pendingNodes.addAll(nodes);
 	}
 
 	public void retry(String nodeId) {
-		if(isSuspended())
-			throw new IllegalStateException("Xflow %s is suspended");
-		XflowEngine.submit(context, nodes.get(nodeId));
+		reqire(XflowStatus.RUNNING);
+		
+		nodes.get(nodeId).retry();
 	}
 	
 	public boolean isSuspended() {
 		return statusRef.get() == XflowStatus.SUSPENDED;
 	}
 	
+	public boolean isRunning() {
+		return statusRef.get() == XflowStatus.RUNNING;
+	}
+	
 	public boolean isEnded() {
-		return statusRef.get() == XflowStatus.SUCCEED || statusRef.get() == XflowStatus.FAILED;
+		XflowStatus cur = getStatus();
+		return cur == XflowStatus.SUCCEED || 
+				cur == XflowStatus.FAILED ||
+				cur == XflowStatus.ABORTED;
 	}
 	
-	public XflowStatus getStatus() {
-		return statusRef.get();
+	public List<String> getActiveNodeIds() {
+		List<String> ids = new ArrayList<>();
+		for(Node node: nodes.values())
+			if(node.isActive())
+				ids.add(node.getId());
+		return ids;
 	}
 	
+	public List<String> getFailedNodeIds() {
+		List<String> ids = new ArrayList<>();
+		for(Node node: nodes.values())
+			if(node.isFailed())
+				ids.add(node.getId());
+		return ids;
+	}
+	
+	public boolean isActive(String nodeId) {
+		return nodes.get(nodeId).isActive();
+	}
+	
+	public boolean isFailed(String nodeId) {
+		return nodes.get(nodeId).isFailed();
+	}
+	
+	public Throwable getFailure(String nodeId) {
+		return nodes.get(nodeId).getLastFailure();
+	}
+	
+	public XflowContext getSubflowContext(String nodeId) {
+		return ((SubflowActivityNode)nodes.get(nodeId)).getSubflowContext();
+	}
+	
+	public Xflow getSubflow(String nodeId) {
+		return getSubflowContext(nodeId).getFlow();
+	}
+	public void mergeSubflow(String nodeId) {
+		((SubflowActivityNode)nodes.get(nodeId)).mergeSubflow();
+	}
+
 	/**
 	 * If assignee is null, it will return all task that is not assigned.
 	 * @param assignee
@@ -136,6 +233,10 @@ public class Xflow {
 		return taskList;
 	}
 	
+	/**
+	 * Submit will not cause task activity fail. 
+	 * @param task
+	 */
 	public void submit(Task task) {
 		Node node = nodes.get(task.getActivityId());
 		if(!(node instanceof TaskActivityNode))
@@ -162,5 +263,45 @@ public class Xflow {
 			throw new IllegalArgumentException(String.format("Node %s is not a event activity.", event.getActivityId()));
 
 		((EventActivityNode)node).notify(context, event);
+	}
+	
+	private void reqire(XflowStatus...validStatus) {
+		XflowStatus cur = statusRef.get();
+		for(XflowStatus status: validStatus)
+			if(cur == status)
+				return;
+			
+		throw new IllegalStateException(String.format("Flow is not in %s. Current status is ", validStatus, cur));
+	}
+	
+	private synchronized void changeTo(XflowStatus next) {
+		statusRef.set(statusRef.get().changeTo(next));
+	}
+	
+	public void tick() {
+		lastTickRef.set(System.currentTimeMillis());
+	}
+	
+	public long getLastTick() {
+		return lastTickRef.get();
+	}
+	
+	public boolean isFailed() {
+		if(statusRef.get() == XflowStatus.SUCCEED || statusRef.get() == XflowStatus.ABORTED)
+			return false;
+			
+		if(statusRef.get() == XflowStatus.FAILED)
+			return true;
+
+		long lastTick = getLastTick();
+		for(Node node: nodes.values())
+			if(node.isActive())
+				return false;
+		
+		if(lastTick != getLastTick())
+			return false;
+
+		statusRef.set(XflowStatus.FAILED);
+		return true;
 	}
 }

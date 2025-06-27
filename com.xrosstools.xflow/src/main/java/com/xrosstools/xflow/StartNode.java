@@ -1,14 +1,17 @@
 package com.xrosstools.xflow;
 
+import java.util.List;
+
 public class StartNode extends Node {
 	public StartNode(String name) {
 		super(name);
 	}
 	
-	public void handle(ActiveToken token) {
-		if(getOutputs().length == 0)
-			return;
+	public boolean isSinglePhased() {
+		return true;
+	}
 
-		token.submit(getOutputs()[0].getTarget());
+	public List<ActiveToken> handle(ActiveToken token) {
+		return next(token);
 	}
 }

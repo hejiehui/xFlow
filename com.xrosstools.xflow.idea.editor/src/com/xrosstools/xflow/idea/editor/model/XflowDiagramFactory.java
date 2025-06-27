@@ -1,5 +1,6 @@
 package com.xrosstools.xflow.idea.editor.model;
 
+import com.xrosstools.idea.gef.routers.RouterStyle;
 import com.xrosstools.idea.gef.util.ConfigXmlAccessor;
 import com.xrosstools.idea.gef.util.PropertyEntrySource;
 import com.xrosstools.idea.gef.util.PropertySourceXmlRegister;
@@ -144,6 +145,9 @@ public class XflowDiagramFactory implements PropertyConstants {
 
             Link link = new Link(parent, child);
             register.readProperties(Link.class, connectionNode, link);
+            RouterStyle style = link.getStyle();
+            if(style == RouterStyle.HORIZONTAL_HOMOLATERAL || style == RouterStyle.VERTICAL_HOMOLATERAL)
+                link.setDistance(getIntAttribute(connectionNode, PROP_DISTANCE, 50));
         }
     }
 
@@ -204,6 +208,9 @@ public class XflowDiagramFactory implements PropertyConstants {
                 register.writeProperties(doc, Link.class, connNode, conn);
                 connNode.setAttribute(SOURCE_INDEX, String.valueOf(nodes.indexOf(node)));
                 connNode.setAttribute(TARGET_INDEX, String.valueOf(nodes.indexOf(conn.getTarget())));
+                RouterStyle style = conn.getStyle();
+                if(style == RouterStyle.HORIZONTAL_HOMOLATERAL || style == RouterStyle.VERTICAL_HOMOLATERAL)
+                    connNode.setAttribute(PROP_DISTANCE, String.valueOf(conn.getDistance()));
             }
         }
     }

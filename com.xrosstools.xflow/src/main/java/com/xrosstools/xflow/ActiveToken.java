@@ -1,7 +1,10 @@
 package com.xrosstools.xflow;
 
 import java.util.Collection;
+import java.util.Deque;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Shall we always keep one running task whenever possible?
@@ -13,8 +16,14 @@ public class ActiveToken implements Runnable {
 
 	private Node node;
 	//We can use Stack instead, because there is no concurrent case
-	private ConcurrentLinkedDeque<RouteToken> routeTokens;
+	private Deque<RouteToken> routeTokens;
 	
+	private AtomicReference<Throwable> failureRef = new AtomicReference<>();
+	
+	public Deque<RouteToken> getRouteTokens() {
+		return routeTokens;
+	}
+
 	public ActiveToken(XflowContext context, Node node) {
 		this.context = context;
 		this.setNode(node);
@@ -30,11 +39,51 @@ public class ActiveToken implements Runnable {
 		routeTokens.addLast(routeToken);
 	}
 
+	public void clearFailure() {
+		setFailure(null);
+	}
+
+	public void setFailure(Throwable e) {
+		failureRef.set(e);
+	}
+
+	public Throwable getFailure() {
+		return failureRef.get();
+	}
+
 	@Override
 	public void run() {
-		getNode().handle(this);
+		Xflow flow = context.getFlow();
+
+		do {
+			if(flow.isEnded())
+				return;
+
+			if(flow.isSuspended()) {
+				flow.pending(this);
+				return;
+			}
+		} while(!node.start(this));
+
+		List<ActiveToken> nextTokens = node.handle(node, node.isSinglePhased());
+
+		if(node.isFailed())
+			return;
+
+		if(!node.isSinglePhased())
+			return;
+
+		if(flow.isEnded())
+			return;
+			
+		if(flow.isSuspended()) {
+			flow.pending(nextTokens);
+			return;
+		}
+		
+		XflowEngine.submit(nextTokens);
 	}
-	
+
 	public XflowContext getContext() {
 		return context;
 	}
@@ -60,13 +109,18 @@ public class ActiveToken implements Runnable {
 		this.node = node;
 	}
 
-	public void submit(Node node) {
-		XflowEngine.submit(new ActiveToken(context, node, routeTokens));
+	public ActiveToken next(Node node) {
+		return new ActiveToken(context, node, routeTokens);
 	}
 	
-	public void submit(Node node, RouteToken routeToken) {
+	public ActiveToken next(Node node, RouteToken routeToken) {
 		ActiveToken activeToken = new ActiveToken(context, node, routeTokens);
 		activeToken.participate(routeToken);		
-		XflowEngine.submit(activeToken);
+		return activeToken;
+	}
+
+	public void submit(Node node) {
+		if(node != null)
+			XflowEngine.submit(new ActiveToken(context, node, routeTokens));
 	}
 }

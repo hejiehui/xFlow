@@ -1,5 +1,7 @@
 package com.xrosstools.xflow;
 
+import java.util.List;
+
 public class AutoActivityNode extends Node {
 	private AutoActivity activity;
 
@@ -7,12 +9,13 @@ public class AutoActivityNode extends Node {
 		super(id, activity);
 		this.activity= activity;
 	}
+	
+	public boolean isSinglePhased() {
+		return true;
+	}
 
-	public void handle(ActiveToken token) {
+	public List<ActiveToken> handle(ActiveToken token) {
 		activity.execute(token.getContext());
-		if(getOutputs().length == 0)
-			return;
-
-		token.submit(getOutputs()[0].getTarget());
+		return next(token);
 	}
 }

@@ -1,9 +1,14 @@
 package com.xrosstools.xflow;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 public class SubflowActivityNode extends Node {
 	private String subflowId;
 	private SubflowActivity activity;
 	private XflowFactory factory;
+	private AtomicReference<XflowContext> subflowContextRef = new AtomicReference<>();
 
 	public SubflowActivityNode(String id, String subflowId, SubflowActivity activity, XflowFactory factory) {
 		super(id);
@@ -12,24 +17,57 @@ public class SubflowActivityNode extends Node {
 		this.factory = factory;
 	}
 
-	@Override
-	public void handle(ActiveToken token) {
-		Xflow subFlow = factory.create(subflowId);
-
-		XflowContext subFlowContext = activity.createContext(token.getContext());
-		subFlowContext.setFlow(subFlow);
-		subFlowContext.setParentToken(token);
-		
-		subFlow.start(subFlowContext);
+	public boolean isSinglePhased() {
+		return false;
 	}
 	
-	public void finish(XflowContext subflowContext) {
-		ActiveToken token = subflowContext.getParentToken();
-		activity.mergeContext(subflowContext.getParentToken().getContext(), subflowContext);
-		
-		if(getOutputs().length == 0)
-			return;
+	public XflowContext getSubflowContext() {
+		return subflowContextRef.get();
+	}
 
-		token.submit(getOutputs()[0].getTarget());
-	}	
+	@Override
+	public List<ActiveToken> handle(ActiveToken token) {
+		Xflow subFlow = factory.create(subflowId);
+
+		XflowContext subflowContext = activity.createContext(token.getContext());
+		subflowContext.setFlow(subFlow);
+		subflowContext.setParentToken(token);
+
+		subFlow.start(subflowContext);
+
+		subflowContextRef.set(subflowContext);
+		return Collections.emptyList();
+	}
+
+	public void mergeSubflow() {
+		assertMerge();
+
+		synchronized (subflowContextRef) {
+			assertMerge();
+
+			ActiveToken token = getToken();
+			token.clearFailure();
+			XflowContext parentContext = token.getContext();
+			XflowContext subflowContext = subflowContextRef.get();
+			ActiveToken next = this.singleNext(getToken());
+
+			try {
+				activity.mergeSubflow(parentContext, subflowContext);
+				succeed();
+			} catch (Exception e) {
+				getListener().mergeSubflowFailed(parentContext, subflowId, subflowContext, e);
+				failed(e);
+				throw e;
+			}
+			subflowContextRef.set(null);
+			XflowEngine.submit(next);
+		}
+	}
+	
+	private void assertMerge() {
+		assertToken();
+
+		if(subflowContextRef.get() == null)
+			throw new IllegalStateException(String.format("No subflow context found for node: ", subflowId));
+	}
 }

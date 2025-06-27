@@ -71,4 +71,8 @@ public class Task extends DataMap {
 	public void setSubmitted() {
 		submittedRef.set(Boolean.TRUE);
 	}
+	
+	public void clearSubmitFlag() {
+		submittedRef.set(Boolean.FALSE);
+	}
 }

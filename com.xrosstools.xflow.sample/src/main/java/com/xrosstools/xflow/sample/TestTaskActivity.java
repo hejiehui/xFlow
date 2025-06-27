@@ -10,7 +10,7 @@ import com.xrosstools.xflow.Task;
 import com.xrosstools.xflow.TaskActivity;
 import com.xrosstools.xflow.XflowContext;
 
-public class TestTaskActivity implements TaskActivity, NodeConfigAware, FlowConfigAware {
+public class TestTaskActivity extends TestAdapter implements TaskActivity, NodeConfigAware, FlowConfigAware {
 	private int count;
 	private String assignee;
 
@@ -26,6 +26,7 @@ public class TestTaskActivity implements TaskActivity, NodeConfigAware, FlowConf
 
 	@Override
 	public List<Task> create(XflowContext context) {
+		call(context);
 		List<Task> tasks = new ArrayList<>();
 		for(int i = 0; i < count; i++) {
 			tasks.add(new FeedbackTask("id_" + i, assignee));
@@ -35,6 +36,7 @@ public class TestTaskActivity implements TaskActivity, NodeConfigAware, FlowConf
 
 	@Override
 	public boolean submit(XflowContext context, List<Task> tasks, Task task) {
+		call(context);
 		return ((FeedbackTask)task).getFeedback().equals("OK");
 	}
 }

@@ -17,7 +17,7 @@ import com.xrosstools.xflow.Task;
 import com.xrosstools.xflow.Xflow;
 import com.xrosstools.xflow.XflowContext;
 
-public class XflowUintTest {
+public class NormalTest {
 	@Test
 	public void testAutoActivity() throws Exception {
 		Xflow f = UnitTest.AutoActivity.create();

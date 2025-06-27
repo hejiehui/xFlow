@@ -13,6 +13,8 @@ public class Link extends NodeConnection<BaseNode, BaseNode> implements Property
     private PropertyEntry<Boolean> trueLink = booleanProperty(PROP_TRUE_LINK, false);
     private PropertyEntry<RouterStyle> style = property(PROP_STYLE, RouterStyle.DEFAULT).setDescriptor(new RouterStylePropertyDescriptor(PROP_STYLE));
 
+    private PropertyEntry<Integer> distance = intProperty(PROP_DISTANCE, 50);
+
     public Link(){
         register();
     }
@@ -43,5 +45,13 @@ public class Link extends NodeConnection<BaseNode, BaseNode> implements Property
 
     public void setStyle(RouterStyle style) {
         this.style.set(style);
+    }
+
+    public Integer getDistance() {
+        return distance.get();
+    }
+
+    public void setDistance(Integer _distance) {
+        distance.set(_distance);
     }
 }

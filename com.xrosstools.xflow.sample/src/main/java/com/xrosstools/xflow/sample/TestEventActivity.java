@@ -7,16 +7,18 @@ import com.xrosstools.xflow.EventSpec;
 import com.xrosstools.xflow.NodeConfigAware;
 import com.xrosstools.xflow.XflowContext;
 
-public class TestEventActivity implements EventActivity, NodeConfigAware  {
+public class TestEventActivity extends TestAdapter implements EventActivity, NodeConfigAware  {
 	public static final String EVENT_ID = "event id";
 	private String eventId;
 	@Override
 	public EventSpec specify(XflowContext context) {
+		call(context);
 		return new EventSpec(eventId);
 	}
 
 	@Override
 	public void notify(XflowContext context, Event event) {
+		call(context);
 		if(!event.getId().equals(eventId))
 			throw new IllegalArgumentException();
 	}
