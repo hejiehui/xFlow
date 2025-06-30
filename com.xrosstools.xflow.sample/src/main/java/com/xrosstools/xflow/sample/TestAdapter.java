@@ -6,6 +6,9 @@ import com.xrosstools.xflow.XflowContext;
 public class TestAdapter {
 	public static final String INTERNAL_TASK = "internal_task";
 	
+	public static final String START_NODE = "start";
+	public static final String END_NODE = "end";
+	
 	public static final String AUTO_ACTIVITY_NODE = "a";
 	public static final String TASK_ACTIVITY_NODE = "aaaabbb";
 	public static final String EVENT_ACTIVITY_NODE = "event activity";
@@ -16,8 +19,65 @@ public class TestAdapter {
 	public static final String SUBFLOW_AUTO_ACTIVITY_ID_1 = "a1";
 	public static final String SUBFLOW_AUTO_ACTIVITY_ID_2 = "a2";
 	public static final String SUBFLOW_AUTO_ACTIVITY_ID_3 = "a3";
+	
+	
+	public static final String CALL_BACK = "call back";
+	public static final String NODE_ID = "node id";
+	public static final String FLOW_TASK = "flow_task";
+	
+	public static final String flowCreated = "flowCreated";
+	public static final String flowStarted = "flowStarted";
+	public static final String flowSucceed = "flowSucceed";
+	public static final String flowSuspended = "flowSuspended";
+	public static final String flowResumed = "flowResumed";
+	public static final String flowRestored = "flowRestored";
+	
+	public static final String flowFailed = "flowFailed";
+	public static final String flowAborted = "flowAborted";
+	
+	public static final String nodeStarted = "nodeStarted";
+	public static final String nodeRetried = "nodeRetried";
+	public static final String nodeSucceed = "nodeSucceed";
+	public static final String nodePended = "nodePended";
+	public static final String nodeFailed = "nodeFailed";
+	
+	public static final String eventNotifyFailed = "eventNotifyFailed";
+	public static final String taskSubmitFailed = "taskSubmitFailed";
+	public static final String mergeSubflowFailed = "mergeSubflowFailed";
 
-	public static void injectException(XflowContext context, final Throwable e) {
+	public static void injectSuspend(XflowContext context) {
+		context.put(INTERNAL_TASK, new Runnable() {			
+			@Override
+			public void run() {
+				System.out.println("internal suspend");
+				context.getFlow().suspend();
+			}
+		});
+	}
+
+	public static void injectSuspend(XflowContext context, String callback) {
+		context.put(CALL_BACK, callback);
+		context.put(FLOW_TASK, new Runnable() {			
+			@Override
+			public void run() {
+				System.out.println("internal suspend at " + callback);
+				context.getFlow().suspend();
+			}
+		});
+	}
+
+	public static void injectSuspend(XflowContext context, String callback, String nodeId) {
+		context.put(CALL_BACK, callback);
+		context.put(nodeId, new Runnable() {			
+			@Override
+			public void run() {
+				System.out.println("internal suspend at " + callback + " node: " + nodeId);
+				context.getFlow().suspend();
+			}
+		});
+	}
+
+	public static void injectException(XflowContext context, Throwable e) {
 		context.put(INTERNAL_TASK, new Runnable() {			
 			@Override
 			public void run() {
@@ -39,6 +99,7 @@ public class TestAdapter {
 			@Override
 			public void run() {
 				try {
+					System.out.println("Sleep for " + dur);
 					Thread.sleep(dur);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -53,6 +114,19 @@ public class TestAdapter {
 			internalTask.run();
 	}
 	
+	public void nodeCallback(XflowContext context, String callback, String nodeId) {
+		Runnable internalTask = context.get(nodeId);
+		if(internalTask != null && callback.equals(context.get(CALL_BACK)))
+			internalTask.run();
+	}
+	
+	public void flowCallback(XflowContext context, String callback) {
+		Runnable internalTask = context.get(FLOW_TASK);
+		if(internalTask != null && callback.equals(context.get(CALL_BACK)))
+			internalTask.run();
+	}
+
+	
 	public void sleep1() throws Exception {
 		Thread.sleep(1);
 	}
@@ -61,18 +135,40 @@ public class TestAdapter {
 		Thread.sleep(5);
 	}
 	
+	public void sleep(long dur) throws Exception {
+		Thread.sleep(dur);
+	}
+	
+	public void waitToSuspend(Xflow f) throws Exception {
+		int i = 0;
+		while(!f.isSuspended()) {
+			sleep1();
+			i++;
+		}
+		System.out.println("sleeped: " + i);
+	}
+
 	public void waitToEnd(Xflow f) throws Exception {
-		while(!f.isEnded())
+		int i = 20;
+		while(!f.isEnded() && i-- > 0)
 			sleep1();
 	}
 
 	public void waitToActive(Xflow f, String nodeId) throws Exception {
-		while(!f.isActive(nodeId))
+		int i = 20;
+		while(!f.isActive(nodeId) && i-- > 0)
+			sleep1();
+	}
+
+	public void waitToInactive(Xflow f, String nodeId) throws Exception {
+		int i = 20;
+		while(f.isActive(nodeId) && i-- > 0)
 			sleep1();
 	}
 
 	public void waitToFail(Xflow f, String nodeId) throws Exception {
-		while(!f.isFailed(nodeId))
+		int i = 20;
+		while(!f.isFailed(nodeId) && i-- > 0)
 			sleep1();
 	}
 }

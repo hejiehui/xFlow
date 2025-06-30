@@ -27,6 +27,7 @@ public interface ElementConstants {
     String LINK = "link";
 
     String PROP_ID = "id";
+    String PROP_LISTENER = "listener";
     String PROP_LABEL = "Label";
     String PROP_DESCRIPTION = "Description";
     String PROP_LOCATION = "location";

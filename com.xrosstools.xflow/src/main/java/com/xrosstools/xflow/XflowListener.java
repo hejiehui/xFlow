@@ -21,7 +21,9 @@ public interface XflowListener {
 	void flowAborted(XflowContext context, String flowId, String reason);
 	
 	void nodeStarted(XflowContext context, String nodeId);
+	void nodeRetried(XflowContext context, String nodeId);
 	void nodeSucceed(XflowContext context, String nodeId);
+	void nodePended(XflowContext context, String nodeId);
 	void nodeFailed(XflowContext context, String nodeId, Throwable e);
 	
 	void eventNotifyFailed(XflowContext context, String nodeId, Event event, Throwable e);

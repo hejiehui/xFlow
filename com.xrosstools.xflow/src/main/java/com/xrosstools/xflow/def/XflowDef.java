@@ -11,20 +11,24 @@ import com.xrosstools.xflow.GlobalConfigAware;
 import com.xrosstools.xflow.Link;
 import com.xrosstools.xflow.Node;
 import com.xrosstools.xflow.NodeConfigAware;
+import com.xrosstools.xflow.TaskActivity;
 import com.xrosstools.xflow.Xflow;
 import com.xrosstools.xflow.XflowFactory;
+import com.xrosstools.xflow.XflowListener;
 
 public class XflowDef {
 	private String name;
+	private ImplementationDef<XflowListener> listenerDef;
     private List<NodeDef> nodeDefs;
     private List<LinkDef> linkDefs;
     private DataMap globalConfig;
     private DataMap flowConfig;
 
-	public XflowDef(String name, List<NodeDef> nodeDefs, List<LinkDef> linkDefs,
+	public XflowDef(String name, ImplementationDef<XflowListener> listenerDef, List<NodeDef> nodeDefs, List<LinkDef> linkDefs,
 			DataMap globalConfig,
 			DataMap flowConfig) {
 		this.name = name;
+		this.listenerDef = listenerDef;
 		this.nodeDefs = nodeDefs;
 		this.linkDefs = linkDefs;
 		this.globalConfig = globalConfig;
@@ -35,7 +39,7 @@ public class XflowDef {
 		return name;
 	}
 
-	public Xflow create(XflowFactory fafactory) {
+	public Xflow create(XflowFactory factory) {
 		List<Node> nodes = new LinkedList<>();
 		for(NodeDef nodeDef: nodeDefs)
 			nodes.add(createNode(nodeDef));
@@ -58,7 +62,7 @@ public class XflowDef {
 			nodes.get(sourceId).setOutputs(outputs.toArray(new Link[outputs.size()]));
 		}
 		
-		return new Xflow(fafactory, name, nodes);
+		return new Xflow(factory, name, nodes, listenerDef.create());
 	}
 	
 	private Node createNode(NodeDef nodeDef) {

@@ -40,7 +40,15 @@ public class XflowListenerAdapter implements XflowListener {
 	}
 
 	@Override
+	public void nodeRetried(XflowContext context, String nodeId) {
+	}
+
+	@Override
 	public void nodeSucceed(XflowContext context, String nodeId) {
+	}
+	
+	@Override
+	public void nodePended(XflowContext context, String nodeId) {
 	}
 
 	@Override

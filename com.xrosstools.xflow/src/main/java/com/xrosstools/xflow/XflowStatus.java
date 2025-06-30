@@ -17,31 +17,17 @@ public enum XflowStatus {
 
 	SUSPENDED(){
 		public XflowStatus changeTo(XflowStatus next) {
-			
+			if(next == CREATED)
+				illegalState(next);
 			return next;
 		}
 	},
 
-	SUCCEED(){
-		public XflowStatus changeTo(XflowStatus next) {
-			
-			return next;
-		}
-	},
+	SUCCEED,
 
-	FAILED(){
-		public XflowStatus changeTo(XflowStatus next) {
-			
-			return next;
-		}
-	},
+	FAILED,
 
-	//
-	ABORTED(){
-		public XflowStatus changeTo(XflowStatus next) {
-			return illegalState(next);
-		}
-	};
+	ABORTED;
 	
 	public XflowStatus changeTo(XflowStatus next) {
 		return illegalState(next);

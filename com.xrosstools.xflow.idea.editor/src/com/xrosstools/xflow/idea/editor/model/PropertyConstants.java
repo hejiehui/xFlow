@@ -13,6 +13,7 @@ public interface PropertyConstants {
     String PROP_ID = "Id";
     String PROP_LABEL = "Label";
     String PROP_DESCRIPTION = "Description";
+    String PROP_LISTENER = "Listener";
     String PROP_EVALUATOR = "Evaluator";
     String PROP_IMPLEMENTATION = "Implementation";
     String PROP_DEFAULT_LINK = "Default link";

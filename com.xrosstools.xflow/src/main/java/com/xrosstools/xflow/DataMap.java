@@ -61,4 +61,12 @@ public class DataMap {
 		copy.entries.putAll(entries);
 		return copy;
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for(Map.Entry<String, ?> enrty: entries.entrySet()) {
+			sb.append(String.format("%s: %s\n", enrty.getKey(), enrty.getValue()));
+		}
+		return sb.toString();
+	}
 }

@@ -26,6 +26,7 @@ import com.xrosstools.xflow.def.ImplementationDef;
 import com.xrosstools.xflow.def.LinkDef;
 import com.xrosstools.xflow.def.NodeDef;
 import com.xrosstools.xflow.def.XflowDef;
+import com.xrosstools.xflow.imp.XflowListenerAdapter;
 
 public class XflowFactory implements ElementConstants {
     private static final ConcurrentHashMap<String, XflowFactory> factories = new ConcurrentHashMap<>();
@@ -132,7 +133,11 @@ public class XflowFactory implements ElementConstants {
     	DataMap flowConfig = readConfig(flowNode);
 		List<NodeDef> nodeDefs = readNodes(getChildNode(flowNode, NODES));
 		List<LinkDef> linkDefs = readLinks(getChildNode(flowNode, LINKS));
-		return new XflowDef(getAttribute(flowNode, PROP_ID), nodeDefs, linkDefs, config, flowConfig);
+		String listenerImpStr = getAttribute(flowNode, PROP_LISTENER);
+		if(listenerImpStr == null || listenerImpStr.trim().length() == 0)
+			listenerImpStr = XflowListenerAdapter.class.getName();
+
+		return new XflowDef(getAttribute(flowNode, PROP_ID), new ImplementationDef<XflowListener>(listenerImpStr.trim()), nodeDefs, linkDefs, config, flowConfig);
 	}
 
 	private List<NodeDef> readNodes(Node nodesNode) {

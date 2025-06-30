@@ -39,7 +39,7 @@ public abstract class Node implements NodeHandler {
 		return token != null && token.getFailure() != null;
 	}
 	
-	public Throwable getLastFailure() {
+	public Throwable getFailure() {
 		ActiveToken token = getToken();
 		return token == null ? null : token.getFailure();
 	}
@@ -66,18 +66,16 @@ public abstract class Node implements NodeHandler {
 		if(token == tokenRef.get())
 			return true;
 
-		synchronized (tokenRef) {
-			if(tokenRef.get() == null) {
-				tokenRef.set(token);
-				try {
-					listener.nodeStarted(token.getContext(), id);
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-				return true;
-			} else
-				return false;
+		if(!tokenRef.compareAndSet(null, token))
+			return false;
+		
+		try {
+			listener.nodeStarted(token.getContext(), id);
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
+
+		return true;
 	}
 	
 	public void releaseToken() {
@@ -155,6 +153,7 @@ public abstract class Node implements NodeHandler {
 	}
 	
 	public void retry() {
+		assertToken();
 		getToken().clearFailure();
 		XflowEngine.submit(handle(this, isSinglePhased()));
 	}

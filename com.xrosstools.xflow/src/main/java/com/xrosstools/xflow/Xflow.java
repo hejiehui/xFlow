@@ -7,14 +7,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.xrosstools.xflow.imp.XflowListenerAdapter;
-import com.xrosstools.xflow.imp.XflowSystemOutListener;
 
 /**
  * The flow will schedule its pending tasks into TaskEngine.
@@ -28,7 +23,6 @@ public class Xflow {
 	private XflowListener listener;
 
 	private Queue<ActiveToken> pendingNodes = new ConcurrentLinkedQueue<>();
-	private Map<String, Exception> failedTasks = new ConcurrentHashMap<>();
 	
 	private XflowContext context;
 	private AtomicReference<XflowStatus> statusRef = new AtomicReference<>(XflowStatus.CREATED);
@@ -45,10 +39,6 @@ public class Xflow {
 		}
 		this.listener = listener;
 		listener.flowCreated(flowId);
-	}
-
-	public Xflow(XflowFactory factory, String flowId, List<Node> nodeList) {
-		this(factory, flowId, nodeList, new XflowSystemOutListener());
 	}
 
 	public String getId() {
@@ -74,7 +64,7 @@ public class Xflow {
 		context.setFlow(this);
 		for(Node node: nodes.values())
 			if(node instanceof StartNode) {
-				changeTo(XflowStatus.RUNNING);
+				changeTo(XflowStatus.CREATED, XflowStatus.RUNNING);
 				XflowEngine.submit(context, node);
 				listener.flowStarted(context, getId());
 				return;
@@ -97,7 +87,7 @@ public class Xflow {
 				throw new NoSuchElementException("There is no activity called " + id);
 		}
 
-		reqire(XflowStatus.CREATED);
+		changeTo(XflowStatus.CREATED, XflowStatus.RUNNING);
 
 		this.context = context;
 		for(String id: pendingActivityIds) {
@@ -105,38 +95,31 @@ public class Xflow {
 			XflowEngine.submit(context, node);
 		}
 		
-		changeTo(XflowStatus.RUNNING);
+		listener.flowRestored(context, getId());
 	}
 	
-	public List<String> getPendingNodes() {
-		return null;//new ArrayList<String>(pendingTasks.keySet());
-	}
-
-	public Map<String, Exception> getFailedTasks() {
-		return failedTasks;
-	}
-
 	public void suspend() {
-		reqire(XflowStatus.RUNNING);
-		changeTo(XflowStatus.SUSPENDED);
+		changeTo(XflowStatus.RUNNING, XflowStatus.SUSPENDED);
 		listener.flowSuspended(context, id);
 	}
 
 	public void resume() {
-		reqire(XflowStatus.SUSPENDED);
-		changeTo(XflowStatus.RUNNING);
+		changeTo(XflowStatus.SUSPENDED, XflowStatus.RUNNING);
+		
+		ActiveToken next;
+		while((next = pendingNodes.poll()) != null)
+			XflowEngine.submit(next);
+
 		listener.flowResumed(context, id);
 	}
 
 	public void succeed() {
-		reqire(XflowStatus.RUNNING);
-		changeTo(XflowStatus.SUCCEED);
+		changeTo(XflowStatus.RUNNING, XflowStatus.SUCCEED);
 		listener.flowSucceed(context, id);
 	}
 	
 	public void abort(String reason) {
-		reqire(XflowStatus.RUNNING);
-		changeTo(XflowStatus.ABORTED);
+		changeTo(XflowStatus.RUNNING, XflowStatus.ABORTED);
 		listener.flowAborted(context, id, reason);
 	}
 
@@ -144,40 +127,42 @@ public class Xflow {
 	 * When there is no active token.
 	 */
 	public void fail() {
-		reqire(XflowStatus.RUNNING);
-		changeTo(XflowStatus.FAILED);
+		changeTo(XflowStatus.RUNNING, XflowStatus.FAILED);
 		listener.flowFailed(context, id);
 	}
 	
-	public void pending(ActiveToken node) {
-		pendingNodes.add(node);
+	public void pending(ActiveToken token) {
+		pendingNodes.add(token);
+		listener.nodePended(context, token.getNode().getId());
 	}
 	
-	public void pending(List<ActiveToken> nodes) {
-		if(nodes == null)
+	public void pending(List<ActiveToken> tokens) {
+		if(tokens == null)
 			return;
-		pendingNodes.addAll(nodes);
+		pendingNodes.addAll(tokens);
+		for(ActiveToken token: tokens)
+			listener.nodePended(context, token.getNode().getId());
 	}
 
 	public void retry(String nodeId) {
 		reqire(XflowStatus.RUNNING);
-		
 		nodes.get(nodeId).retry();
+		listener.nodeRetried(context, id);
 	}
 	
 	public boolean isSuspended() {
-		return statusRef.get() == XflowStatus.SUSPENDED;
+		return XflowStatus.SUSPENDED == statusRef.get();
 	}
 	
 	public boolean isRunning() {
-		return statusRef.get() == XflowStatus.RUNNING;
+		return XflowStatus.RUNNING == statusRef.get();
 	}
 	
 	public boolean isEnded() {
 		XflowStatus cur = getStatus();
-		return cur == XflowStatus.SUCCEED || 
-				cur == XflowStatus.FAILED ||
-				cur == XflowStatus.ABORTED;
+		return XflowStatus.SUCCEED == cur || 
+				XflowStatus.FAILED == cur ||
+				XflowStatus.ABORTED == cur;
 	}
 	
 	public List<String> getActiveNodeIds() {
@@ -196,6 +181,15 @@ public class Xflow {
 		return ids;
 	}
 	
+	public List<String> getPendingNodeIds() {
+		List<String> ids = new ArrayList<>();
+		List<ActiveToken> pendingNodesSnap = new ArrayList<>(pendingNodes);
+
+		for(ActiveToken token: pendingNodesSnap)
+			ids.add(token.getNode().getId());
+		return ids;
+	}
+
 	public boolean isActive(String nodeId) {
 		return nodes.get(nodeId).isActive();
 	}
@@ -205,7 +199,7 @@ public class Xflow {
 	}
 	
 	public Throwable getFailure(String nodeId) {
-		return nodes.get(nodeId).getLastFailure();
+		return nodes.get(nodeId).getFailure();
 	}
 	
 	public XflowContext getSubflowContext(String nodeId) {
@@ -238,6 +232,7 @@ public class Xflow {
 	 * @param task
 	 */
 	public void submit(Task task) {
+		reqire(XflowStatus.RUNNING);
 		Node node = nodes.get(task.getActivityId());
 		if(!(node instanceof TaskActivityNode))
 			throw new IllegalArgumentException(String.format("Node %s is not a task activity.", task.getActivityId()));
@@ -258,6 +253,7 @@ public class Xflow {
 	}
 	
 	public void notify(Event event) {
+		reqire(XflowStatus.RUNNING);
 		Node node = nodes.get(event.getActivityId());
 		if(!(node instanceof EventActivityNode))
 			throw new IllegalArgumentException(String.format("Node %s is not a event activity.", event.getActivityId()));
@@ -265,17 +261,17 @@ public class Xflow {
 		((EventActivityNode)node).notify(context, event);
 	}
 	
-	private void reqire(XflowStatus...validStatus) {
+	private void reqire(XflowStatus validStatus) {
 		XflowStatus cur = statusRef.get();
-		for(XflowStatus status: validStatus)
-			if(cur == status)
-				return;
+		if(cur == validStatus)
+			return;
 			
-		throw new IllegalStateException(String.format("Flow is not in %s. Current status is ", validStatus, cur));
+		throw new IllegalStateException(String.format("Flow is not in %s. Current status is %s", validStatus.name(), cur.name()));
 	}
 	
-	private synchronized void changeTo(XflowStatus next) {
-		statusRef.set(statusRef.get().changeTo(next));
+	private void changeTo(XflowStatus expected, XflowStatus next) {
+		reqire(expected);
+		statusRef.compareAndSet(expected, next);
 	}
 	
 	public void tick() {

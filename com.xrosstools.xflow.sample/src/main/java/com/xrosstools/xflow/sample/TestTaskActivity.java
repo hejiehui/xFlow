@@ -31,6 +31,7 @@ public class TestTaskActivity extends TestAdapter implements TaskActivity, NodeC
 		for(int i = 0; i < count; i++) {
 			tasks.add(new FeedbackTask("id_" + i, assignee));
 		}
+		System.out.println("Task generated: " + tasks.size());
 		return tasks;
 	}
 

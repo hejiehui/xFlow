@@ -7,7 +7,7 @@
   <property key="globalA" type="String" value="abc"/>
   <property key="gBool" type="Boolean" value="true"/>
  </properties>
- <flow id="auto activity">
+ <flow id="auto activity" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties>
    <property key="flowA" type="Long" value="1000"/>
@@ -29,7 +29,7 @@
    <link source_index="1" style="DEFAULT" target_index="2"/>
   </links>
  </flow>
- <flow id="task activity">
+ <flow id="task activity" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties>
    <property key="assignee" type="String" value="Jerry"/>
@@ -48,7 +48,7 @@
    <link source_index="2" style="DEFAULT" target_index="1"/>
   </links>
  </flow>
- <flow id="event activity">
+ <flow id="event activity" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -65,7 +65,7 @@
    <link source_index="2" style="DEFAULT" target_index="1"/>
   </links>
  </flow>
- <flow id="wait activity">
+ <flow id="wait activity" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -78,7 +78,7 @@
    <link source_index="2" style="DEFAULT" target_index="1"/>
   </links>
  </flow>
- <flow id="binary router">
+ <flow id="binary router" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -110,7 +110,7 @@
    <link source_index="5" style="VERTICAL_RIGHT_ANGLE" target_index="1" true_link="false"/>
   </links>
  </flow>
- <flow id="inclusive router">
+ <flow id="inclusive router" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -149,7 +149,7 @@
    <link source_index="6" style="HORIZONTAL_RIGHT_ANGLE" target_index="3"/>
   </links>
  </flow>
- <flow id="exclusive router">
+ <flow id="exclusive router" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -189,7 +189,7 @@
    <link source_index="6" style="VERTICAL_RIGHT_ANGLE" target_index="1"/>
   </links>
  </flow>
- <flow id="parallel router">
+ <flow id="parallel router" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -225,7 +225,7 @@
    <link source_index="6" style="HORIZONTAL_RIGHT_ANGLE" target_index="3"/>
   </links>
  </flow>
- <flow id="subflow activity">
+ <flow id="subflow activity" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
   <description/>
   <properties/>
   <nodes>
@@ -236,8 +236,26 @@
    </subflow_activity>
   </nodes>
   <links>
+   <link source_index="0" style="VERTICAL_LIGHTNING" target_index="2"/>
+   <link Distance="164" source_index="2" style="VERTICAL_HOMOLATERAL" target_index="1"/>
+  </links>
+ </flow>
+ <flow id="" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
+  <description/>
+  <properties/>
+  <nodes>
+   <start id="start" location="106,229"/>
+   <end id="end" location="640,198"/>
+   <auto_activity location="483,304">
+    <properties/>
+   </auto_activity>
+   <auto_activity location="659,137">
+    <properties/>
+   </auto_activity>
+  </nodes>
+  <links>
    <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
-   <link source_index="2" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link id="abc" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="2"/>
   </links>
  </flow>
 </xflow>
