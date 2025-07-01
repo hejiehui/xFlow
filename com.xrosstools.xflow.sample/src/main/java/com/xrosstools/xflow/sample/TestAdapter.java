@@ -14,6 +14,7 @@ public class TestAdapter {
 	public static final String EVENT_ACTIVITY_NODE = "event activity";
 	public static final String BINARY_ROUTER_NODE = "b1";
 	public static final String INCLUSIVE_ROUTER_NODE = "r1";
+	public static final String PARALLEL_ROUTER_NODE = "r1";
 	public static final String SUBFLOW_ACTIVITY_NODE = "f1";
 	public static final String SUBFLOW_ID = "parallel router";
 	public static final String SUBFLOW_AUTO_ACTIVITY_ID_1 = "a1";
@@ -109,18 +110,27 @@ public class TestAdapter {
 	}
 	
 	public void call(XflowContext context) {
+		if(!context.contains(INTERNAL_TASK))
+			return;
+
 		Runnable internalTask = context.get(INTERNAL_TASK);
 		if(internalTask != null)
 			internalTask.run();
 	}
 	
 	public void nodeCallback(XflowContext context, String callback, String nodeId) {
+		if(nodeId == null || !context.contains(nodeId))
+			return;
+
 		Runnable internalTask = context.get(nodeId);
 		if(internalTask != null && callback.equals(context.get(CALL_BACK)))
 			internalTask.run();
 	}
 	
 	public void flowCallback(XflowContext context, String callback) {
+		if(!context.contains(FLOW_TASK))
+			return;
+
 		Runnable internalTask = context.get(FLOW_TASK);
 		if(internalTask != null && callback.equals(context.get(CALL_BACK)))
 			internalTask.run();
