@@ -77,11 +77,8 @@ public class SaveRestoreTest extends TestAdapter {
 		injectSuspend(context);
 		f.restore(context, recorder);
 		
-		waitToSuspend(f);
+		assertPending(f, END_NODE);
 
-		assertEquals(f.getPendingNodeIds().size(), 1);
-		assertEquals(END_NODE, f.getPendingNodeIds().get(0));
-		
 		recorder = f.specify();
 
 		f = UnitTest.AutoActivity.create();
@@ -177,213 +174,255 @@ public class SaveRestoreTest extends TestAdapter {
 		assertTrue(f.getTasks("Jerry").isEmpty());
 	}
 	
-//	@Test
-//	public void testEventActivity() throws Exception {
-//		String nodeId = EVENT_ACTIVITY_NODE;
-//		Xflow f = UnitTest.EventActivity.create();
-//		XflowContext context = new XflowContext();
-//
-//		injectSuspend(context, nodeStarted, START_NODE);
-//
-//		f.start(context);
-//
-//		assertPending(f, nodeId);
-//		
-//		assertRetryFailed(f, nodeId);
-//		
-//		f.resume();
-//		
-//		waitToActive(f, nodeId);
-//
-//		f.suspend();
-//		assertTrue(f.isSuspended());
-//		sleep();
-//		
-//		assertTrue(f.isActive(nodeId));
-//		assertFalse(f.isFailed(nodeId));
-//
-//		List<EventSpec> specs = f.getEventSpecs();
-//		assertEquals(1, specs.size());
-//		
-//		//notify fail
-//		Event event = specs.get(0).create();
-//		
-//		try {
-//			f.notify(event);
-//			fail();
-//		}catch(IllegalStateException e) {
-//		}
-//		
-//		assertTrue(f.isActive(nodeId));
-//		assertFalse(f.isFailed(nodeId));
-//
-//		//notify retry succeed
-//		f.resume();
-//		restoreNormal(context);
-//		event = specs.get(0).create();
-//		f.notify(event);
-//
-//		waitToEnd(f);
-//		assertTrue(f.isEnded());
-//	}
-//
-//	@Test
-//	public void testWaitActivity() throws Exception {
-//		String nodeId = WAIT_ACTIVITY_NODE;
-//		Xflow f = UnitTest.WaitActivity.create();
-//		XflowContext context = new XflowContext();
-//		
-//		injectSuspend(context, nodeStarted, START_NODE);
-//		
-//		long dur = System.currentTimeMillis();
-//		f.start(context);
-//		
-//		assertPending(f, nodeId);
-//
-//		assertTrue(f.isSuspended());
-//		
-//		restoreNormal(context);
-//
-//		f.resume();
-//		
-//		waitToActive(f, nodeId);
-//		assertTrue(f.isActive(nodeId));
-//		
-//		f.suspend();
-//
-//		assertRetryFailed(f, nodeId);
-//		
-//		assertPending(f, END_NODE);
-//		
-//		f.resume();
-//
-//		waitToEnd(f);
-//		dur = System.currentTimeMillis() - dur;
-//		System.out.println("dur: " + dur);
-//		assertTrue(dur > 100 && dur < 115);
-//	}
-//
-//	@Test
-//	public void testBinaryRouterTrue() throws Exception {
-//		String nodeId = BINARY_ROUTER_NODE;
-//		Xflow f = UnitTest.BinaryRouter.create();
-//		
-//		//True path
-//		XflowContext context = new XflowContext();
-//		context.put(TestBinaryRouter.PROP_KEY_RESULT, true);
-//		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
-//		
-//		suspendAndResume(f, context, nodeId, 1);
-//
-//		waitToEnd(f);
-//		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
-//		assertEquals(20, counter.get());
-//	}
-//
-//	@Test
-//	public void testBinaryRouterFalse() throws Exception {
-//		String nodeId = BINARY_ROUTER_NODE;
-//		Xflow f = UnitTest.BinaryRouter.create();
-//
-//		//False path
-//		XflowContext context = new XflowContext();
-//		context.put(TestBinaryRouter.PROP_KEY_RESULT, false);
-//		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
-//
-//		suspendAndResume(f, context, nodeId, 1);
-//		
-//		waitToEnd(f);
-//		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
-//		assertEquals(30, counter.get());
-//	}
-//
-//	@Test
-//	public void testExclusiveRouterTrue() throws Exception {
-//		String nodeId = INCLUSIVE_ROUTER_NODE;
-//		for(int i = 1; i <= 3; i++) {
-//			Xflow f = UnitTest.ExclusiveRouter.create();
-//			
-//			XflowContext context = new XflowContext();
-//			//p1, p2, p3
-//			context.put(TestExclusiveRouter.PROP_KEY_PATH, "p" + i);
-//			context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
-//	
-//			suspendAndResume(f, context, nodeId, 1);
-//			
-//			waitToEnd(f);
-//			
-//			AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
-//			assertEquals(10 * (i + 1), counter.get());
-//		}
-//	}
-//	
-//	@Test
-//	public void testInclusiveRouterTrue() throws Exception {
-//		String nodeId = INCLUSIVE_ROUTER_NODE;
-//		Map<String, Integer> data = new HashMap<>();
-//		data.put("p1,p2", 40);
-//		data.put("p1,p3", 50);
-//		data.put("p3,p2", 60);
-//		for(String pathes: data.keySet()) {
-//			int value = data.get(pathes);
-//			Xflow f = UnitTest.InclusiveRouter.create();
-//			
-//			XflowContext context = new XflowContext();
-//			context.put(TestInclusiveRouter.PROP_KEY_PATHES, pathes);
-//			context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
-//	
-//			suspendAndResume(f, context, nodeId, 2);
-//			
-//			waitToEnd(f);
-//			AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
-//			assertEquals(value, counter.get());
-//		}
-//	}
-//	
-//	private void suspendAndResume(Xflow f, XflowContext context, String routerId, int count) throws Exception {
-//		injectSuspend(context, nodeStarted, START_NODE);
-//		
-//		f.start(context);
-//
-//		assertPending(f, routerId);
-//
-//		assertFalse(f.isActive(routerId));
-//		assertFalse(f.isFailed(routerId));
-//
-//		//Retry failed
-//		try {
-//			f.retry(routerId);
-//			fail();
-//		}catch(IllegalStateException e) {
-//		}
-//		
-//		injectSuspend(context, nodeStarted, routerId);
-//
-//		f.resume();
-//		
-//		waitToSuspend(f);
-//		while(f.getPendingNodeIds().isEmpty())
-//			sleep1();
-//		assertEquals(count, f.getPendingNodeIds().size());
-//		
-//		f.resume();
-//	}
-//	
-//	@Test
-//	public void testParallelRouterTrue() throws Exception {
-//		String nodeId = PARALLEL_ROUTER_NODE;
-//		Xflow f = UnitTest.ParallelRouter.create();
-//		
-//		XflowContext context = new XflowContext();
-//		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
-//
-//		suspendAndResume(f, context, nodeId, 3);
-//		
-//		waitToEnd(f);
-//		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
-//		assertEquals(10+10+20+30, counter.get());
-//	}
-//	
+	@Test
+	public void testEventActivity() throws Exception {
+		String nodeId = EVENT_ACTIVITY_NODE;
+		Xflow f = UnitTest.EventActivity.create();
+		XflowContext context = new XflowContext();
+
+		injectSuspend(context, nodeStarted, START_NODE);
+
+		f.start(context);
+
+		waitToSuspend(f);
+		
+		XflowRecorder recorder = f.specify();
+
+		assertTrue(recorder.getEventSpecs().isEmpty());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(1, recorder.getTokenRecorders().size());		
+
+		f = UnitTest.EventActivity.create();
+		f.restore(context, recorder);
+
+		waitToActive(f, nodeId);
+
+		f.suspend();
+		assertTrue(f.isSuspended());
+		sleep();
+		
+		assertTrue(f.isActive(nodeId));
+		assertFalse(f.isFailed(nodeId));
+
+		List<EventSpec> specs = f.getEventSpecs();
+		assertEquals(1, specs.size());
+		
+		recorder = f.specify();
+
+		assertEquals(1, recorder.getEventSpecs().size());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(1, recorder.getTokenRecorders().size());		
+
+		f = UnitTest.EventActivity.create();
+		f.restore(context, recorder);
+		
+		specs = f.getEventSpecs();
+		assertEquals(1, specs.size());
+		
+		Event event = specs.get(0).create();
+		f.notify(event);
+
+		waitToEnd(f);
+		assertTrue(f.isEnded());
+	}
+
+	@Test
+	public void testWaitActivity() throws Exception {
+		String nodeId = WAIT_ACTIVITY_NODE;
+		Xflow f = UnitTest.WaitActivity.create();
+		XflowContext context = new XflowContext();
+		
+		injectSuspend(context, nodeStarted, START_NODE);
+		
+		long dur = System.currentTimeMillis();
+		f.start(context);
+		
+		assertPending(f, nodeId);
+
+		assertTrue(f.isSuspended());
+		
+		XflowRecorder recorder = f.specify();
+
+		assertTrue(recorder.getEventSpecs().isEmpty());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(1, recorder.getTokenRecorders().size());		
+
+		f = UnitTest.WaitActivity.create();
+		f.restore(context, recorder);
+
+		waitToActive(f, nodeId);
+		assertTrue(f.isActive(nodeId));
+
+		//Fail when wait node is running
+		try {
+			f.specify();
+			fail();
+		}catch(IllegalStateException e) {
+		}
+
+		f.suspend();
+
+		try {
+			f.specify();
+			fail();
+		}catch(IllegalStateException e) {
+		}
+
+		assertPending(f, END_NODE);
+		
+		recorder = f.specify();
+
+		assertTrue(recorder.getEventSpecs().isEmpty());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(1, recorder.getTokenRecorders().size());		
+
+		f = UnitTest.WaitActivity.create();
+		f.restore(context, recorder);
+
+		waitToEnd(f);
+		dur = System.currentTimeMillis() - dur;
+		System.out.println("dur: " + dur);
+		assertTrue(dur > 100 && dur < 120);
+	}
+
+	@Test
+	public void testBinaryRouterTrue() throws Exception {
+		String nodeId = BINARY_ROUTER_NODE;
+		Xflow f = UnitTest.BinaryRouter.create();
+		Xflow f1 = UnitTest.BinaryRouter.create();
+		Xflow f2 = UnitTest.BinaryRouter.create();
+		
+		//True path
+		XflowContext context = new XflowContext();
+		context.put(TestBinaryRouter.PROP_KEY_RESULT, true);
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+		
+		suspendAndRestore(f, context, nodeId, 1, f1, f2);
+
+		waitToEnd(f);
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(20, counter.get());
+	}
+
+	@Test
+	public void testBinaryRouterFalse() throws Exception {
+		String nodeId = BINARY_ROUTER_NODE;
+		Xflow f = UnitTest.BinaryRouter.create();
+		Xflow f1 = UnitTest.BinaryRouter.create();
+		Xflow f2 = UnitTest.BinaryRouter.create();
+
+		//False path
+		XflowContext context = new XflowContext();
+		context.put(TestBinaryRouter.PROP_KEY_RESULT, false);
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+		suspendAndRestore(f, context, nodeId, 1, f1, f2);
+		
+		waitToEnd(f);
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(30, counter.get());
+	}
+
+	@Test
+	public void testExclusiveRouterTrue() throws Exception {
+		String nodeId = INCLUSIVE_ROUTER_NODE;
+		for(int i = 1; i <= 3; i++) {
+			Xflow f = UnitTest.ExclusiveRouter.create();
+			Xflow f1 = UnitTest.ExclusiveRouter.create();
+			Xflow f2 = UnitTest.ExclusiveRouter.create();
+			
+			XflowContext context = new XflowContext();
+			//p1, p2, p3
+			context.put(TestExclusiveRouter.PROP_KEY_PATH, "p" + i);
+			context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+	
+			suspendAndRestore(f, context, nodeId, 1, f1, f2);
+			
+			waitToEnd(f);
+			
+			AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+			assertEquals(10 * (i + 1), counter.get());
+		}
+	}
+	
+	@Test
+	public void testInclusiveRouterTrue() throws Exception {
+		String nodeId = INCLUSIVE_ROUTER_NODE;
+		Map<String, Integer> data = new HashMap<>();
+		data.put("p1,p2", 40);
+		data.put("p1,p3", 50);
+		data.put("p3,p2", 60);
+		for(String pathes: data.keySet()) {
+			int value = data.get(pathes);
+			Xflow f = UnitTest.InclusiveRouter.create();
+			Xflow f1 = UnitTest.InclusiveRouter.create();
+			Xflow f2 = UnitTest.InclusiveRouter.create();
+			
+			XflowContext context = new XflowContext();
+			context.put(TestInclusiveRouter.PROP_KEY_PATHES, pathes);
+			context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+	
+			suspendAndRestore(f, context, nodeId, 2, f1, f2);
+			
+			waitToEnd(f);
+			AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+			assertEquals(value, counter.get());
+		}
+	}
+	
+	private void suspendAndRestore(Xflow f, XflowContext context, String routerId, int count, Xflow f1, Xflow f2) throws Exception {
+		injectSuspend(context, nodeStarted, START_NODE);
+		
+		f.start(context);
+
+		assertPending(f, routerId);
+
+		assertFalse(f.isActive(routerId));
+		assertFalse(f.isFailed(routerId));
+
+		XflowRecorder recorder = f.specify();
+
+		assertTrue(recorder.getEventSpecs().isEmpty());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(1, recorder.getTokenRecorders().size());		
+
+		f = f1;
+
+		injectSuspend(context, nodeStarted, routerId);
+		f.restore(context, recorder);
+		
+		waitToSuspend(f);
+		while(f.getPendingNodeIds().isEmpty())
+			sleep1();
+		assertEquals(count, f.getPendingNodeIds().size());
+		
+		recorder = f.specify();
+
+		assertTrue(recorder.getEventSpecs().isEmpty());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(count, recorder.getTokenRecorders().size());		
+
+		f = f2;
+		f.restore(context, recorder);
+	}
+	
+	@Test
+	public void testParallelRouterTrue() throws Exception {
+		String nodeId = PARALLEL_ROUTER_NODE;
+		Xflow f = UnitTest.ParallelRouter.create();
+		Xflow f1 = UnitTest.ParallelRouter.create();
+		Xflow f2 = UnitTest.ParallelRouter.create();
+		
+		XflowContext context = new XflowContext();
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+		suspendAndRestore(f, context, nodeId, 3, f1, f2);
+		
+		waitToEnd(f);
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(10+10+20+30, counter.get());
+	}
+	
 //	@Test
 //	public void testSubflowActivity() throws Exception {
 //		String nodeId = SUBFLOW_ACTIVITY_NODE;
