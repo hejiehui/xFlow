@@ -56,6 +56,10 @@ public class XflowListenerAdapter implements XflowListener {
 	}
 	
 	@Override
+	public void nodeRestored(XflowContext context, String nodeId) {
+	}
+	
+	@Override
 	public void eventNotifyFailed(XflowContext context, String nodeId, Event event, Throwable e) {
 	}
 

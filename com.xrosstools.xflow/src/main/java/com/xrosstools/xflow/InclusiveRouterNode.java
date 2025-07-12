@@ -60,7 +60,7 @@ public class InclusiveRouterNode extends Node {
 		}
 		
 		String[] ids = router.route(token.getContext());
-		RouteToken rt = new RouteToken(this, ids.length);
+		RouteToken rt = new RouteToken(this.getId(), ids.length);
 		List<ActiveToken> nextTokens = new ArrayList<>(ids.length);
 		for(String id: ids) {
 			Link link = getLink(id);

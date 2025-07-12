@@ -78,6 +78,16 @@ public abstract class Node implements NodeHandler {
 		return true;
 	}
 	
+	public void restore(ActiveToken token) {
+		tokenRef.set(token);
+		
+		try {
+			listener.nodeRestored(token.getContext(), id);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void releaseToken() {
 		tokenRef.set(null);
 	}
@@ -120,6 +130,7 @@ public abstract class Node implements NodeHandler {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		token.getContext().getFlow().tick();
 	}
 	
 	public void failed(Throwable ex) {
@@ -131,6 +142,7 @@ public abstract class Node implements NodeHandler {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		token.getContext().getFlow().tick();
 	}
 	
 	public List<ActiveToken> next(ActiveToken token, Node node) {

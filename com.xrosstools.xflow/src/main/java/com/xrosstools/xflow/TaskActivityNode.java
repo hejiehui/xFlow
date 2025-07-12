@@ -1,7 +1,10 @@
 package com.xrosstools.xflow;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,6 +19,42 @@ public class TaskActivityNode extends Node {
 
 	public boolean isSinglePhased() {
 		return false;
+	}
+	
+	public static void restoreTasks(Map<String, Node> nodes, Map<String, ActiveToken> activeTokenMap, List<Task> allTasks) {
+		Map<String, List<Task>> taskMap = new HashMap<>();
+		for(Task task: allTasks) {
+			String nodeId = task.getActivityId();
+			if(nodeId == null || !nodes.containsKey(nodeId) || !(nodes.get(nodeId) instanceof TaskActivityNode))
+				throw new IllegalArgumentException("Can not find task activity for " + nodeId);
+
+			List<Task> tasks = taskMap.get(nodeId);
+			if(tasks == null) {
+				tasks = new ArrayList<Task>();
+				taskMap.put(nodeId, tasks);
+			}
+			
+			tasks.add(task);
+		}
+		
+		//Initialize task node
+		for(Map.Entry<String, List<Task>> entry: taskMap.entrySet()) {
+			TaskActivityNode node = (TaskActivityNode)nodes.get(entry.getKey());
+			node.restore(activeTokenMap.get(node.getId()), entry.getValue());
+			activeTokenMap.remove(node.getId());
+		}
+	}
+
+	private void restore(ActiveToken token, List<Task> tasks) {
+		restore(token);
+		tasksRef.set(tasks);
+	}
+
+	public List<Task> getTasks() {
+		if(tasksRef.get() == null)
+			return Collections.emptyList();
+		
+		return new ArrayList<Task>(tasksRef.get());
 	}
 
 	public void findTasks(List<Task> taskList, String assignee) {

@@ -18,6 +18,9 @@ public class TestSubflowActivity extends TestAdapter implements SubflowActivity 
 		if(parentContext.contains(ERROR))
 			injectException(subflowContext, (Exception)subflowContext.get(ERROR));
 		
+		if(parentContext.contains(SUB_FLOW_SUSPEND))
+			injectSuspend(subflowContext, nodeStarted, START_NODE);
+		
 		int count = parentContext.get(COUNT);
 		subflowContext.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(count));
 		

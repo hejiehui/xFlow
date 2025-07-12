@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0589550a-139a-49fd-b56b-df3926cc66be" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/PropertyConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/PropertyConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/Xflow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/Xflow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/java/com/xrosstools/xflow/sample/TestAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/java/com/xrosstools/xflow/sample/TestAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/AllTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/AllTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/SuspendResumeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/SuspendResumeTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/Node.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/Xflow.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/Xflow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/imp/XflowSystemOutListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/imp/XflowSystemOutListener.java" afterDir="false" />
-    </list>
+    <list default="true" id="0589550a-139a-49fd-b56b-df3926cc66be" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -259,7 +247,7 @@
     <option name="FILTER_DEBUG" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="1160" />
     <option name="y" value="6" />
     <option name="width" value="1734" />
@@ -423,7 +411,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1751184798391" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1751902195896" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/com.xrosstools.idea.gef.jar!/" />
     <property name="project.structure.last.edited" value="SDKs" />

@@ -25,6 +25,7 @@ public interface XflowListener {
 	void nodeSucceed(XflowContext context, String nodeId);
 	void nodePended(XflowContext context, String nodeId);
 	void nodeFailed(XflowContext context, String nodeId, Throwable e);
+	void nodeRestored(XflowContext context, String nodeId);
 	
 	void eventNotifyFailed(XflowContext context, String nodeId, Event event, Throwable e);
 	void taskSubmitFailed(XflowContext context, String nodeId, Task task, Throwable e);

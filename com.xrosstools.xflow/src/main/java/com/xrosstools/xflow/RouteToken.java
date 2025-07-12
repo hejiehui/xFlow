@@ -3,20 +3,23 @@ package com.xrosstools.xflow;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RouteToken {
-	//TODO change to node index
-	private Node router;
+	private String routerId;
 	private AtomicInteger counter = new AtomicInteger();
 
-	public RouteToken(Node router, int count) {
-		this.router = router;
+	public RouteToken(String routerId, int count) {
+		this.routerId = routerId;
 		counter.set(count);
 	}
 
-	public Node getRouter() {
-		return router;
+	public String getRouterId() {
+		return routerId;
 	}
 
 	public int reach() {
 		return counter.decrementAndGet();
+	}
+	
+	public int getCount() {
+		return counter.get();
 	}
 }

@@ -1,12 +1,12 @@
 package com.xrosstools.xflow;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -72,27 +72,98 @@ public class Xflow {
 
 		throw new IllegalArgumentException("No start node found");
 	}
+	
+	/**
+	 * This only works only when all nodes are inactive, except task and event node.
+	 * @return internal state of current xflow.
+	 */
+	public XflowRecorder specify() {
+		reqire(XflowStatus.SUSPENDED);
+
+		long lastTick = getLastTick();
+		
+		List<Task> tasks = new ArrayList<>();
+		List<EventSpec> eventSpecs = new ArrayList<>();
+		List<RouteToken> routeTokens = new ArrayList<>();
+		Map<String, List<Integer>> tokenRecorders = new HashMap<>();
+
+		for(Node node: nodes.values()) {
+			if(!node.isActive())
+				continue;
+
+			if(node instanceof TaskActivityNode)
+				tasks.addAll(((TaskActivityNode)node).getTasks());
+			else if(node instanceof EventActivityNode)
+				eventSpecs.add(((EventActivityNode)node).getEventSpec());
+			else
+				throw new IllegalStateException(String.format("Node %s is still running.", node.getId()));
+			
+			tokenRecorders.put(node.getId(), specifyToken(routeTokens, node.getToken()));
+		}
+		
+		for(ActiveToken token: pendingNodes)
+			tokenRecorders.put(token.getNode().getId(), specifyToken(routeTokens, token));
+
+		XflowRecorder flowRecorder = new XflowRecorder(routeTokens, tokenRecorders);
+		
+		flowRecorder.setEventSpecs(eventSpecs);
+		flowRecorder.setTasks(tasks);
+
+		if(lastTick != getLastTick())
+			throw new IllegalStateException("Running node detected during specifying.");
+
+		return flowRecorder;
+	}
+	
+	private List<Integer> specifyToken(List<RouteToken> routeTokens, ActiveToken activeToken) {
+		List<Integer> recorder = new ArrayList<>();
+
+		Deque<RouteToken> curRouteTokens = activeToken.getRouteTokens();
+		for(RouteToken token: curRouteTokens) {
+			if(!routeTokens.contains(token))
+				routeTokens.add(token);
+			recorder.add(routeTokens.indexOf(token));
+		}
+		
+		return recorder;
+	}
 
 	/**
-	 * TODO How to restore tasks? or do we allow this?
-	 * @param context
-	 * @param pendingActivities
+	 * Restore an xflow instance from a recorder
 	 */
-	public void restore(XflowContext context, Set<String> pendingActivityIds) {
-		if(pendingActivityIds.isEmpty())
-			throw new IllegalArgumentException("There is no activity to be restored");
+	public void restore(XflowContext context, XflowRecorder flowRecorder) {
+		reqire(XflowStatus.CREATED);
+
+		if(flowRecorder.getTokenRecorders().isEmpty())
+			throw new IllegalArgumentException("There is no active node to be restored");
 		
-		for(String id: pendingActivityIds) {
-			if(!nodes.containsKey(id))
-				throw new NoSuchElementException("There is no activity called " + id);
+		this.context = context;
+		context.setFlow(this);
+
+		//Validate and initialize active token
+		List<RouteToken> routeTokens = flowRecorder.getRouteTokens();
+		Map<String, ActiveToken> activeTokenMap = new HashMap<>();
+		for(Map.Entry<String, List<Integer>> recorder: flowRecorder.getTokenRecorders().entrySet()) {
+			String nodeId = recorder.getKey();
+			if(!nodes.containsKey(nodeId))
+				throw new NoSuchElementException("There is no active node called " + nodeId);
+			
+			List<RouteToken> curRouteTokens = new ArrayList<>();
+			for(Integer id: recorder.getValue())
+				curRouteTokens.add(routeTokens.get(id));
+			activeTokenMap.put(nodeId, new ActiveToken(context, nodes.get(nodeId), curRouteTokens));
 		}
+
+		//Restore task node
+		TaskActivityNode.restoreTasks(nodes, activeTokenMap, flowRecorder.getTasks());
+		
+		//Restore event node
+		EventActivityNode.restoreEventSpecs(nodes, activeTokenMap, flowRecorder.getEventSpecs());
 
 		changeTo(XflowStatus.CREATED, XflowStatus.RUNNING);
 
-		this.context = context;
-		for(String id: pendingActivityIds) {
-			Node node = nodes.get(id);
-			XflowEngine.submit(context, node);
+		for(ActiveToken token: activeTokenMap.values()) {
+			XflowEngine.submit(token);
 		}
 		
 		listener.flowRestored(context, getId());
@@ -165,6 +236,25 @@ public class Xflow {
 				XflowStatus.ABORTED == cur;
 	}
 	
+	public boolean isFailed() {
+		if(statusRef.get() == XflowStatus.SUCCEED || statusRef.get() == XflowStatus.ABORTED)
+			return false;
+			
+		if(statusRef.get() == XflowStatus.FAILED)
+			return true;
+
+		long lastTick = getLastTick();
+		for(Node node: nodes.values())
+			if(node.isActive())
+				return false;
+		
+		if(lastTick != getLastTick())
+			return false;
+
+		statusRef.set(XflowStatus.FAILED);
+		return true;
+	}
+	
 	public List<String> getActiveNodeIds() {
 		List<String> ids = new ArrayList<>();
 		for(Node node: nodes.values())
@@ -210,6 +300,7 @@ public class Xflow {
 		return getSubflowContext(nodeId).getFlow();
 	}
 	public void mergeSubflow(String nodeId) {
+		reqire(XflowStatus.RUNNING);
 		((SubflowActivityNode)nodes.get(nodeId)).mergeSubflow();
 	}
 
@@ -280,24 +371,5 @@ public class Xflow {
 	
 	public long getLastTick() {
 		return lastTickRef.get();
-	}
-	
-	public boolean isFailed() {
-		if(statusRef.get() == XflowStatus.SUCCEED || statusRef.get() == XflowStatus.ABORTED)
-			return false;
-			
-		if(statusRef.get() == XflowStatus.FAILED)
-			return true;
-
-		long lastTick = getLastTick();
-		for(Node node: nodes.values())
-			if(node.isActive())
-				return false;
-		
-		if(lastTick != getLastTick())
-			return false;
-
-		statusRef.set(XflowStatus.FAILED);
-		return true;
 	}
 }

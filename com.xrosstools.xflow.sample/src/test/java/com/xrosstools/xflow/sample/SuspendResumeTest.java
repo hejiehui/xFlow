@@ -2,7 +2,6 @@ package com.xrosstools.xflow.sample;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -267,6 +266,42 @@ public class SuspendResumeTest extends TestAdapter {
 	}
 
 	@Test
+	public void testWaitActivity() throws Exception {
+		String nodeId = WAIT_ACTIVITY_NODE;
+		Xflow f = UnitTest.WaitActivity.create();
+		XflowContext context = new XflowContext();
+		
+		injectSuspend(context, nodeStarted, START_NODE);
+		
+		long dur = System.currentTimeMillis();
+		f.start(context);
+		
+		assertPending(f, nodeId);
+
+		assertTrue(f.isSuspended());
+		
+		restoreNormal(context);
+
+		f.resume();
+		
+		waitToActive(f, nodeId);
+		assertTrue(f.isActive(nodeId));
+		
+		f.suspend();
+
+		assertRetryFailed(f, nodeId);
+		
+		assertPending(f, END_NODE);
+		
+		f.resume();
+
+		waitToEnd(f);
+		dur = System.currentTimeMillis() - dur;
+		System.out.println("dur: " + dur);
+		assertTrue(dur > 100 && dur < 115);
+	}
+
+	@Test
 	public void testBinaryRouterTrue() throws Exception {
 		String nodeId = BINARY_ROUTER_NODE;
 		Xflow f = UnitTest.BinaryRouter.create();
@@ -387,113 +422,78 @@ public class SuspendResumeTest extends TestAdapter {
 		assertEquals(10+10+20+30, counter.get());
 	}
 	
-//	@Test
-//	public void testSubflowActivity() throws Exception {
-//		String nodeId = SUBFLOW_ACTIVITY_NODE;
-//		String subflowNodeId = SUBFLOW_AUTO_ACTIVITY_ID_1;
-//		
-//		Xflow f = UnitTest.SubflowActivity.create();
-//		XflowContext context = new XflowContext();
-//		context.put(TestSubflowActivity.COUNT, 10);
-//		
-//		//Create context failed
-//		injectException(context, exception);
-//		f.start(context);
-//		waitToFail(f, nodeId);
-//		assertTrue(f.isActive(nodeId));
-//		assertTrue(f.isFailed(nodeId));
-//		assertEquals(exception, f.getFailure(nodeId));
-//
-//		//Retry failed
-//		try {
-//			f.retry(nodeId);
-//			fail();
-//		}catch(Throwable e) {
-//			assertEquals(e, exception);
-//		}
-//		assertTrue(f.isActive(nodeId));
-//		assertTrue(f.isFailed(nodeId));
-//		assertEquals(exception, f.getFailure(nodeId));
-//
-//		//Retry succeed
-//		restoreNormal(context);
-//		context.put(TestSubflowActivity.ERROR, exception);
-//		f.retry(nodeId);
-//		assertTrue(f.isActive(nodeId));
-//		assertFalse(f.isFailed(nodeId));
-//		
-//		//Subflow failed
-//		Xflow subflow = f.getSubflow(nodeId);
-//		assertEquals(SUBFLOW_ID, subflow.getId());
-//
-//		List<String> ids = subflow.getFailedNodeIds();
-//		
-//		assertFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_1);
-//		assertFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_2);
-//		assertFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_3);
-//		
-//		//Subflow retry failed
-//		try {
-//			subflow.retry(SUBFLOW_AUTO_ACTIVITY_ID_1);
-//			subflow.retry(SUBFLOW_AUTO_ACTIVITY_ID_2);
-//			subflow.retry(SUBFLOW_AUTO_ACTIVITY_ID_3);
-//			fail();
-//		}catch(Throwable e) {
-//			assertTrue(e instanceof NullPointerException);
-//		}
-//		assertFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_1);
-//		assertFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_2);
-//		assertFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_3);
-//		
-//		//Subflow retry succeed, merge failed
-//		XflowContext subflowContext = f.getSubflowContext(nodeId);
-//		restoreNormal(subflowContext);
-//		
-//		injectException(context, exception);
-//		
-//		subflow.retry(SUBFLOW_AUTO_ACTIVITY_ID_1);
-//		subflow.retry(SUBFLOW_AUTO_ACTIVITY_ID_2);
-//		subflow.retry(SUBFLOW_AUTO_ACTIVITY_ID_3);
-//
-//		assertInactive(subflow, SUBFLOW_AUTO_ACTIVITY_ID_1);
-//		assertInactive(subflow, SUBFLOW_AUTO_ACTIVITY_ID_2);
-//		assertInactive(subflow, SUBFLOW_AUTO_ACTIVITY_ID_3);
-//
-//		waitToEnd(subflow);
-//		
-//		assertTrue(f.isActive(nodeId));
-//		assertTrue(f.isFailed(nodeId));
-//		assertEquals(exception, f.getFailure(nodeId));
-//		
-//		//Remerge failed
-//		try {
-//			f.mergeSubflow(nodeId);
-//			fail();
-//		}catch(Throwable e) {
-//			assertEquals(e, exception);
-//		}
-//		assertTrue(f.isActive(nodeId));
-//		assertTrue(f.isFailed(nodeId));
-//		assertEquals(exception, f.getFailure(nodeId));
-//		
-//		//Remerge succeed
-//		restoreNormal(context);
-//		f.mergeSubflow(nodeId);
-//		assertFalse(f.isActive(nodeId));
-//		assertFalse(f.isFailed(nodeId));
-//		
-//		waitToEnd(f);
-//		int counter = context.get(TestSubflowActivity.COUNT);
-//		assertEquals(10+10+20+30, counter);
-//	}
-//	
-//	private void assertFailed(Xflow f, String nodeId) throws Exception {
-//		waitToFail(f, nodeId);
-//		assertTrue(f.isActive(nodeId));
-//		assertTrue(f.isFailed(nodeId));
-//		assertTrue(f.getFailure(nodeId) instanceof NullPointerException);
-//	}
-//	
+	@Test
+	public void testSubflowActivity() throws Exception {
+		String nodeId = SUBFLOW_ACTIVITY_NODE;
+		String subflowNodeId = SUBFLOW_AUTO_ACTIVITY_ID_1;
+		
+		Xflow f = UnitTest.SubflowActivity.create();
+		XflowContext context = new XflowContext();
+		context.put(TestSubflowActivity.COUNT, 10);
+		
+		//Suspend main node
+		injectSuspend(context, nodeStarted, START_NODE);
+		f.start(context);
+		
+		assertPending(f, nodeId);
+
+		assertRetryFailed(f, nodeId);
+		
+		restoreNormal(context);
+
+		//Inject into subflow
+		context.put(SUB_FLOW_SUSPEND, "");
+		f.resume();
+
+		//Subflow failed
+		sleep1();
+		Xflow subflow = f.getSubflow(nodeId);
+		assertEquals(SUBFLOW_ID, subflow.getId());
+		assertTrue(subflow.isSuspended());
+
+		assertPending(subflow, PARALLEL_ROUTER_NODE);
+		
+		XflowContext subflowContext = f.getSubflowContext(nodeId);
+		
+		//For parallel node, it can only be injected like this
+		injectSuspend(subflowContext, nodeStarted, PARALLEL_ROUTER_NODE);
+
+		subflow.resume();
+		
+		sleep1();
+		sleep1();
+		
+		List<String> pendingNodes = subflow.getPendingNodeIds();
+		
+		assertEquals(3, pendingNodes.size());
+		assertTrue(pendingNodes.contains(SUBFLOW_AUTO_ACTIVITY_ID_1));
+		assertTrue(pendingNodes.contains(SUBFLOW_AUTO_ACTIVITY_ID_2));
+		assertTrue(pendingNodes.contains(SUBFLOW_AUTO_ACTIVITY_ID_3));
+		
+		assertRetryFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_1);
+		assertRetryFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_2);
+		assertRetryFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_3);
+
+		//Suspend parent so the merge from subflow will fail
+		f.suspend();
+		subflow.resume();
+
+		waitToFail(subflow, END_NODE);
+		assertTrue(subflow.isActive(END_NODE));
+		assertTrue(subflow.isFailed(END_NODE));
+		assertTrue(subflow.getFailure(END_NODE) instanceof IllegalStateException);
+
+		f.resume();
+		
+		subflow.retry(END_NODE);
+		
+		waitToEnd(subflow);
+		
+		waitToEnd(f);
+		int counter = context.get(TestSubflowActivity.COUNT);
+		assertEquals(10+10+20+30, counter);
+	}
+	
 //	private void assertInactive(Xflow f, String nodeId) throws Exception {
 //		assertFalse(f.isActive(nodeId));
 //		assertFalse(f.isFailed(nodeId));

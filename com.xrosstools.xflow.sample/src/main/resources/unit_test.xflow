@@ -71,7 +71,7 @@
   <nodes>
    <start id="start" location="81,193"/>
    <end id="end" location="466,193"/>
-   <wait_activity delay="100" location="242,176" time_unit="MILLISECONDS"/>
+   <wait_activity delay="100" id="w1" location="242,176" time_unit="MILLISECONDS"/>
   </nodes>
   <links>
    <link source_index="0" style="DEFAULT" target_index="2"/>

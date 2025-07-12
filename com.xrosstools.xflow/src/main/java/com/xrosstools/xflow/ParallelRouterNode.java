@@ -20,7 +20,7 @@ public class ParallelRouterNode extends Node {
 		if(getOutputs().length == 0)
 			return Collections.emptyList();
 
-		RouteToken rt = new RouteToken(this, getOutputs().length);
+		RouteToken rt = new RouteToken(this.getId(), getOutputs().length);
 		List<ActiveToken> nextTokens = new ArrayList<>(getOutputs().length);
 		for(Link link: getOutputs()) {
 			nextTokens.add(token.next(link.getTarget(), rt));

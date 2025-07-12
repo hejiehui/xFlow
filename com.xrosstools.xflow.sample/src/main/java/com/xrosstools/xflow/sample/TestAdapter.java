@@ -5,6 +5,7 @@ import com.xrosstools.xflow.XflowContext;
 
 public class TestAdapter {
 	public static final String INTERNAL_TASK = "internal_task";
+	public static final String SUB_FLOW_SUSPEND = "sub_flow_suspend";
 	
 	public static final String START_NODE = "start";
 	public static final String END_NODE = "end";
@@ -12,6 +13,7 @@ public class TestAdapter {
 	public static final String AUTO_ACTIVITY_NODE = "a";
 	public static final String TASK_ACTIVITY_NODE = "aaaabbb";
 	public static final String EVENT_ACTIVITY_NODE = "event activity";
+	public static final String WAIT_ACTIVITY_NODE = "w1";
 	public static final String BINARY_ROUTER_NODE = "b1";
 	public static final String INCLUSIVE_ROUTER_NODE = "r1";
 	public static final String PARALLEL_ROUTER_NODE = "r1";
@@ -41,6 +43,7 @@ public class TestAdapter {
 	public static final String nodeSucceed = "nodeSucceed";
 	public static final String nodePended = "nodePended";
 	public static final String nodeFailed = "nodeFailed";
+	public static final String nodeRestored = "nodeRestored";
 	
 	public static final String eventNotifyFailed = "eventNotifyFailed";
 	public static final String taskSubmitFailed = "taskSubmitFailed";
@@ -150,12 +153,11 @@ public class TestAdapter {
 	}
 	
 	public void waitToSuspend(Xflow f) throws Exception {
-		int i = 0;
-		while(!f.isSuspended()) {
+		int i = 30;
+		while(!f.isSuspended() && i-- > 0)
 			sleep1();
-			i++;
-		}
-		System.out.println("sleeped: " + i);
+
+//		System.out.println("sleeped: " + i);
 	}
 
 	public void waitToEnd(Xflow f) throws Exception {

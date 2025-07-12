@@ -2,6 +2,7 @@ package com.xrosstools.xflow;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EventActivityNode extends Node {
@@ -15,6 +16,23 @@ public class EventActivityNode extends Node {
 
 	public boolean isSinglePhased() {
 		return false;
+	}
+	
+	public static void restoreEventSpecs(Map<String, Node> nodes, Map<String, ActiveToken> activeTokenMap, List<EventSpec> eventSpecs) {
+		for(EventSpec spec: eventSpecs) {
+			String nodeId = spec.getActivityId();
+			if(nodeId == null || !nodes.containsKey(nodeId) || !(nodes.get(nodeId) instanceof EventActivityNode))
+				throw new IllegalArgumentException("Can not find event activity for " + nodeId);
+
+			EventActivityNode node = (EventActivityNode)nodes.get(nodeId);
+			node.restore(activeTokenMap.get(node.getId()), spec);
+			activeTokenMap.remove(node.getId());
+		}
+	}
+
+	private void restore(ActiveToken token, EventSpec eventSpec) {
+		restore(token);
+		eventIdRef.set(eventSpec);
 	}
 
 	public List<ActiveToken> handle(ActiveToken token) {
