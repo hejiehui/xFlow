@@ -74,11 +74,15 @@ public class Xflow {
 	}
 	
 	/**
-	 * This only works only when all nodes are inactive, except task and event node.
+	 * This only works when all nodes are inactive, except task and event node.
+	 * And current flow is not a sub flow.
 	 * @return internal state of current xflow.
 	 */
 	public XflowRecorder specify() {
 		reqire(XflowStatus.SUSPENDED);
+		
+		if(context.getParentToken() != null)
+			throw new IllegalStateException("Specify is not supported as subflow");
 
 		long lastTick = getLastTick();
 		

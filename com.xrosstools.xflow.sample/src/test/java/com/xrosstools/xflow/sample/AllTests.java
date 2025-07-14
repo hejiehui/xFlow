@@ -9,6 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
         NormalTest.class,
         FailRetryTest.class,
         SuspendResumeTest.class,
+        SpecifyRestoreTest.class,
 })
 public class AllTests {
 

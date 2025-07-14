@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ import com.xrosstools.xflow.Xflow;
 import com.xrosstools.xflow.XflowContext;
 import com.xrosstools.xflow.XflowRecorder;
 
-public class SaveRestoreTest extends TestAdapter {
+public class SpecifyRestoreTest extends TestAdapter {
 	private static final long DUR = 5;
 	private Exception exception = new NullPointerException();
 
@@ -370,6 +371,23 @@ public class SaveRestoreTest extends TestAdapter {
 		}
 	}
 	
+	@Test
+	public void testParallelRouterTrue() throws Exception {
+		String nodeId = PARALLEL_ROUTER_NODE;
+		Xflow f = UnitTest.ParallelRouter.create();
+		Xflow f1 = UnitTest.ParallelRouter.create();
+		Xflow f2 = UnitTest.ParallelRouter.create();
+		
+		XflowContext context = new XflowContext();
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+		suspendAndRestore(f, context, nodeId, 3, f1, f2);
+		
+		waitToEnd(f);
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertEquals(10+10+20+30, counter.get());
+	}
+	
 	private void suspendAndRestore(Xflow f, XflowContext context, String routerId, int count, Xflow f1, Xflow f2) throws Exception {
 		injectSuspend(context, nodeStarted, START_NODE);
 		
@@ -407,93 +425,47 @@ public class SaveRestoreTest extends TestAdapter {
 	}
 	
 	@Test
-	public void testParallelRouterTrue() throws Exception {
-		String nodeId = PARALLEL_ROUTER_NODE;
-		Xflow f = UnitTest.ParallelRouter.create();
-		Xflow f1 = UnitTest.ParallelRouter.create();
-		Xflow f2 = UnitTest.ParallelRouter.create();
+	public void testSubflowActivity() throws Exception {
+		String nodeId = SUBFLOW_ACTIVITY_NODE;
 		
-		XflowContext context = new XflowContext();
-		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+		Xflow f = UnitTest.SubflowActivity.create();
+		Xflow f1 = UnitTest.SubflowActivity.create();
+		Xflow f2 = UnitTest.SubflowActivity.create();
 
-		suspendAndRestore(f, context, nodeId, 3, f1, f2);
+		XflowContext context = new XflowContext();
+		context.put(TestSubflowActivity.COUNT, 10);
 		
-		waitToEnd(f);
-		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
-		assertEquals(10+10+20+30, counter.get());
+		//Suspend main node
+		injectSuspend(context, nodeStarted, START_NODE);
+		f.start(context);
+		
+		assertPending(f, nodeId);
+
+		//Specify and restore at SUBFLOW_ACTIVITY_NODE
+		XflowRecorder recorder = specifyRecorder(f, nodeId);
+		
+		//Inject into subflow
+		context.put(SUB_FLOW_SUSPEND, "");
+		f1.restore(context, recorder);
+
+		sleep1();
+		Xflow subflow = f1.getSubflow(nodeId);
+
+		assertPending(subflow, PARALLEL_ROUTER_NODE);
+		
+		try {
+			subflow.specify();
+			fail();
+		} catch(Throwable e) {
+			assertTrue(e instanceof IllegalStateException);
+		}
+		
+		subflow.resume();
+
+		waitToEnd(f1);
+		int counter = context.get(TestSubflowActivity.COUNT);
+		assertEquals(10+10+20+30, counter);
 	}
-	
-//	@Test
-//	public void testSubflowActivity() throws Exception {
-//		String nodeId = SUBFLOW_ACTIVITY_NODE;
-//		String subflowNodeId = SUBFLOW_AUTO_ACTIVITY_ID_1;
-//		
-//		Xflow f = UnitTest.SubflowActivity.create();
-//		XflowContext context = new XflowContext();
-//		context.put(TestSubflowActivity.COUNT, 10);
-//		
-//		//Suspend main node
-//		injectSuspend(context, nodeStarted, START_NODE);
-//		f.start(context);
-//		
-//		assertPending(f, nodeId);
-//
-//		assertRetryFailed(f, nodeId);
-//		
-//		restoreNormal(context);
-//
-//		//Inject into subflow
-//		context.put(SUB_FLOW_SUSPEND, "");
-//		f.resume();
-//
-//		//Subflow failed
-//		sleep1();
-//		Xflow subflow = f.getSubflow(nodeId);
-//		assertEquals(SUBFLOW_ID, subflow.getId());
-//		assertTrue(subflow.isSuspended());
-//
-//		assertPending(subflow, PARALLEL_ROUTER_NODE);
-//		
-//		XflowContext subflowContext = f.getSubflowContext(nodeId);
-//		
-//		//For parallel node, it can only be injected like this
-//		injectSuspend(subflowContext, nodeStarted, PARALLEL_ROUTER_NODE);
-//
-//		subflow.resume();
-//		
-//		sleep1();
-//		sleep1();
-//		
-//		List<String> pendingNodes = subflow.getPendingNodeIds();
-//		
-//		assertEquals(3, pendingNodes.size());
-//		assertTrue(pendingNodes.contains(SUBFLOW_AUTO_ACTIVITY_ID_1));
-//		assertTrue(pendingNodes.contains(SUBFLOW_AUTO_ACTIVITY_ID_2));
-//		assertTrue(pendingNodes.contains(SUBFLOW_AUTO_ACTIVITY_ID_3));
-//		
-//		assertRetryFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_1);
-//		assertRetryFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_2);
-//		assertRetryFailed(subflow, SUBFLOW_AUTO_ACTIVITY_ID_3);
-//
-//		//Suspend parent so the merge from subflow will fail
-//		f.suspend();
-//		subflow.resume();
-//
-//		waitToFail(subflow, END_NODE);
-//		assertTrue(subflow.isActive(END_NODE));
-//		assertTrue(subflow.isFailed(END_NODE));
-//		assertTrue(subflow.getFailure(END_NODE) instanceof IllegalStateException);
-//
-//		f.resume();
-//		
-//		subflow.retry(END_NODE);
-//		
-//		waitToEnd(subflow);
-//		
-//		waitToEnd(f);
-//		int counter = context.get(TestSubflowActivity.COUNT);
-//		assertEquals(10+10+20+30, counter);
-//	}
 	
 //	private void assertInactive(Xflow f, String nodeId) throws Exception {
 //		assertFalse(f.isActive(nodeId));
@@ -506,6 +478,19 @@ public class SaveRestoreTest extends TestAdapter {
 			sleep1();
 		assertEquals(f.getPendingNodeIds().size(), 1);
 		assertEquals(nodeId, f.getPendingNodeIds().get(0));
+	}
+	
+	private XflowRecorder specifyRecorder(Xflow f, String...nodeIds) {
+		XflowRecorder recorder = f.specify();
+
+		assertTrue(recorder.getEventSpecs().isEmpty());
+		assertTrue(recorder.getTasks().isEmpty());
+		assertEquals(nodeIds.length, recorder.getTokenRecorders().size());
+		
+		for(String id: nodeIds)
+			assertTrue(recorder.getTokenRecorders().containsKey(id));
+
+		return recorder;
 	}
 	
 	private void assertRetryFailed(Xflow f, String nodeId) {
