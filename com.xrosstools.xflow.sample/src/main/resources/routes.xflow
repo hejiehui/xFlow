@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xflow evaluator="">
+ <description/>
+ <properties/>
+ <flow id="merge early" listener="">
+  <description/>
+  <properties/>
+  <nodes>
+   <start id="start" location="43,272"/>
+   <end id="end" location="828,311"/>
+   <parallel_router id="R1" location="211,265"/>
+   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.TestAutoActivity" location="385,129">
+    <properties>
+     <property key="step" type="Integer" value="10"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a3" implementation="com.xrosstools.xflow.sample.TestAutoActivity" location="362,373">
+    <properties>
+     <property key="step" type="Integer" value="10"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a2" implementation="com.xrosstools.xflow.sample.TestAutoActivity" location="377,260">
+    <properties>
+     <property key="step" type="Integer" value="10"/>
+    </properties>
+   </auto_activity>
+   <parallel_router id="R2" location="525,207"/>
+   <auto_activity id="a4" implementation="com.xrosstools.xflow.sample.TestAutoActivity" location="605,205">
+    <properties>
+     <property key="step" type="Integer" value="10"/>
+    </properties>
+   </auto_activity>
+   <parallel_router id="R3" location="731,306"/>
+  </nodes>
+  <links>
+   <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
+   <link id="r1" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="3"/>
+   <link id="r3" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="4"/>
+   <link id="r2" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
+   <link source_index="3" style="HORIZONTAL_RIGHT_ANGLE" target_index="6"/>
+   <link source_index="4" style="HORIZONTAL_RIGHT_ANGLE" target_index="8"/>
+   <link source_index="5" style="HORIZONTAL_RIGHT_ANGLE" target_index="6"/>
+   <link source_index="6" style="VERTICAL_RIGHT_ANGLE" target_index="7"/>
+   <link source_index="7" style="HORIZONTAL_RIGHT_ANGLE" target_index="8"/>
+   <link source_index="8" style="VERTICAL_RIGHT_ANGLE" target_index="1"/>
+  </links>
+ </flow>
+</xflow>

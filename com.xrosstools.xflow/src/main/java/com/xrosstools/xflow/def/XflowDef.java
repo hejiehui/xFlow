@@ -11,6 +11,7 @@ import com.xrosstools.xflow.GlobalConfigAware;
 import com.xrosstools.xflow.Link;
 import com.xrosstools.xflow.Node;
 import com.xrosstools.xflow.NodeConfigAware;
+import com.xrosstools.xflow.RouterNode;
 import com.xrosstools.xflow.TaskActivity;
 import com.xrosstools.xflow.Xflow;
 import com.xrosstools.xflow.XflowFactory;
@@ -41,8 +42,15 @@ public class XflowDef {
 
 	public Xflow create(XflowFactory factory) {
 		List<Node> nodes = new LinkedList<>();
-		for(NodeDef nodeDef: nodeDefs)
-			nodes.add(createNode(nodeDef));
+		List<RouterNode> routerNodes = new LinkedList<>();
+
+		for(NodeDef nodeDef: nodeDefs) {
+			Node node = createNode(nodeDef);
+			nodes.add(node);
+			if(node instanceof RouterNode) {
+				routerNodes.add((RouterNode)node);
+			}
+		}
 	
 		Map<Integer, List<Link>> links = new HashMap<>();
 		for(LinkDef linkDef: linkDefs) {
@@ -62,7 +70,23 @@ public class XflowDef {
 			nodes.get(sourceId).setOutputs(outputs.toArray(new Link[outputs.size()]));
 		}
 		
+		initRouterNode(routerNodes);
+		
 		return new Xflow(factory, name, nodes, listenerDef.create());
+	}
+	
+	private void initRouterNode(List<RouterNode> routerNodes) {
+		for(RouterNode node: routerNodes) {
+			node.visit();
+		}
+		
+		for(RouterNode node: routerNodes) {
+			node.checkEnd();
+		}
+		
+		for(RouterNode node: routerNodes) {
+			node.displayRouteInfo();
+		}
 	}
 	
 	private Node createNode(NodeDef nodeDef) {

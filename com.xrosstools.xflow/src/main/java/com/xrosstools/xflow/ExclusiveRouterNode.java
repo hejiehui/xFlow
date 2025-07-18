@@ -1,11 +1,10 @@
 package com.xrosstools.xflow;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExclusiveRouterNode extends Node {
+public class ExclusiveRouterNode extends RouterNode {
 	private ExclusiveRouter router;
 	private Map<String, Link> linkMap = new HashMap<>();
 
@@ -20,6 +19,10 @@ public class ExclusiveRouterNode extends Node {
 	
 	public boolean isSinglePhased() {
 		return true;
+	}
+
+	public boolean isSource() {
+		return false;
 	}
 
 	public void setOutputs(Link[] outputs) {

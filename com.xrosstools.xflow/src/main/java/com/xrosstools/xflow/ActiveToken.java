@@ -20,10 +20,6 @@ public class ActiveToken implements Runnable {
 	
 	private AtomicReference<Throwable> failureRef = new AtomicReference<>();
 	
-	public Deque<RouteToken> getRouteTokens() {
-		return routeTokens;
-	}
-
 	public ActiveToken(XflowContext context, Node node) {
 		this.context = context;
 		this.setNode(node);
@@ -35,6 +31,10 @@ public class ActiveToken implements Runnable {
 		routeTokens = new ConcurrentLinkedDeque<>(routes);
 	}
 	
+	public Deque<RouteToken> getRouteTokens() {
+		return routeTokens;
+	}
+
 	public void participate(RouteToken routeToken) {
 		routeTokens.addLast(routeToken);
 	}
@@ -86,19 +86,6 @@ public class ActiveToken implements Runnable {
 
 	public XflowContext getContext() {
 		return context;
-	}
-
-	public boolean checkInput() {
-		if(routeTokens.isEmpty())
-			return true;
-
-		RouteToken routeToken = routeTokens.getLast();
-		
-		if(routeToken.reach() > 0)
-			return false;
-			
-		routeTokens.removeLast();
-		return true;
 	}
 
 	public Node getNode() {

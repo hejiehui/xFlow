@@ -1,10 +1,11 @@
 package com.xrosstools.xflow;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ParallelRouterNode extends Node {
+public class ParallelRouterNode extends RouterNode {
+	private String[] ids;
+
 	public ParallelRouterNode(String name) {
 		super(name);
 	}
@@ -13,19 +14,23 @@ public class ParallelRouterNode extends Node {
 		return true;
 	}
 
+	public boolean isSource() {
+		return getOutputs().length > 1;
+	}
+	
+	public void setOutputs(Link[] outputs) {
+		super.setOutputs(outputs);
+		initLinkMap(outputs);
+		ids = getLinkMap().keySet().toArray(new String[outputs.length]);
+	}
+
 	public List<ActiveToken> handle(ActiveToken token) {
-		if(!token.checkInput())
+		if(!checkInput(token))
 			return Collections.emptyList();
 
-		if(getOutputs().length == 0)
-			return Collections.emptyList();
-
-		RouteToken rt = new RouteToken(this.getId(), getOutputs().length);
-		List<ActiveToken> nextTokens = new ArrayList<>(getOutputs().length);
-		for(Link link: getOutputs()) {
-			nextTokens.add(token.next(link.getTarget(), rt));
-		}
-
-		return nextTokens;
+		if(!isSource())
+			return next(token);
+		
+		return getNextTokens(token, ids);
 	}
 }

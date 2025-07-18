@@ -1,25 +1,26 @@
 package com.xrosstools.xflow;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public class RouteToken {
-	private String routerId;
-	private AtomicInteger counter = new AtomicInteger();
+	private RouteResult routerResult;
+	private Set<String> reachedRoutes = new CopyOnWriteArraySet<>();
 
-	public RouteToken(String routerId, int count) {
-		this.routerId = routerId;
-		counter.set(count);
+	public RouteToken(RouteResult routerResult, String route) {
+		this.routerResult = routerResult;
+		this.reachedRoutes.add(route);
 	}
 
-	public String getRouterId() {
-		return routerId;
+	public RouteResult getRouteResult() {
+		return routerResult;
 	}
 
-	public int reach() {
-		return counter.decrementAndGet();
+	public Set<String> getReachedRoutes() {
+		return reachedRoutes;
 	}
-	
-	public int getCount() {
-		return counter.get();
+
+	public void setReachedRoutes(Set<String> reachedRoutes) {
+		this.reachedRoutes = reachedRoutes;
 	}
 }

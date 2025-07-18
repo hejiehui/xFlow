@@ -2,14 +2,11 @@ package com.xrosstools.xflow;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class InclusiveRouterNode extends Node {
+public class InclusiveRouterNode extends RouterNode {
 	private String[] defaultOutputs;
 	private InclusiveRouter router;
-	private Map<String, Link> linkMap = new HashMap<>();
 
 	public InclusiveRouterNode(String name) {
 		this(name, null);
@@ -24,18 +21,18 @@ public class InclusiveRouterNode extends Node {
 		return true;
 	}
 
+	public boolean isSource() {
+		return router != null;
+	}
+
 	public void setOutputs(Link[] outputs) {
 		if(router == null && outputs.length > 1)
 			throw new IllegalArgumentException("Router implementation is reqired for node: " + getId());
 			
 		super.setOutputs(outputs);
+		initLinkMap(outputs);
 		List<String> defaultOutputList = new ArrayList<>();
 		for(Link link: outputs) {
-			String linkName = link.getId();
-			if(linkMap.containsKey(linkName))
-				throw new IllegalArgumentException(String.format("Linke id: \"%s\" is duplicated", linkName));
-
-			linkMap.put(linkName, link);
 			if(link.isDefaultLink())
 				defaultOutputList.add(link.getId());
 		}
@@ -43,16 +40,12 @@ public class InclusiveRouterNode extends Node {
 		defaultOutputs = defaultOutputList.toArray(new String[defaultOutputList.size()]);
 	}
 	
-	public Link getLink(String name) {
-		return linkMap.get(name);
-	}
-
 	public String[] getDefaultOutputs() {
 		return defaultOutputs.clone();
 	}
 
 	public List<ActiveToken> handle(ActiveToken token) {
-		if(!token.checkInput())
+		if(!checkInput(token))
 			return Collections.emptyList();
 
 		if(router == null) {
@@ -60,12 +53,6 @@ public class InclusiveRouterNode extends Node {
 		}
 		
 		String[] ids = router.route(token.getContext());
-		RouteToken rt = new RouteToken(this.getId(), ids.length);
-		List<ActiveToken> nextTokens = new ArrayList<>(ids.length);
-		for(String id: ids) {
-			Link link = getLink(id);
-			nextTokens.add(token.next(link.getTarget(), rt));
-		}
-		return nextTokens;
+		return getNextTokens(token, ids);
 	}
 }
