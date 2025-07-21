@@ -16,12 +16,42 @@ import com.xrosstools.xflow.XflowFactory;
 */
 public class Routes {
     
-    public static class MergeEarly {
+    public static class ParallelCase1 {
         public static Xflow create() {
-            return load().create("merge early");
+            return load().create("parallel case1");
         }
     }
 
+    public static class ParallelCase2 {
+        public static Xflow create() {
+            return load().create("parallel case2");
+        }
+    }
+
+    public static class InclusiveCase1 {
+        public static Xflow create() {
+            return load().create("inclusive case1");
+        }
+    }
+
+    public static class ParallelCase3 {
+        public static Xflow create() {
+            return load().create("parallel case3");
+        }
+    }
+    
+
+    public static class ParallelCase4 {
+        public static Xflow create() {
+            return load().create("parallel case4");
+        }
+    }
+    
+    public static class InclusiveCase2 {
+        public static Xflow create() {
+            return load().create("inclusive case2");
+        }
+    }
 
     private static volatile XflowFactory factory;
     private static XflowFactory load()  {

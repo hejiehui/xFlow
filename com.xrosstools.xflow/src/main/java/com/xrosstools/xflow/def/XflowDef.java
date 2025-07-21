@@ -94,7 +94,7 @@ public class XflowDef {
 
 		node.initGlobalConfig(globalConfig.copy());
 		node.initFlowConfig(flowConfig.copy());
-		node.initNodeConfig(nodeDef.getConfig().copy());
+		node.initNodeConfig(nodeDef.getConfig());
 		
 		return node;
 	}

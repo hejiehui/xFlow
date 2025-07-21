@@ -27,7 +27,19 @@ public abstract class RouterNode extends Node {
 		super(id);
 	}
 	
-	public abstract boolean isSource();
+	public RouterNode(String id, Object configurable) {
+		super(id, configurable);
+	}
+	
+	/**
+	 * @return if current route node produces multiple concurrent active tokens
+	 */
+	public abstract boolean isDispatcher();
+	
+	/**
+	 * @return if current route node combines multiple concurrent active tokens
+	 */
+	public abstract boolean isMerger();
 
 	public void checkEnd() {
 		//End of visit
@@ -58,7 +70,7 @@ public abstract class RouterNode extends Node {
 	}
 
 	public void visit() {
-		if(!isSource())
+		if(!isDispatcher())
 			return;
 
 		for(Link link: getOutputs()) {
@@ -70,41 +82,54 @@ public abstract class RouterNode extends Node {
 	}
 	
 	public void visit(RouterNode sourceNode, String routeId) {
-		String sourceId = sourceNode.getId();
-		RouteInfo info = sourceRouteInfoMap.get(sourceId);
-		if(info == null) {
-			info = new RouteInfo();
-			sourceRouteInfoMap.put(sourceId, info);
-		}
-		
-		//Already visited
-		if(info.routes.contains(routeId))
+		if(this == sourceNode)
 			return;
 
-		info.routes.add(routeId);
-		
-		//All routes merged
-		if(sourceNode.getOutputs().length == info.routes.size()) {
-			info.isEnd = true;
-			//Clear for ended router
-			clearDownstream(sourceId);
-		} else {
-			for(Link link: getOutputs()) {
-				RouterNode next = findNext(link);
-				if(next != null) {
-					next.visit(sourceNode, routeId);
-				}
+		if(isMerger()) {
+			String sourceId = sourceNode.getId();
+			RouteInfo info = sourceRouteInfoMap.get(sourceId);
+			if(info == null) {
+				info = new RouteInfo();
+				sourceRouteInfoMap.put(sourceId, info);
+			}
+			
+			//Already visited
+			if(info.routes.contains(routeId))
+				return;
+	
+			info.routes.add(routeId);
+			
+			//All routes merged
+			if(sourceNode.getOutputs().length == info.routes.size()) {
+				info.isEnd = true;
+				//Clear for ended router
+				Set<String> clearedNodes = new HashSet<String>();
+				clearedNodes.add(getId());
+				clearDownstream(sourceId, clearedNodes);
+				return;
+			}
+		}
+
+		for(Link link: getOutputs()) {
+			RouterNode next = findNext(link);
+			if(next != null) {
+				next.visit(sourceNode, routeId);
 			}
 		}
 	}
 	
-	private void clearDownstream(String sourceId) {
+	private void clearDownstream(String sourceId, Set<String> clearedNodes) {
 		for(Link link: getOutputs()) {
 			RouterNode next = findNext(link);
-			if(next != null && next.sourceRouteInfoMap.containsKey(sourceId)) {
+			
+			if(next == null || next.getId() == sourceId || clearedNodes.contains(next.getId())) 
+				continue;
+
+			if(next.isMerger() && next.sourceRouteInfoMap.containsKey(sourceId))
 				next.sourceRouteInfoMap.remove(sourceId);
-				next.clearDownstream(sourceId);
-			}
+
+			next.clearDownstream(sourceId, clearedNodes);
+			clearedNodes.add(next.getId());
 		}
 	}
 
@@ -115,21 +140,27 @@ public abstract class RouterNode extends Node {
 		return (RouterNode)next;
 	}
 	
-	public boolean checkInput(ActiveToken token) {
-		Deque<RouteToken> routeTokens = token.getRouteTokens();
+	public boolean isMerged(ActiveToken token) {
+		List<RouteToken> routeTokens = token.getRouteTokens();
 		if(routeTokens.isEmpty())
 			return true;
 
-		RouteToken routeToken = routeTokens.getLast();
+		List<RouteToken> mergedTokens = new ArrayList<>();
+		boolean merged = true;
+		for(RouteToken routeToken: routeTokens) {
+			if(reach(routeToken)) {
+				RouteInfo info = sourceRouteInfoMap.get(routeToken.getRouteResult().getRouterId());
+				if(info.isEnd)
+					mergedTokens.add(routeToken);
+			}else
+				merged = false;
+		}
 		
-		if(!reach(routeToken))
-			return false;
-			
-		RouteInfo info = sourceRouteInfoMap.get(routeToken.getRouteResult().getRouterId());
-		if(info.isEnd)
-			routeTokens.removeLast();
-
-		return true;
+		for(RouteToken mergedToken: mergedTokens)
+			routeTokens.remove(mergedToken);
+		
+		//If all route are merged
+		return merged;
 	}
 	
 	public boolean reach(RouteToken routeToken) {
@@ -139,22 +170,22 @@ public abstract class RouterNode extends Node {
 
 		RouteInfo info = sourceRouteInfoMap.get(result.getRouterId());
 
-		Set<String> reachedRoutes = routeResultMap.get(result);
-		if(reachedRoutes == null) {
-			reachedRoutes = new CopyOnWriteArraySet<>();
-			routeResultMap.put(result, reachedRoutes);
+		Set<String> mergedRoutes = routeResultMap.get(result);
+		if(mergedRoutes == null) {
+			mergedRoutes = new CopyOnWriteArraySet<>();
+			routeResultMap.put(result, mergedRoutes);
 		}
 
-		reachedRoutes.addAll(routeToken.getReachedRoutes());
+		mergedRoutes.addAll(routeToken.getMergedRoutes());
 		
 		//Check if all route reached current router
 		for(String route: result.getRoutes()) {
 			//There is still incoming route
-			if(info.routes.contains(route) && !reachedRoutes.contains(route))
+			if(info.routes.contains(route) && !mergedRoutes.contains(route))
 				return false;
 		}
 		
-		routeToken.setReachedRoutes(reachedRoutes);
+		routeToken.setMergedRoutes(mergedRoutes);
 		routeResultMap.remove(result);
 
 		return true;
@@ -180,6 +211,8 @@ public abstract class RouterNode extends Node {
 			for(String route: info.routes) {
 				System.out.print(route + " ");
 			}
+			
+			System.out.print(info.isEnd ? "end" : "");
 			System.out.println("]");
 		}
 	}

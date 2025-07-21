@@ -216,9 +216,9 @@
   </nodes>
   <links>
    <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
-   <link source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="4"/>
-   <link source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
-   <link source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link id="r1" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="4"/>
+   <link id="r2" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
+   <link id="r3" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
    <link source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="1"/>
    <link source_index="4" style="HORIZONTAL_RIGHT_ANGLE" target_index="3"/>
    <link source_index="5" style="HORIZONTAL_RIGHT_ANGLE" target_index="3"/>
@@ -237,25 +237,7 @@
   </nodes>
   <links>
    <link source_index="0" style="VERTICAL_LIGHTNING" target_index="2"/>
-   <link Distance="164" source_index="2" style="VERTICAL_HOMOLATERAL" target_index="1"/>
-  </links>
- </flow>
- <flow id="" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
-  <description/>
-  <properties/>
-  <nodes>
-   <start id="start" location="106,229"/>
-   <end id="end" location="640,198"/>
-   <auto_activity location="483,304">
-    <properties/>
-   </auto_activity>
-   <auto_activity location="659,137">
-    <properties/>
-   </auto_activity>
-  </nodes>
-  <links>
-   <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
-   <link id="abc" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="2"/>
+   <link source_index="2" style="HORIZONTAL_LIGHTNING" target_index="1"/>
   </links>
  </flow>
 </xflow>

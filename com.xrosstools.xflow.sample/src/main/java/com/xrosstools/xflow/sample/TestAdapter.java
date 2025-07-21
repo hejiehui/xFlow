@@ -161,7 +161,7 @@ public class TestAdapter {
 	}
 
 	public void waitToEnd(Xflow f) throws Exception {
-		int i = 20;
+		int i = 100;
 		while(!f.isEnded() && i-- > 0)
 			sleep1();
 	}

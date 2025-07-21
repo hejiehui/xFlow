@@ -13,7 +13,7 @@ public class InclusiveRouterNode extends RouterNode {
 	}
 			
 	public InclusiveRouterNode(String name, InclusiveRouter router) {
-		super(name);
+		super(name, router);
 		this.router = router;
 	}
 
@@ -21,8 +21,12 @@ public class InclusiveRouterNode extends RouterNode {
 		return true;
 	}
 
-	public boolean isSource() {
+	public boolean isDispatcher() {
 		return router != null;
+	}
+
+	public boolean isMerger() {
+		return getInputCount() > 1;
 	}
 
 	public void setOutputs(Link[] outputs) {
@@ -45,14 +49,10 @@ public class InclusiveRouterNode extends RouterNode {
 	}
 
 	public List<ActiveToken> handle(ActiveToken token) {
-		if(!checkInput(token))
-			return Collections.emptyList();
+		if(isMerger())
+			if(!isMerged(token))
+				return Collections.emptyList();
 
-		if(router == null) {
-			return next(token);
-		}
-		
-		String[] ids = router.route(token.getContext());
-		return getNextTokens(token, ids);
+		return isDispatcher() ? getNextTokens(token, router.route(token.getContext())) : next(token);
 	}
 }

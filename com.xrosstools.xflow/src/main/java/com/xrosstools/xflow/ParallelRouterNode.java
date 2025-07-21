@@ -14,8 +14,12 @@ public class ParallelRouterNode extends RouterNode {
 		return true;
 	}
 
-	public boolean isSource() {
+	public boolean isDispatcher() {
 		return getOutputs().length > 1;
+	}
+	
+	public boolean isMerger() {
+		return getInputCount() > 1;
 	}
 	
 	public void setOutputs(Link[] outputs) {
@@ -25,12 +29,10 @@ public class ParallelRouterNode extends RouterNode {
 	}
 
 	public List<ActiveToken> handle(ActiveToken token) {
-		if(!checkInput(token))
-			return Collections.emptyList();
+		if(isMerger())
+			if(!isMerged(token))
+				return Collections.emptyList();
 
-		if(!isSource())
-			return next(token);
-		
-		return getNextTokens(token, ids);
+		return isDispatcher() ? getNextTokens(token, ids) : next(token);
 	}
 }

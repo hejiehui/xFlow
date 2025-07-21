@@ -13,7 +13,7 @@ public class BinaryRouterNode extends RouterNode {
 	}
 
 	public BinaryRouterNode(String name, BinaryRouter router) {
-		super(name);
+		super(name, router);
 		this.router = router;
 	}
 	
@@ -21,7 +21,11 @@ public class BinaryRouterNode extends RouterNode {
 		return true;
 	}
 	
-	public boolean isSource() {
+	public boolean isDispatcher() {
+		return false;
+	}
+
+	public boolean isMerger() {
 		return false;
 	}
 

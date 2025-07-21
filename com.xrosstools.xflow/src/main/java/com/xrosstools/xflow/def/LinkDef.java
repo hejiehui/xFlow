@@ -41,6 +41,6 @@ public class LinkDef {
 	}
 	
 	public Link create(List<Node> nodes) {
-		return new Link(name, nodes.get(sourceIndex), nodes.get(targetIndex), defaultLink, trueLink);
+		return new Link(name, nodes.get(sourceIndex), nodes.get(targetIndex).addInputCount(), defaultLink, trueLink);
 	}
 }

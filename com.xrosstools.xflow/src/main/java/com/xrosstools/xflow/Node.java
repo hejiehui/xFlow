@@ -11,6 +11,7 @@ public abstract class Node implements NodeHandler {
 	private final static Link[] EMPTY = new Link[0];
 	private Object configurable;
 	private String id;
+	private int inputCount;
 	private Link[] outputs = EMPTY;
 	private AtomicReference<ActiveToken> tokenRef = new AtomicReference<>();
 	private XflowListener listener = new XflowListenerAdapter();
@@ -30,6 +31,16 @@ public abstract class Node implements NodeHandler {
 	public String getId() {
 		return id;
 	}
+	
+	public int getInputCount() {
+		return inputCount;
+	}
+
+	public Node addInputCount() {
+		inputCount++;
+		return this;
+	}
+
 	public boolean isActive() {
 		return getToken() != null;
 	}

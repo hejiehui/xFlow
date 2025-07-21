@@ -122,7 +122,7 @@ public class Xflow {
 	private List<Integer> specifyToken(List<RouteToken> routeTokens, ActiveToken activeToken) {
 		List<Integer> recorder = new ArrayList<>();
 
-		Deque<RouteToken> curRouteTokens = activeToken.getRouteTokens();
+		Deque<RouteToken> curRouteTokens = null;//activeToken.getRouteTokens();
 		for(RouteToken token: curRouteTokens) {
 			if(!routeTokens.contains(token))
 				routeTokens.add(token);

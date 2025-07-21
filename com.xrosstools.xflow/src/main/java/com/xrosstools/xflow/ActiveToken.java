@@ -1,9 +1,8 @@
 package com.xrosstools.xflow;
 
 import java.util.Collection;
-import java.util.Deque;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -16,27 +15,27 @@ public class ActiveToken implements Runnable {
 
 	private Node node;
 	//We can use Stack instead, because there is no concurrent case
-	private Deque<RouteToken> routeTokens;
+	private List<RouteToken> routeTokens;
 	
 	private AtomicReference<Throwable> failureRef = new AtomicReference<>();
 	
 	public ActiveToken(XflowContext context, Node node) {
 		this.context = context;
 		this.setNode(node);
-		routeTokens = new ConcurrentLinkedDeque<>();
+		routeTokens = new CopyOnWriteArrayList<>();
 	}
 
 	public ActiveToken(XflowContext context, Node node, Collection<RouteToken> routes) {
 		this(context, node);
-		routeTokens = new ConcurrentLinkedDeque<>(routes);
+		routeTokens = new CopyOnWriteArrayList<>(routes);
 	}
 	
-	public Deque<RouteToken> getRouteTokens() {
+	public List<RouteToken> getRouteTokens() {
 		return routeTokens;
 	}
 
 	public void participate(RouteToken routeToken) {
-		routeTokens.addLast(routeToken);
+		routeTokens.add(routeToken);
 	}
 
 	public void clearFailure() {
