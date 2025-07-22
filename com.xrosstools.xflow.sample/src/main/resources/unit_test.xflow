@@ -240,4 +240,83 @@
    <link source_index="2" style="HORIZONTAL_LIGHTNING" target_index="1"/>
   </links>
  </flow>
+ <flow id="fail case" listener="">
+  <description/>
+  <properties>
+   <property key="assignee" type="String" value="Tom"/>
+  </properties>
+  <nodes>
+   <start id="start" location="84,428"/>
+   <parallel_router id="R1" location="213,418"/>
+   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="366,132">
+    <properties/>
+   </auto_activity>
+   <task_activity id="2" implementation="com.xrosstools.xflow.sample.TestTaskActivity" location="366,219">
+    <properties>
+     <property key="count" type="Integer" value="1"/>
+    </properties>
+   </task_activity>
+   <event_activity id="3" implementation="com.xrosstools.xflow.sample.TestEventActivity" location="366,304">
+    <properties>
+     <property key="event id" type="String" value="abc"/>
+    </properties>
+   </event_activity>
+   <wait_activity delay="1" id="4" label="" location="371,379" time_unit="SECONDS"/>
+   <subflow_activity id="5" implementation="com.xrosstools.xflow.sample.TestSubflowActivity" location="367,452" subflow="parallel router">
+    <properties/>
+   </subflow_activity>
+   <binary_router id="6" implementation="com.xrosstools.xflow.sample.TestBinaryRouter" location="392,537">
+    <properties/>
+   </binary_router>
+   <inclusive_router id="7" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="393,665">
+    <properties/>
+   </inclusive_router>
+   <exclusive_router id="8" implementation="com.xrosstools.xflow.sample.TestExclusiveRouter" location="394,799">
+    <properties/>
+   </exclusive_router>
+   <parallel_router id="9" location="399,916"/>
+   <binary_router id="6-1" location="393,607">
+    <properties/>
+   </binary_router>
+   <inclusive_router id="7-1" location="397,726">
+    <properties/>
+   </inclusive_router>
+   <exclusive_router id="8-1" location="395,858">
+    <properties/>
+   </exclusive_router>
+   <auto_activity id="1-1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="584,529">
+    <properties/>
+   </auto_activity>
+   <auto_activity id="1-2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="588,644">
+    <properties/>
+   </auto_activity>
+   <auto_activity id="1-3" implementation="com.xrosstools.xflow.sample.TestAddOne" location="577,797">
+    <properties/>
+   </auto_activity>
+   <parallel_router id="9-1" location="397,977"/>
+   <auto_activity id="1-4" implementation="com.xrosstools.xflow.sample.TestAddOne" location="591,902">
+    <properties/>
+   </auto_activity>
+  </nodes>
+  <links>
+   <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link id="1" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="2"/>
+   <link id="2" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="3"/>
+   <link id="3" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="4"/>
+   <link id="4" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
+   <link id="5" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link id="6" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="7"/>
+   <link id="7" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="8"/>
+   <link id="8" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="9"/>
+   <link id="9" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="10"/>
+   <link id="6-1" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="11"/>
+   <link id="7-1" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="12"/>
+   <link id="8-1" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="13"/>
+   <link source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="17"/>
+   <link source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="14" true_link="true"/>
+   <link default_link="false" id="1" source_index="8" style="VERTICAL_RIGHT_ANGLE" target_index="15"/>
+   <link id="1" source_index="9" style="VERTICAL_RIGHT_ANGLE" target_index="16"/>
+   <link id="1" source_index="10" style="VERTICAL_RIGHT_ANGLE" target_index="18"/>
+  </links>
+ </flow>
 </xflow>

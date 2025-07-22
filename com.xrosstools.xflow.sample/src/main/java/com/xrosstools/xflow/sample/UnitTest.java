@@ -70,6 +70,12 @@ public class UnitTest {
         }
     }
 
+    public static class FailCase {
+        public static Xflow create() {
+            return load().create("fail case");
+        }
+    }
+
     private static volatile XflowFactory factory;
     private static XflowFactory load()  {
         if(factory == null) {

@@ -9,6 +9,9 @@ public class TestInclusiveRouter extends TestAdapter implements InclusiveRouter 
 	@Override
 	public String[] route(XflowContext context) {
 		call(context);
+		if(!context.contains(PROP_KEY_PATHES))
+			return null;
+
 		String pathes = context.get(PROP_KEY_PATHES);
 		return pathes.split(",");
 	}

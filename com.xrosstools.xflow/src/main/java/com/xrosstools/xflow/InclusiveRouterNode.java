@@ -2,7 +2,9 @@ package com.xrosstools.xflow;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InclusiveRouterNode extends RouterNode {
 	private String[] defaultOutputs;
@@ -53,6 +55,22 @@ public class InclusiveRouterNode extends RouterNode {
 			if(!isMerged(token))
 				return Collections.emptyList();
 
-		return isDispatcher() ? getNextTokens(token, router.route(token.getContext())) : next(token);
+		if(isDispatcher()) {
+			String[] ids = router.route(token.getContext());
+			if(ids == null || ids.length == 0)
+				ids = defaultOutputs;
+			else {
+				Set<String> idSet = new HashSet<>();
+				for(String id: ids)
+					if(idSet.contains(id))
+						throw new IllegalArgumentException(String.format("Route %s is duplicated", id));
+					else
+						idSet.add(id);
+			}
+			
+			ids = ids == null || ids.length == 0 ? defaultOutputs : ids;
+			return getNextTokens(token, ids);
+		}else
+			return next(token);
 	}
 }

@@ -53,6 +53,18 @@ public class Routes {
         }
     }
 
+    public static class BinaryCase1 {
+        public static Xflow create() {
+            return load().create("binary case1");
+        }
+    }
+
+    public static class ExclusiveCase1 {
+        public static Xflow create() {
+            return load().create("exclusive case1");
+        }
+    }
+    
     private static volatile XflowFactory factory;
     private static XflowFactory load()  {
         if(factory == null) {

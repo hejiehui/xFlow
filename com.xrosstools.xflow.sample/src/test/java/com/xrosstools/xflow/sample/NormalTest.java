@@ -179,6 +179,42 @@ public class NormalTest {
 		assertEquals(10+10+20+30, counter);
 	}
 
+	@Test
+	public void testFailCase() throws Exception {
+		Xflow f = UnitTest.FailCase.create();
+		XflowContext context = new XflowContext();
+		context.put(TestSubflowActivity.COUNT, 10);
+		context.put(TestAddOne.PROP_KEY_COUNTER, new AtomicInteger(0));
+		context.put(TestBinaryRouter.PROP_KEY_RESULT, true);
+		context.put(TestExclusiveRouter.PROP_KEY_PATH, "1");
+		context.put(TestInclusiveRouter.PROP_KEY_PATHES, "1");
+		f.start(context);
+
+		sleep();
+
+		//Task activity
+		List<Task> tasks = f.getTasks("Tom");
+		assertEquals(1, tasks.size());
+		FeedbackTask task = (FeedbackTask)tasks.get(0);
+		task.setFeedback("OK");
+		f.submit(task);
+
+		//Event activity
+		List<EventSpec> specs = f.getEventSpecs();
+		assertEquals(1, specs.size());
+		
+		Event event = specs.get(0).create();
+		f.notify(event);
+
+		//Wait activity should still running
+		assertTrue(f.isActive("4"));
+		
+		while(f.isFailed() == false)
+			sleep1();
+
+		assertTrue(f.isFailed());
+	}
+
 	private void sleep1() throws Exception {
 		Thread.sleep(1);
 	}

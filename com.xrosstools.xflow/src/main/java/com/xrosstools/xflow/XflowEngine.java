@@ -15,6 +15,9 @@ public class XflowEngine {
 	}
 	
 	public static void submit(ActiveToken activeToken) {
+		if(activeToken == null)
+			return;
+
 		activeToken.getContext().getFlow().tick();
 		executor.submit(activeToken);
 	}

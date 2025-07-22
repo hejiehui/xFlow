@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0589550a-139a-49fd-b56b-df3926cc66be" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/ConfirmNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/java/com/xrosstools/xflow/sample/Routes.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/java/com/xrosstools/xflow/sample/Routes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/resources/routes.xflow" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/resources/routes.xflow" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/resources/unit_test.xflow" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/resources/unit_test.xflow" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/AllTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/AllTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/RouteTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/RouteTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="0589550a-139a-49fd-b56b-df3926cc66be" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,36 +12,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/src/com/xrosstools/idea/gef/figures/Figure.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="689">
-              <caret line="403" column="5" selection-start-line="403" selection-start-column="5" selection-end-line="403" selection-end-column="5" />
-              <folding>
-                <element signature="e#2177#2178#0" expanded="true" />
-                <element signature="e#2205#2206#0" expanded="true" />
-                <element signature="e#3935#3936#0" expanded="true" />
-                <element signature="e#3979#3980#0" expanded="true" />
-                <element signature="e#4024#4025#0" expanded="true" />
-                <element signature="e#4064#4065#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/ConfirmNode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/EndNode.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="190">
-              <caret line="12" lean-forward="true" selection-start-line="2" selection-start-column="21" selection-end-line="12" />
+              <caret line="12" selection-start-line="2" selection-start-column="21" selection-end-line="12" />
             </state>
           </provider>
         </entry>
@@ -63,11 +29,34 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/AutoActivityNode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="5" column="87" lean-forward="true" selection-start-line="5" selection-start-column="87" selection-end-line="5" selection-end-column="87" />
+            <state relative-caret-position="209">
+              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/BinaryRouterNode.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/Link.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="779">
+              <caret line="50" selection-start-line="50" selection-end-line="50" />
+              <folding>
+                <element signature="e#1880#1881#0" expanded="true" />
+                <element signature="e#1930#1931#0" expanded="true" />
+                <element signature="e#1969#1970#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -218,7 +207,7 @@
     <option name="FILTER_DEBUG" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="1160" />
     <option name="y" value="6" />
     <option name="width" value="1734" />
@@ -230,6 +219,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -378,7 +368,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -452,11 +441,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1160" y="6" width="1734" height="1399" extended-state="1" />
-    <editor active="true" />
+    <frame x="1160" y="6" width="1734" height="1399" extended-state="0" />
     <layout>
       <window_info id="BPMN Editor" order="0" weight="0.3297491" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.30346474" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.30704898" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -467,7 +455,7 @@
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32964426" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info anchor="bottom" id="Debug" order="4" visible="true" weight="0.27272728" />
+      <window_info active="true" anchor="bottom" id="Debug" order="4" visible="true" weight="0.27272728" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" />
@@ -578,13 +566,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
           <caret line="15" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/BinaryRouterNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -793,18 +774,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/Link.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="623">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
-          <folding>
-            <element signature="e#1880#1881#0" expanded="true" />
-            <element signature="e#1930#1931#0" expanded="true" />
-            <element signature="e#1969#1970#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/src/com/xrosstools/idea/gef/EditorPanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20159">
@@ -890,6 +859,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/src/com/xrosstools/idea/gef/figures/Figure.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5681">
+          <caret line="403" column="5" selection-start-line="403" selection-start-column="5" selection-end-line="403" selection-end-column="5" />
+          <folding>
+            <element signature="e#2177#2178#0" expanded="true" />
+            <element signature="e#2205#2206#0" expanded="true" />
+            <element signature="e#3935#3936#0" expanded="true" />
+            <element signature="e#3979#3980#0" expanded="true" />
+            <element signature="e#4024#4025#0" expanded="true" />
+            <element signature="e#4064#4065#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/ConfirmNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/EndNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="12" selection-start-line="2" selection-start-column="21" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/ActivityNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/src/com/xrosstools/idea/gef/routers/CommonStyleRouter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
@@ -928,46 +933,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/src/com/xrosstools/idea/gef/figures/Figure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="689">
-          <caret line="403" column="5" selection-start-line="403" selection-start-column="5" selection-end-line="403" selection-end-column="5" />
-          <folding>
-            <element signature="e#2177#2178#0" expanded="true" />
-            <element signature="e#2205#2206#0" expanded="true" />
-            <element signature="e#3935#3936#0" expanded="true" />
-            <element signature="e#3979#3980#0" expanded="true" />
-            <element signature="e#4024#4025#0" expanded="true" />
-            <element signature="e#4064#4065#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/ConfirmNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/EndNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="12" lean-forward="true" selection-start-line="2" selection-start-column="21" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/ActivityNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/AutoActivityNode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="87" lean-forward="true" selection-start-line="5" selection-start-column="87" selection-end-line="5" selection-end-column="87" />
+        <state relative-caret-position="209">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/BinaryRouterNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="33" lean-forward="true" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/Link.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="779">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
+          <folding>
+            <element signature="e#1880#1881#0" expanded="true" />
+            <element signature="e#1930#1931#0" expanded="true" />
+            <element signature="e#1969#1970#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

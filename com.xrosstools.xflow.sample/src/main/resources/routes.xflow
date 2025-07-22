@@ -172,15 +172,13 @@
    </binary_router>
    <end id="end" location="797,303"/>
    <parallel_router id="R3" location="436,285"/>
-   <exclusive_router id="R4" location="623,286">
-    <properties/>
-   </exclusive_router>
    <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="499,211">
     <properties/>
    </auto_activity>
    <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="499,360">
     <properties/>
    </auto_activity>
+   <parallel_router id="R4" location="638,288"/>
   </nodes>
   <links>
    <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="1"/>
@@ -191,11 +189,11 @@
    <link source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="7"/>
    <link Distance="139" source_index="5" style="VERTICAL_HOMOLATERAL" target_index="1" true_link="false"/>
    <link source_index="5" style="VERTICAL_RIGHT_ANGLE" target_index="6" true_link="true"/>
-   <link id="1" source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="9"/>
-   <link id="2" source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="10"/>
-   <link source_index="8" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
-   <link source_index="9" style="HORIZONTAL_RIGHT_ANGLE" target_index="8"/>
-   <link source_index="10" style="HORIZONTAL_RIGHT_ANGLE" target_index="8"/>
+   <link id="1" source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="8"/>
+   <link id="2" source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="9"/>
+   <link source_index="8" style="HORIZONTAL_RIGHT_ANGLE" target_index="10"/>
+   <link source_index="9" style="HORIZONTAL_RIGHT_ANGLE" target_index="10"/>
+   <link source_index="10" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
   </links>
  </flow>
  <flow id="inclusive case1" listener="">
@@ -305,26 +303,26 @@
   <properties/>
   <nodes>
    <start id="start" location="59,261"/>
-   <binary_router location="144,249">
+   <binary_router id="R1" implementation="com.xrosstools.xflow.sample.TestBinaryRouter" location="144,248">
     <properties/>
    </binary_router>
    <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="305,34">
     <properties/>
    </auto_activity>
-   <inclusive_router location="216,167">
+   <inclusive_router id="R2" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="216,167">
     <properties/>
    </inclusive_router>
-   <parallel_router location="232,477"/>
+   <parallel_router id="R5" location="232,477"/>
    <auto_activity id="a2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="300,162">
     <properties/>
    </auto_activity>
    <auto_activity id="a5" implementation="com.xrosstools.xflow.sample.TestAddOne" location="297,287">
     <properties/>
    </auto_activity>
-   <inclusive_router location="425,112">
+   <inclusive_router id="R3" location="425,112">
     <properties/>
    </inclusive_router>
-   <inclusive_router location="631,214">
+   <inclusive_router id="R4" location="631,214">
     <properties/>
    </inclusive_router>
    <auto_activity id="a3" implementation="com.xrosstools.xflow.sample.TestAddOne" location="512,97">
@@ -336,12 +334,12 @@
    <auto_activity id="a8" implementation="com.xrosstools.xflow.sample.TestAddOne" location="325,563">
     <properties/>
    </auto_activity>
-   <parallel_router location="658,485"/>
+   <parallel_router id="R7" location="658,485"/>
    <auto_activity id="a7" implementation="com.xrosstools.xflow.sample.TestAddOne" location="328,478">
     <properties/>
    </auto_activity>
-   <parallel_router location="460,428"/>
-   <binary_router location="840,309">
+   <parallel_router id="R6" location="460,428"/>
+   <binary_router id="R8" location="840,309">
     <properties/>
    </binary_router>
    <end id="end" location="1074,320"/>
@@ -363,9 +361,9 @@
    <link source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="3" true_link="true"/>
    <link source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="4" true_link="false"/>
    <link source_index="2" style="HORIZONTAL_RIGHT_ANGLE" target_index="7"/>
-   <link default_link="false" id="r1" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="2"/>
-   <link default_link="false" id="r2" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
-   <link default_link="false" id="r3" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link default_link="true" id="r1" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="2"/>
+   <link default_link="true" id="r2" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
+   <link default_link="true" id="r3" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
    <link id="r1" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="10"/>
    <link id="r3" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="11"/>
    <link id="r2" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="13"/>
@@ -390,71 +388,75 @@
   <description/>
   <properties/>
   <nodes>
-   <start id="start" location="56,268"/>
+   <start id="start" location="40,289"/>
    <end id="end" location="1254,307"/>
-   <exclusive_router location="156,272">
+   <exclusive_router id="R1" implementation="com.xrosstools.xflow.sample.TestExclusiveRouter" location="105,272">
     <properties/>
    </exclusive_router>
-   <auto_activity location="352,67">
+   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="352,67">
     <properties/>
    </auto_activity>
-   <auto_activity location="332,247">
+   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="332,247">
+    <description/>
     <properties/>
    </auto_activity>
-   <auto_activity location="349,548">
+   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" location="349,548">
     <properties/>
    </auto_activity>
-   <parallel_router location="241,135"/>
-   <parallel_router location="482,170"/>
-   <auto_activity location="614,80">
+   <parallel_router id="R2" location="296,133"/>
+   <parallel_router id="R3" location="482,170"/>
+   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" location="614,80">
     <properties/>
    </auto_activity>
-   <auto_activity location="612,246">
+   <auto_activity id="7" implementation="com.xrosstools.xflow.sample.TestAddOne" location="612,246">
     <properties/>
    </auto_activity>
-   <auto_activity location="616,170">
+   <auto_activity id="6" implementation="com.xrosstools.xflow.sample.TestAddOne" location="616,170">
     <properties/>
    </auto_activity>
-   <parallel_router location="767,179"/>
-   <auto_activity location="841,174">
+   <parallel_router id="R4" location="767,179"/>
+   <auto_activity id="11" implementation="com.xrosstools.xflow.sample.TestAddOne" location="843,174">
     <properties/>
    </auto_activity>
-   <inclusive_router location="246,486">
+   <inclusive_router id="R5" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="246,486">
     <properties/>
    </inclusive_router>
-   <auto_activity location="351,416">
+   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" location="351,416">
     <properties/>
    </auto_activity>
-   <inclusive_router location="496,491">
+   <inclusive_router id="R6" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="496,491">
     <properties/>
    </inclusive_router>
-   <auto_activity location="580,539">
+   <auto_activity id="10" implementation="com.xrosstools.xflow.sample.TestAddOne" location="580,539">
     <properties/>
    </auto_activity>
-   <parallel_router location="758,495"/>
-   <auto_activity location="815,417">
+   <parallel_router id="R8" location="758,495"/>
+   <auto_activity id="12" implementation="com.xrosstools.xflow.sample.TestAddOne" location="815,417">
     <properties/>
    </auto_activity>
-   <auto_activity location="838,565">
+   <auto_activity id="13" implementation="com.xrosstools.xflow.sample.TestAddOne" location="838,565">
     <properties/>
    </auto_activity>
-   <parallel_router location="960,514"/>
-   <exclusive_router location="1035,293">
+   <parallel_router id="R9" location="960,514"/>
+   <exclusive_router id="R10" location="1035,293">
     <properties/>
    </exclusive_router>
-   <auto_activity location="1096,292">
+   <auto_activity id="14" implementation="com.xrosstools.xflow.sample.TestAddOne" location="1096,292">
     <properties/>
    </auto_activity>
-   <auto_activity location="582,411">
+   <auto_activity id="9" implementation="com.xrosstools.xflow.sample.TestAddOne" location="582,411">
     <properties/>
    </auto_activity>
-   <inclusive_router location="695,498">
+   <inclusive_router id="R7" location="695,497">
     <properties/>
    </inclusive_router>
+   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="175,126">
+    <properties/>
+   </auto_activity>
   </nodes>
   <links>
    <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
-   <link id="r1" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link id="r1" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="25"/>
    <link id="r2" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="13"/>
    <link source_index="3" style="HORIZONTAL_RIGHT_ANGLE" target_index="7"/>
    <link source_index="4" style="HORIZONTAL_RIGHT_ANGLE" target_index="7"/>
@@ -469,14 +471,14 @@
    <link source_index="10" style="HORIZONTAL_RIGHT_ANGLE" target_index="11"/>
    <link source_index="11" style="VERTICAL_RIGHT_ANGLE" target_index="12"/>
    <link source_index="12" style="HORIZONTAL_RIGHT_ANGLE" target_index="21"/>
-   <link default_link="false" source_index="13" style="VERTICAL_RIGHT_ANGLE" target_index="14"/>
-   <link default_link="false" source_index="13" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
+   <link default_link="false" id="r1" source_index="13" style="VERTICAL_RIGHT_ANGLE" target_index="14"/>
+   <link default_link="false" id="r2" source_index="13" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
    <link source_index="14" style="HORIZONTAL_RIGHT_ANGLE" target_index="15"/>
-   <link default_link="false" source_index="15" style="VERTICAL_RIGHT_ANGLE" target_index="16"/>
-   <link default_link="false" source_index="15" style="VERTICAL_RIGHT_ANGLE" target_index="23"/>
+   <link default_link="false" id="r2" source_index="15" style="VERTICAL_RIGHT_ANGLE" target_index="16"/>
+   <link default_link="false" id="r1" source_index="15" style="VERTICAL_RIGHT_ANGLE" target_index="23"/>
    <link source_index="16" style="HORIZONTAL_RIGHT_ANGLE" target_index="24"/>
-   <link source_index="17" style="VERTICAL_RIGHT_ANGLE" target_index="18"/>
-   <link source_index="17" style="VERTICAL_RIGHT_ANGLE" target_index="19"/>
+   <link id="r1" source_index="17" style="VERTICAL_RIGHT_ANGLE" target_index="18"/>
+   <link id="r2" source_index="17" style="VERTICAL_RIGHT_ANGLE" target_index="19"/>
    <link source_index="18" style="HORIZONTAL_RIGHT_ANGLE" target_index="20"/>
    <link source_index="19" style="HORIZONTAL_RIGHT_ANGLE" target_index="20"/>
    <link source_index="20" style="HORIZONTAL_RIGHT_ANGLE" target_index="21"/>
@@ -484,6 +486,7 @@
    <link source_index="22" style="HORIZONTAL_LIGHTNING" target_index="1"/>
    <link source_index="23" style="HORIZONTAL_RIGHT_ANGLE" target_index="24"/>
    <link default_link="false" source_index="24" style="VERTICAL_RIGHT_ANGLE" target_index="17"/>
+   <link source_index="25" style="HORIZONTAL_RIGHT_ANGLE" target_index="6"/>
   </links>
  </flow>
 </xflow>
