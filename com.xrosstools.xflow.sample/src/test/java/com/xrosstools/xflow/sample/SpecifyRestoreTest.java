@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
+import com.xrosstools.xflow.ActiveTokenRecord;
 import com.xrosstools.xflow.Event;
 import com.xrosstools.xflow.EventSpec;
 import com.xrosstools.xflow.Task;
@@ -487,8 +488,14 @@ public class SpecifyRestoreTest extends TestAdapter {
 		assertTrue(recorder.getTasks().isEmpty());
 		assertEquals(nodeIds.length, recorder.getTokenRecorders().size());
 		
-		for(String id: nodeIds)
-			assertTrue(recorder.getTokenRecorders().containsKey(id));
+		boolean found = false;
+		for(String id: nodeIds) {
+			for(ActiveTokenRecord record: recorder.getTokenRecorders())
+				if(id.equals(record.getNodeId()))
+					found = true;
+		}
+
+		assertTrue(found);
 
 		return recorder;
 	}

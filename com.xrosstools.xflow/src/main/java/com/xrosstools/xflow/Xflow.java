@@ -1,12 +1,13 @@
 package com.xrosstools.xflow;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -82,14 +83,14 @@ public class Xflow {
 		reqire(XflowStatus.SUSPENDED);
 		
 		if(context.getParentToken() != null)
-			throw new IllegalStateException("Specify is not supported as subflow");
+			throw new IllegalStateException("Specify is not supported for subflow");
 
 		long lastTick = getLastTick();
 		
 		List<Task> tasks = new ArrayList<>();
 		List<EventSpec> eventSpecs = new ArrayList<>();
-		List<RouteToken> routeTokens = new ArrayList<>();
-		Map<String, List<Integer>> tokenRecorders = new HashMap<>();
+		List<RouteResult> routeResults = new ArrayList<>();
+		List<ActiveTokenRecord> tokenRecorders = new ArrayList<>();
 
 		for(Node node: nodes.values()) {
 			if(!node.isActive())
@@ -102,13 +103,13 @@ public class Xflow {
 			else
 				throw new IllegalStateException(String.format("Node %s is still running.", node.getId()));
 			
-			tokenRecorders.put(node.getId(), specifyToken(routeTokens, node.getToken()));
+			tokenRecorders.add(new ActiveTokenRecord(node.getId(), specifyToken(routeResults, node.getToken())));
 		}
 		
 		for(ActiveToken token: pendingNodes)
-			tokenRecorders.put(token.getNode().getId(), specifyToken(routeTokens, token));
+			tokenRecorders.add(new ActiveTokenRecord(token.getNode().getId(), specifyToken(routeResults, token)));
 
-		XflowRecorder flowRecorder = new XflowRecorder(routeTokens, tokenRecorders);
+		XflowRecorder flowRecorder = new XflowRecorder(routeResults, tokenRecorders);
 		
 		flowRecorder.setEventSpecs(eventSpecs);
 		flowRecorder.setTasks(tasks);
@@ -119,14 +120,15 @@ public class Xflow {
 		return flowRecorder;
 	}
 	
-	private List<Integer> specifyToken(List<RouteToken> routeTokens, ActiveToken activeToken) {
-		List<Integer> recorder = new ArrayList<>();
+	private Map<Integer, Set<String>> specifyToken(List<RouteResult> routeResults, ActiveToken activeToken) {
+		Map<Integer, Set<String>> recorder = new LinkedHashMap<>();
 
-		Deque<RouteToken> curRouteTokens = null;//activeToken.getRouteTokens();
+		List<RouteToken> curRouteTokens = activeToken.getRouteTokens();
 		for(RouteToken token: curRouteTokens) {
-			if(!routeTokens.contains(token))
-				routeTokens.add(token);
-			recorder.add(routeTokens.indexOf(token));
+			RouteResult result = token.getRouteResult();
+			if(!routeResults.contains(result))
+				routeResults.add(result);
+			recorder.put(routeResults.indexOf(result), token.getMergedRoutes());
 		}
 		
 		return recorder;
@@ -145,16 +147,20 @@ public class Xflow {
 		context.setFlow(this);
 
 		//Validate and initialize active token
-		List<RouteToken> routeTokens = flowRecorder.getRouteTokens();
+		List<RouteResult> routeResults = flowRecorder.getRouteResults();
 		Map<String, ActiveToken> activeTokenMap = new HashMap<>();
-		for(Map.Entry<String, List<Integer>> recorder: flowRecorder.getTokenRecorders().entrySet()) {
-			String nodeId = recorder.getKey();
+		for(ActiveTokenRecord recorder: flowRecorder.getTokenRecorders()) {
+			String nodeId = recorder.getNodeId();
 			if(!nodes.containsKey(nodeId))
 				throw new NoSuchElementException("There is no active node called " + nodeId);
 			
 			List<RouteToken> curRouteTokens = new ArrayList<>();
-			for(Integer id: recorder.getValue())
-				curRouteTokens.add(routeTokens.get(id));
+			Map<Integer, Set<String>> routeRecords = recorder.getRouteRecords();
+			
+			for(Integer resultIndex: routeRecords.keySet()) {
+				RouteToken routeToken = new RouteToken(routeResults.get(resultIndex), routeRecords.get(resultIndex));
+				curRouteTokens.add(routeToken);
+			}
 			activeTokenMap.put(nodeId, new ActiveToken(context, nodes.get(nodeId), curRouteTokens));
 		}
 

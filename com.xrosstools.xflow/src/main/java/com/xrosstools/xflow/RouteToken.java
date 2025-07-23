@@ -11,6 +11,11 @@ public class RouteToken {
 		this.routerResult = routerResult;
 		this.mergedRoutes.add(route);
 	}
+	
+	public RouteToken(RouteResult routerResult, Set<String> mergedRoutes) {
+		this.routerResult = routerResult;
+		this.mergedRoutes = mergedRoutes;
+	}
 
 	public RouteResult getRouteResult() {
 		return routerResult;

@@ -1,27 +1,26 @@
 package com.xrosstools.xflow;
 
 import java.util.List;
-import java.util.Map;
 
 public class XflowRecorder {
-	private List<RouteToken> routeTokens;
+	private List<RouteResult> routeResults;
 	
-	private Map<String, List<Integer>> tokenRecorders;
+	private List<ActiveTokenRecord> tokenRecorders;
 	
 	private List<Task> tasks;
 	
 	private List<EventSpec> eventSpecs;
 	
-	public XflowRecorder(List<RouteToken> routeTokens, Map<String, List<Integer>> tokenRecorders) {
-		this.routeTokens = routeTokens;
+	public XflowRecorder(List<RouteResult> routeResults, List<ActiveTokenRecord> tokenRecorders) {
+		this.routeResults = routeResults;
 		this.tokenRecorders = tokenRecorders;
 	}
 
-	public List<RouteToken> getRouteTokens() {
-		return routeTokens;
+	public List<RouteResult> getRouteResults() {
+		return routeResults;
 	}
 
-	public Map<String, List<Integer>> getTokenRecorders() {
+	public List<ActiveTokenRecord> getTokenRecorders() {
 		return tokenRecorders;
 	}
 	
