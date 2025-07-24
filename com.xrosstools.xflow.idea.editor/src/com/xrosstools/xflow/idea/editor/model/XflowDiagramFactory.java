@@ -63,7 +63,7 @@ public class XflowDiagramFactory implements PropertyConstants {
         register.register(NodeType.INCLUSIVE_ROUTER).attributes(PROP_ID, PROP_LABEL, PROP_IMPLEMENTATION).nodes(PROP_DESCRIPTION);
         register.register(NodeType.PARALLEL_ROUTER).attributes(PROP_ID, PROP_LABEL).nodes(PROP_DESCRIPTION);
 
-        register.register(Link.class).attributes(PROP_ID, PROP_LABEL, PROP_DEFAULT_LINK, PROP_TRUE_LINK, PROP_STYLE).nodes(PROP_DESCRIPTION);
+        register.register(Link.class).attributes(PROP_ID, PROP_LABEL, PROP_DEFAULT_LINK, PROP_STYLE).nodes(PROP_DESCRIPTION);
     }
 
     public XflowDiagram getFromXML(Document doc) {
