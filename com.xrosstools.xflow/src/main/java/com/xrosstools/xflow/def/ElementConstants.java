@@ -35,7 +35,6 @@ public interface ElementConstants {
     String PROP_SOURCE_INDEX = "source_index";
     String PROP_TARGET_INDEX = "target_index";
     String PROP_DEFAULT_LINK = "default_link";
-    String PROP_TRUE_LINK = "true_link";
     
     String PROP_DELAY = "delay";
     String PROP_TIME_UNIT = "time_unit";

@@ -81,7 +81,7 @@ public abstract class Node implements NodeHandler {
 			return false;
 		
 		try {
-			listener.nodeStarted(token.getContext(), id);
+			listener.nodeStarted(id, token.getContext());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -93,7 +93,7 @@ public abstract class Node implements NodeHandler {
 		tokenRef.set(token);
 		
 		try {
-			listener.nodeRestored(token.getContext(), id);
+			listener.nodeRestored(id, token.getContext());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -137,7 +137,7 @@ public abstract class Node implements NodeHandler {
 		
 		releaseToken();
 		try {
-			listener.nodeSucceed(token.getContext(), id);
+			listener.nodeSucceed(id, token.getContext());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -149,7 +149,7 @@ public abstract class Node implements NodeHandler {
 		token.setFailure(ex);
 
 		try {
-			listener.nodeFailed(token.getContext(), id, ex);
+			listener.nodeFailed(id, token.getContext(), ex);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

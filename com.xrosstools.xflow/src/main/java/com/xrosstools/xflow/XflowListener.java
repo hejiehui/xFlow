@@ -1,33 +1,33 @@
 package com.xrosstools.xflow;
 
 public interface XflowListener {
-	void flowCreated(String flowId);
-	void flowStarted(XflowContext context, String flowId);
-	void flowSucceed(XflowContext context, String flowId);
-	void flowSuspended(XflowContext context, String flowId);
-	void flowResumed(XflowContext context, String flowId);
-	void flowRestored(XflowContext context, String flowId);
+	void flowCreated(String flowId, String flowInfo);
+	void flowStarted(String flowId, XflowContext context);
+	void flowSucceed(String flowId, XflowContext context);
+	void flowSuspended(String flowId, XflowContext context);
+	void flowResumed(String flowId, XflowContext context);
+	void flowRestored(String flowId, XflowContext context);
 	
 	/**
 	 * When there is no more active token, and flow is still running.
 	 * Trigger by flow monitor.
 	 */
-	void flowFailed(XflowContext context, String flowId);
+	void flowFailed(String flowId, XflowContext context);
 	
 	/**
-	 * When there is unrecoverable reason.
+	 * When there is an unrecoverable reason.
 	 * Trigger by user.
 	 */
-	void flowAborted(XflowContext context, String flowId, String reason);
+	void flowAborted(String flowId, XflowContext context, String reason);
 	
-	void nodeStarted(XflowContext context, String nodeId);
-	void nodeRetried(XflowContext context, String nodeId);
-	void nodeSucceed(XflowContext context, String nodeId);
-	void nodePended(XflowContext context, String nodeId);
-	void nodeFailed(XflowContext context, String nodeId, Throwable e);
-	void nodeRestored(XflowContext context, String nodeId);
+	void nodeStarted(String nodeId, XflowContext context);
+	void nodeRetried(String nodeId, XflowContext context);
+	void nodeSucceed(String nodeId, XflowContext context);
+	void nodePended(String nodeId, XflowContext context);
+	void nodeFailed(String nodeId, XflowContext context, Throwable e);
+	void nodeRestored(String nodeId, XflowContext context);
 	
-	void eventNotifyFailed(XflowContext context, String nodeId, Event event, Throwable e);
-	void taskSubmitFailed(XflowContext context, String nodeId, Task task, Throwable e);
-	void mergeSubflowFailed(XflowContext context, String nodeId,  XflowContext subFlowContext, Throwable e);
+	void eventNotifyFailed(String nodeId, XflowContext context, Event event, Throwable e);
+	void taskSubmitFailed(String nodeId, XflowContext context, Task task, Throwable e);
+	void mergeSubflowFailed(String nodeId, XflowContext context,  XflowContext subFlowContext, Throwable e);
 }

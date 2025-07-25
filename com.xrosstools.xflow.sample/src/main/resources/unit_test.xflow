@@ -103,11 +103,11 @@
   </nodes>
   <links>
    <link source_index="0" style="DEFAULT" target_index="2"/>
-   <link id="true" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="3" true_link="true"/>
-   <link id="false" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="4" true_link="false"/>
+   <link id="true" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="3"/>
+   <link id="false" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="4"/>
    <link source_index="3" style="HORIZONTAL_RIGHT_ANGLE" target_index="5"/>
    <link source_index="4" style="HORIZONTAL_RIGHT_ANGLE" target_index="5"/>
-   <link source_index="5" style="VERTICAL_RIGHT_ANGLE" target_index="1" true_link="false"/>
+   <link id="true" source_index="5" style="VERTICAL_RIGHT_ANGLE" target_index="1"/>
   </links>
  </flow>
  <flow id="inclusive router" listener="com.xrosstools.xflow.sample.TestSystemOutListener">
@@ -313,10 +313,39 @@
    <link id="7-1" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="12"/>
    <link id="8-1" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="13"/>
    <link source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="17"/>
-   <link source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="14" true_link="true"/>
+   <link id="true" source_index="7" style="VERTICAL_RIGHT_ANGLE" target_index="14"/>
    <link default_link="false" id="1" source_index="8" style="VERTICAL_RIGHT_ANGLE" target_index="15"/>
    <link id="1" source_index="9" style="VERTICAL_RIGHT_ANGLE" target_index="16"/>
    <link id="1" source_index="10" style="VERTICAL_RIGHT_ANGLE" target_index="18"/>
+  </links>
+ </flow>
+ <flow id="change source test" listener="">
+  <description/>
+  <properties/>
+  <nodes>
+   <auto_activity location="356,279">
+    <properties/>
+   </auto_activity>
+   <binary_router location="89,189">
+    <properties/>
+   </binary_router>
+   <inclusive_router location="99,325">
+    <properties/>
+   </inclusive_router>
+   <exclusive_router location="137,422">
+    <properties/>
+   </exclusive_router>
+   <parallel_router location="144,519"/>
+   <binary_router location="148,74">
+    <properties/>
+   </binary_router>
+   <auto_activity location="351,71">
+    <properties/>
+   </auto_activity>
+  </nodes>
+  <links>
+   <link id="true" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link default_link="false" id="abc" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="0"/>
   </links>
  </flow>
 </xflow>

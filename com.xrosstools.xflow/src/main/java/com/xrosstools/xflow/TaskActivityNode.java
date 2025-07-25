@@ -77,7 +77,7 @@ public class TaskActivityNode extends Node {
 			try {
 				completed = taskActivity.submit(context, tasksRef.get(), task);
 			} catch (Throwable e) {
-				getListener().taskSubmitFailed(context, getId(), task, e);
+				getListener().taskSubmitFailed(getId(), context, task, e);
 				throw e;
 			}
 			task.setSubmitted();

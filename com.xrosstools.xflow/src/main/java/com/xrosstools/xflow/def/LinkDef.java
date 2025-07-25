@@ -10,14 +10,12 @@ public class LinkDef {
 	private int sourceIndex;
 	private int targetIndex;
 	private boolean defaultLink;
-	private boolean trueLink;
 
-	public LinkDef(String name, int sourceIndex, int targetIndex, boolean defaultLink, boolean trueLink) {
+	public LinkDef(String name, int sourceIndex, int targetIndex, boolean defaultLink) {
 		this.name = name;
 		this.sourceIndex = sourceIndex;
 		this.targetIndex = targetIndex;
 		this.defaultLink = defaultLink;
-		this.trueLink = trueLink;
 	}
 
 	public String getName() {
@@ -36,11 +34,7 @@ public class LinkDef {
 		return defaultLink;
 	}
 
-	public boolean isTrueLink() {
-		return trueLink;
-	}
-	
 	public Link create(List<Node> nodes) {
-		return new Link(name, nodes.get(sourceIndex), nodes.get(targetIndex).addInputCount(), defaultLink, trueLink);
+		return new Link(name, nodes.get(sourceIndex), nodes.get(targetIndex).addInputCount(), defaultLink);
 	}
 }

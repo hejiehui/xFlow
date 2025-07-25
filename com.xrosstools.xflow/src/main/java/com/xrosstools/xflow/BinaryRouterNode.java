@@ -35,7 +35,7 @@ public class BinaryRouterNode extends RouterNode {
 			
 		super.setOutputs(outputs);
 		for(Link link: outputs) {
-			Boolean linkName = link.isTrueLink();
+			Boolean linkName = Boolean.parseBoolean(link.getId());
 			if(linkMap.containsKey(linkName))
 				throw new IllegalArgumentException(String.format("Linke id: \"%s\" is duplicated", linkName));
 

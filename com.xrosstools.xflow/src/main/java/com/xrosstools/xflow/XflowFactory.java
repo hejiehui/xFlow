@@ -215,9 +215,8 @@ public class XflowFactory implements ElementConstants {
             int sourceIndex = getIntAttribute(linkNode, PROP_SOURCE_INDEX);
             int targetIndex = getIntAttribute(linkNode, PROP_TARGET_INDEX);
             boolean defaultLink = Boolean.parseBoolean(getAttribute(linkNode, PROP_DEFAULT_LINK));
-            boolean trueLink = Boolean.parseBoolean(getAttribute(linkNode, PROP_TRUE_LINK));
 
-            linkDefs.add(new LinkDef(id, sourceIndex, targetIndex, defaultLink, trueLink));
+            linkDefs.add(new LinkDef(id, sourceIndex, targetIndex, defaultLink));
         }
 
         return linkDefs;

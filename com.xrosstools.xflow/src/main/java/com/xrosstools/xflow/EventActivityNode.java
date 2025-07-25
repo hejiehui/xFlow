@@ -52,7 +52,7 @@ public class EventActivityNode extends Node {
 				eventIdRef.set(null);
 				succeed();
 			} catch (Throwable e) {
-				getListener().eventNotifyFailed(context, getId(), event, e);
+				getListener().eventNotifyFailed(getId(), context, event, e);
 				failed(e);
 				throw e;
 			}

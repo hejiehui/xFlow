@@ -81,6 +81,9 @@ public class ActiveToken implements Runnable {
 		}
 		
 		XflowEngine.submit(nextTokens);
+//
+//		//Check fail after token executed
+//		flow.isFailed();
 	}
 
 	public XflowContext getContext() {

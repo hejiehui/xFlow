@@ -2,6 +2,7 @@ package com.xrosstools.xflow.sample;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -114,7 +115,7 @@ public class NormalTest {
 	}
 
 	@Test
-	public void testExclusiveRouterTrue() throws Exception {
+	public void testExclusiveRouter() throws Exception {
 		for(int i = 1; i <= 3; i++) {
 			Xflow f = UnitTest.ExclusiveRouter.create();
 			
@@ -132,7 +133,7 @@ public class NormalTest {
 	}
 	
 	@Test
-	public void testInclusiveRouterTrue() throws Exception {
+	public void testInclusiveRouter() throws Exception {
 		Map<String, Integer> data = new HashMap<>();
 		data.put("p1,p2", 40);
 		data.put("p1,p3", 50);
@@ -155,7 +156,7 @@ public class NormalTest {
 	}
 	
 	@Test
-	public void testParallelRouterTrue() throws Exception {
+	public void testParallelRouter() throws Exception {
 		Xflow f = UnitTest.ParallelRouter.create();
 		
 		XflowContext context = new XflowContext();
@@ -166,6 +167,23 @@ public class NormalTest {
 
 		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
 		assertEquals(10+10+20+30, counter.get());
+	}
+	
+	@Test
+	public void testFlowAbort() throws Exception {
+		Xflow f = UnitTest.ParallelRouter.create();
+		
+		XflowContext context = new XflowContext();
+		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+		String reason = "abort";
+		f.start(context);
+		f.abort(reason);
+		
+		assertTrue(f.isAbort());
+		assertEquals(reason, f.getAbortReason());
+
+		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
+		assertNotSame(10+10+20+30, counter.get());
 	}
 	
 	@Test

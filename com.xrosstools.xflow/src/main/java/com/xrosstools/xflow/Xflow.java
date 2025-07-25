@@ -27,6 +27,7 @@ public class Xflow {
 	
 	private XflowContext context;
 	private AtomicReference<XflowStatus> statusRef = new AtomicReference<>(XflowStatus.CREATED);
+	private AtomicReference<String> reasonRef = new AtomicReference<>();
 	private AtomicLong lastTickRef = new AtomicLong(-1);
 	
 	public Xflow(XflowFactory factory, String flowId, List<Node> nodeList, XflowListener listener) {
@@ -39,7 +40,10 @@ public class Xflow {
 			node.setListener(listener);
 		}
 		this.listener = listener;
-		listener.flowCreated(flowId);
+		
+		String flowInfo = RouterNode.initRouterNode(nodeList);
+
+		listener.flowCreated(flowId, flowInfo);
 	}
 
 	public String getId() {
@@ -67,7 +71,7 @@ public class Xflow {
 			if(node instanceof StartNode) {
 				changeTo(XflowStatus.CREATED, XflowStatus.RUNNING);
 				XflowEngine.submit(context, node);
-				listener.flowStarted(context, getId());
+				listener.flowStarted(getId(), context);
 				return;
 			}
 
@@ -176,12 +180,12 @@ public class Xflow {
 			XflowEngine.submit(token);
 		}
 		
-		listener.flowRestored(context, getId());
+		listener.flowRestored(getId(), context);
 	}
 	
 	public void suspend() {
 		changeTo(XflowStatus.RUNNING, XflowStatus.SUSPENDED);
-		listener.flowSuspended(context, id);
+		listener.flowSuspended(id, context);
 	}
 
 	public void resume() {
@@ -191,30 +195,23 @@ public class Xflow {
 		while((next = pendingNodes.poll()) != null)
 			XflowEngine.submit(next);
 
-		listener.flowResumed(context, id);
+		listener.flowResumed(id, context);
 	}
 
 	public void succeed() {
 		changeTo(XflowStatus.RUNNING, XflowStatus.SUCCEED);
-		listener.flowSucceed(context, id);
+		listener.flowSucceed(id, context);
 	}
 	
 	public void abort(String reason) {
+		reasonRef.set(reason);
 		changeTo(XflowStatus.RUNNING, XflowStatus.ABORTED);
-		listener.flowAborted(context, id, reason);
+		listener.flowAborted(id, context, reason);
 	}
 
-	/**
-	 * When there is no active token.
-	 */
-	public void fail() {
-		changeTo(XflowStatus.RUNNING, XflowStatus.FAILED);
-		listener.flowFailed(context, id);
-	}
-	
 	public void pending(ActiveToken token) {
 		pendingNodes.add(token);
-		listener.nodePended(context, token.getNode().getId());
+		listener.nodePended(token.getNode().getId(), context);
 	}
 	
 	public void pending(List<ActiveToken> tokens) {
@@ -222,13 +219,13 @@ public class Xflow {
 			return;
 		pendingNodes.addAll(tokens);
 		for(ActiveToken token: tokens)
-			listener.nodePended(context, token.getNode().getId());
+			listener.nodePended(token.getNode().getId(), context);
 	}
 
 	public void retry(String nodeId) {
 		reqire(XflowStatus.RUNNING);
 		nodes.get(nodeId).retry();
-		listener.nodeRetried(context, id);
+		listener.nodeRetried(id, context);
 	}
 	
 	public boolean isSuspended() {
@@ -262,7 +259,17 @@ public class Xflow {
 			return false;
 
 		statusRef.set(XflowStatus.FAILED);
+		listener.flowFailed(id, context);
+
 		return true;
+	}
+	
+	public boolean isAbort() {
+		return XflowStatus.ABORTED == statusRef.get();
+	}
+	
+	public String getAbortReason() {
+		return reasonRef.get();
 	}
 	
 	public List<String> getActiveNodeIds() {

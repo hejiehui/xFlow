@@ -5,14 +5,12 @@ public class Link {
 	private Node source;
 	private Node target;
 	private boolean defaultLink;
-	private boolean trueLink;
 
-	public Link(String id, Node source, Node target, boolean defaultLink, boolean trueLink) {
+	public Link(String id, Node source, Node target, boolean defaultLink) {
 		this.id = id;
 		this.source = source;
 		this.target = target;
 		this.defaultLink = defaultLink;
-		this.trueLink = trueLink;
 	}
 
 	public Node getSource() {
@@ -29,9 +27,5 @@ public class Link {
 
 	public boolean isDefaultLink() {
 		return defaultLink;
-	}
-
-	public boolean isTrueLink() {
-		return trueLink;
 	}
 }

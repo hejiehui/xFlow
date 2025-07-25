@@ -55,7 +55,7 @@ public class SubflowActivityNode extends Node {
 				activity.mergeSubflow(parentContext, subflowContext);
 				succeed();
 			} catch (Exception e) {
-				getListener().mergeSubflowFailed(parentContext, subflowId, subflowContext, e);
+				getListener().mergeSubflowFailed(subflowId, parentContext, subflowContext, e);
 				failed(e);
 				throw e;
 			}

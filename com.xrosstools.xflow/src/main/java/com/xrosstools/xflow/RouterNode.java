@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import com.xrosstools.xflow.def.NodeDef;
+
 public abstract class RouterNode extends Node {
 	private static class RouteInfo {
 		Set<String> routes = new HashSet<>();
@@ -202,18 +204,49 @@ public abstract class RouterNode extends Node {
 		return nextTokens;	
 	}
 	
-	public void displayRouteInfo() {
-		System.out.println("Current router id: " + getId());
+	public static String initRouterNode(List<Node> nodes) {
+		List<RouterNode> routerNodes = new ArrayList<>();
+
+		for(Node node: nodes) {
+			if(node instanceof RouterNode) {
+				routerNodes.add((RouterNode)node);
+			}
+		}
+		
+		for(RouterNode node: routerNodes) {
+			node.visit();
+		}
+		
+		for(RouterNode node: routerNodes) {
+			node.checkEnd();
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for(RouterNode node: routerNodes) {
+			sb.append(node.routeInfo());
+		}
+		
+		return sb.toString();
+	}
+
+	public String routeInfo() {
+		StringBuilder sb = new StringBuilder();
+		if(sourceRouteInfoMap.isEmpty())
+			return sb.toString();
+
+		sb.append("Merge router id: " + getId() + "\n");
 		for(String id: sourceRouteInfoMap.keySet()) {
 			RouteInfo info = sourceRouteInfoMap.get(id);
-			System.out.println("\tRouter id: " + id);
-			System.out.print("\t[");
+			sb.append("\tRouter id: " + id + "\n");
+			sb.append("\t[");
 			for(String route: info.routes) {
-				System.out.print(route + " ");
+				sb.append(route + " ");
 			}
 			
-			System.out.print(info.isEnd ? "end" : "");
-			System.out.println("]");
+			sb.append(info.isEnd ? "end" : "");
+			sb.append("]\n");
 		}
+		
+		return sb.toString();
 	}
 }

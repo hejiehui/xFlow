@@ -8,70 +8,70 @@ import com.xrosstools.xflow.XflowListener;
 public class XflowListenerAdapter implements XflowListener {
 
 	@Override
-	public void flowCreated(String flowId) {
+	public void flowCreated(String flowId, String flowInfo) {
 	}
 
 	@Override
-	public void flowStarted(XflowContext context, String flowId) {
+	public void flowStarted(String flowId, XflowContext context) {
 	}
 
 	@Override
-	public void flowSucceed(XflowContext context, String flowId) {
+	public void flowSucceed(String flowId, XflowContext context) {
 	}
 
 	@Override
-	public void flowSuspended(XflowContext context, String flowId) {
+	public void flowSuspended(String flowId, XflowContext context) {
 	}
 
 	@Override
-	public void flowResumed(XflowContext context, String flowId) {
+	public void flowResumed(String flowId, XflowContext context) {
 	}
 
 	@Override
-	public void flowFailed(XflowContext context, String flowId) {
+	public void flowRestored(String flowId, XflowContext context) {
 	}
 
 	@Override
-	public void flowAborted(XflowContext context, String flowId, String reason) {
+	public void flowFailed(String flowId, XflowContext context) {
 	}
 
 	@Override
-	public void nodeStarted(XflowContext context, String nodeId) {
+	public void flowAborted(String flowId, XflowContext context, String reason) {
 	}
 
 	@Override
-	public void nodeRetried(XflowContext context, String nodeId) {
+	public void nodeStarted(String nodeId, XflowContext context) {
 	}
 
 	@Override
-	public void nodeSucceed(XflowContext context, String nodeId) {
+	public void nodeRetried(String nodeId, XflowContext context) {
+	}
+
+	@Override
+	public void nodeSucceed(String nodeId, XflowContext context) {
 	}
 	
 	@Override
-	public void nodePended(XflowContext context, String nodeId) {
+	public void nodePended(String nodeId, XflowContext context) {
 	}
 
 	@Override
-	public void nodeFailed(XflowContext context, String nodeId, Throwable e) {
+	public void nodeFailed(String nodeId, XflowContext context, Throwable e) {
 	}
 	
 	@Override
-	public void nodeRestored(XflowContext context, String nodeId) {
+	public void nodeRestored(String nodeId, XflowContext context) {
 	}
 	
 	@Override
-	public void eventNotifyFailed(XflowContext context, String nodeId, Event event, Throwable e) {
+	public void eventNotifyFailed(String nodeId, XflowContext context, Event event, Throwable e) {
 	}
 
 	@Override
-	public void taskSubmitFailed(XflowContext context, String nodeId, Task task, Throwable e) {
+	public void taskSubmitFailed(String nodeId, XflowContext context, Task task, Throwable e) {
 	}
 	
 	@Override
-	public void mergeSubflowFailed(XflowContext context, String nodeId,  XflowContext subFlowContext, Throwable e) {
-	}
-
-	@Override
-	public void flowRestored(XflowContext context, String flowId) {
+	public void mergeSubflowFailed(String nodeId, XflowContext context,  XflowContext subFlowContext, Throwable e) {
 	}
 }
