@@ -14,7 +14,7 @@
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0"/>
+  <idea-version since-build="173.0" until-build="2024.3.5"/>
 
   <depends>com.intellij.modules.lang</depends>
   <depends>com.xrosstools.idea.gef</depends>

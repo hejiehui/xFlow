@@ -49,18 +49,17 @@ public class SubflowActivityNode extends Node {
 			token.clearFailure();
 			XflowContext parentContext = token.getContext();
 			XflowContext subflowContext = subflowContextRef.get();
-			ActiveToken next = this.singleNext(getToken());
+			List<ActiveToken> nextTokens = next(token);
 
 			try {
 				activity.mergeSubflow(parentContext, subflowContext);
-				succeed();
+				succeed(nextTokens);
 			} catch (Exception e) {
 				getListener().mergeSubflowFailed(subflowId, parentContext, subflowContext, e);
 				failed(e);
 				throw e;
 			}
 			subflowContextRef.set(null);
-			XflowEngine.submit(next);
 		}
 	}
 	

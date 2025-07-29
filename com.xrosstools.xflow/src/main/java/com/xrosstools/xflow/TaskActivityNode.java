@@ -69,7 +69,7 @@ public class TaskActivityNode extends Node {
 	public void submit(XflowContext context, Task task) {
 		assertSubmit(task);
 
-		ActiveToken next = this.singleNext(getToken());
+		List<ActiveToken> nextTokens = next(getToken());
 		synchronized(tasksRef) {
 			assertSubmit(task);
 
@@ -83,8 +83,7 @@ public class TaskActivityNode extends Node {
 			task.setSubmitted();
 			if(completed) {
 				tasksRef.set(null);
-				succeed();
-				XflowEngine.submit(next);
+				succeed(nextTokens);
 			}
 		}
 	}

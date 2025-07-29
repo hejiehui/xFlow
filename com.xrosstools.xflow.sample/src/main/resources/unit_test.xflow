@@ -323,7 +323,7 @@
   <description/>
   <properties/>
   <nodes>
-   <auto_activity location="356,279">
+   <auto_activity location="354,279">
     <properties/>
    </auto_activity>
    <binary_router location="89,189">
@@ -344,7 +344,7 @@
    </auto_activity>
   </nodes>
   <links>
-   <link id="true" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link id="false" source_index="1" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
    <link default_link="false" id="abc" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="0"/>
   </links>
  </flow>

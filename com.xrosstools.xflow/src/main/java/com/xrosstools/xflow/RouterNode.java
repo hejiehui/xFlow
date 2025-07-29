@@ -1,7 +1,6 @@
 package com.xrosstools.xflow;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
-
-import com.xrosstools.xflow.def.NodeDef;
 
 public abstract class RouterNode extends Node {
 	private static class RouteInfo {

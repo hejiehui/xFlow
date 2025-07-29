@@ -46,17 +46,16 @@ public class EventActivityNode extends Node {
 		synchronized (eventIdRef) {
 			assertNotify();
 
-			ActiveToken next = this.singleNext(getToken());
+			List<ActiveToken> nextTokens = next(getToken());
 			try {
 				activity.notify(context, event);
 				eventIdRef.set(null);
-				succeed();
+				succeed(nextTokens);
 			} catch (Throwable e) {
 				getListener().eventNotifyFailed(getId(), context, event, e);
 				failed(e);
 				throw e;
 			}
-			XflowEngine.submit(next);
 		}
 	}
 	

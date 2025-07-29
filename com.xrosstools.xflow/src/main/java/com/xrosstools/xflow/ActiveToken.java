@@ -1,5 +1,6 @@
 package com.xrosstools.xflow;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -20,13 +21,12 @@ public class ActiveToken implements Runnable {
 	private AtomicReference<Throwable> failureRef = new AtomicReference<>();
 	
 	public ActiveToken(XflowContext context, Node node) {
-		this.context = context;
-		this.setNode(node);
-		routeTokens = new CopyOnWriteArrayList<>();
+		this(context, node, new ArrayList<RouteToken>());
 	}
 
 	public ActiveToken(XflowContext context, Node node, Collection<RouteToken> routes) {
-		this(context, node);
+		this.context = context;
+		this.node = node;
 		routeTokens = new CopyOnWriteArrayList<>(routes);
 	}
 	
@@ -64,26 +64,7 @@ public class ActiveToken implements Runnable {
 			}
 		} while(!node.start(this));
 
-		List<ActiveToken> nextTokens = node.handle(node, node.isSinglePhased());
-
-		if(node.isFailed())
-			return;
-
-		if(!node.isSinglePhased())
-			return;
-
-		if(flow.isEnded())
-			return;
-			
-		if(flow.isSuspended()) {
-			flow.pending(nextTokens);
-			return;
-		}
-		
-		XflowEngine.submit(nextTokens);
-//
-//		//Check fail after token executed
-//		flow.isFailed();
+		node.handle(node, node.isSinglePhased());
 	}
 
 	public XflowContext getContext() {

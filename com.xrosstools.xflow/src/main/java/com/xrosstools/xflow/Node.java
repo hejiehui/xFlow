@@ -131,8 +131,10 @@ public abstract class Node implements NodeHandler {
 			((GlobalConfigAware)configurable).initGlobalConfig(config);
 	}
 	
-	public void succeed() {
+	public void succeed(List<ActiveToken> nextTokens) {
 		ActiveToken token = getToken();
+		Xflow flow = token.getContext().getFlow();
+
 		token.setFailure(null);
 		
 		releaseToken();
@@ -141,7 +143,20 @@ public abstract class Node implements NodeHandler {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		token.getContext().getFlow().tick();
+		
+		//tok and check
+		if(flow.isEnded())
+			return;
+			
+		if(flow.isSuspended()) {
+			flow.pending(nextTokens);
+			return;
+		}
+		
+		XflowEngine.submit(nextTokens);
+		flow.tok();
+		flow.checkStatus();
+
 	}
 	
 	public void failed(Throwable ex) {
@@ -153,7 +168,6 @@ public abstract class Node implements NodeHandler {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		token.getContext().getFlow().tick();
 	}
 	
 	public List<ActiveToken> next(ActiveToken token, Node node) {
@@ -178,23 +192,19 @@ public abstract class Node implements NodeHandler {
 	public void retry() {
 		assertToken();
 		getToken().clearFailure();
-		XflowEngine.submit(handle(this, isSinglePhased()));
+		handle(this, isSinglePhased());
 	}
 	
-	public List<ActiveToken> handle(NodeHandler handle, boolean isLastPhase) {
+	public void handle(NodeHandler handle, boolean isLastPhase) {
 		assertToken();
 
 		try {
 			List<ActiveToken> nextTokens = handle.handle(getToken());
-			if(isLastPhase) {
-				succeed();
-				return nextTokens;
-			}
+			if(isLastPhase)
+				succeed(nextTokens);
 		} catch(Throwable e) {
 			failed(e);
 			throw e;
 		}
-
-		return Collections.emptyList();
 	}
 }

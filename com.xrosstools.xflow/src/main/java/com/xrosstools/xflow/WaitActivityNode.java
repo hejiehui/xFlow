@@ -19,26 +19,21 @@ public class WaitActivityNode extends Node {
 	}
 
 	public List<ActiveToken> handle(ActiveToken token) {
-		if(getOutputs().length == 0)
-			XflowEngine.schedule(new TimeoutTask(token, null), count, unit);
-		else
-			XflowEngine.schedule(new TimeoutTask(token, getOutputs()[0].getTarget()), count, unit);
-
+		XflowEngine.schedule(new TimeoutTask(token, next(token)), count, unit);
 		return Collections.emptyList();
 	}
 	
 	private static class TimeoutTask implements Runnable {
 		private ActiveToken token;
-		private Node next;
-		private TimeoutTask(ActiveToken token, Node next) {
+		private List<ActiveToken> nextTokens;
+		private TimeoutTask(ActiveToken token, List<ActiveToken> nextTokens) {
 			this.token = token;
-			this.next = next;
+			this.nextTokens= nextTokens;
 		}
 
 		@Override
 		public void run() {
-			token.getNode().succeed();
-			token.submit(next);
+			token.getNode().succeed(nextTokens);
 		}
 	}
 }
