@@ -1,20 +1,21 @@
 <idea-plugin>
   <id>com.xrosstools.xflow.editor</id>
   <name>Xross Workflow Editor</name>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <vendor email="he_jiehui@163.com" url="https://www.xrosstools.com">Xross Tools</vendor>
 
   <description><![CDATA[
-      <em>1.0.0</em>Support basic concept of behavior tree.<br>
+      <em>1.1.0</em>Support basic concept of behavior tree.<br>
     ]]></description>
 
   <change-notes><![CDATA[
+      <em>1.1.0</em>Support method reference.<br>
       <em>1.0.0</em>Initial version of workflow editor.<br>
     ]]>
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0" until-build="2024.3.5"/>
+  <idea-version since-build="173.0"/>
 
   <depends>com.intellij.modules.lang</depends>
   <depends>com.xrosstools.idea.gef</depends>

@@ -14,7 +14,7 @@ public abstract class Node implements NodeHandler {
 	private int inputCount;
 	private Link[] outputs = EMPTY;
 	private AtomicReference<ActiveToken> tokenRef = new AtomicReference<>();
-	private XflowListener listener = new XflowListenerAdapter();
+	private XflowListener listener;
 	
 	public abstract boolean isSinglePhased();
 	

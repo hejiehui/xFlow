@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xflow evaluator="">
+ <description/>
+ <properties/>
+ <flow id="auto activity" listener="">
+  <description/>
+  <properties/>
+  <nodes>
+   <start id="start" location="92,212"/>
+   <end id="end" location="610,213"/>
+   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.spring.TestSpringAutoActivity" label="bbb" location="308,216">
+    <properties/>
+   </auto_activity>
+  </nodes>
+  <links>
+   <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
+   <link source_index="2" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+  </links>
+ </flow>
+</xflow>
