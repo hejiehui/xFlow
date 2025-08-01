@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xrosstools</groupId>
   <artifactId>xflow</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
     <name>xross flow</name>
     <description>The runtime for xross flow model</description>
     <url>https://github.com/hejiehui/xFlow/tree/master/com.xrosstools.xflow</url>
@@ -37,7 +37,6 @@
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -97,7 +96,7 @@
             <plugin> 
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.7.0</version>
+                <version>0.8.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>

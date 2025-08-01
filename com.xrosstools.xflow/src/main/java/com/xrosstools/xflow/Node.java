@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.xrosstools.xflow.imp.XflowListenerAdapter;
-
 public abstract class Node implements NodeHandler {
 	private final static Link[] EMPTY = new Link[0];
 	private Object configurable;
@@ -69,8 +67,8 @@ public abstract class Node implements NodeHandler {
 
 	/**
 	 * Make sure only one token runs at a time
-	 * @param token
-	 * @return
+	 * @param token active token that will execute current node
+	 * @return true if token get the permit
 	 */
 	public boolean start(ActiveToken token) {
 		//When node fails, the token will not be released

@@ -17,7 +17,8 @@ public class EventSpec extends DataMap {
 	
 	/**
 	 * The system will initialize this
-	 * @param activityId
+	 * @param activityId the node id of current event node
+	 * @return the current spec for chain action
 	 */
 	public EventSpec initActivityId(String activityId) {
 		this.activityId = activityId;
@@ -26,7 +27,8 @@ public class EventSpec extends DataMap {
 	
 	/**
 	 * The developer needs to initialize this
-	 * @param batchId
+	 * @param dueDate optional date that indicate the deadline of event to be arrived
+	 * @return the current spec for chain action
 	 */
 	public EventSpec initDueDate(Date dueDate) {
 		this.dueDate = dueDate;

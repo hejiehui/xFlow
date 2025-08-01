@@ -32,7 +32,8 @@ public class Task extends DataMap {
 	
 	/**
 	 * The system will initialize this
-	 * @param activityId
+	 * @param activityId id of current task node
+	 * @return a task that requires further submit
 	 */
 	public Task initActivityId(String activityId) {
 		this.activityId = activityId;
@@ -41,7 +42,7 @@ public class Task extends DataMap {
 
 	/**
 	 * The developer needs to initialize this
-	 * @param batchId
+	 * @param dueDate optional deadline that indicate when the task needs to be submitted
 	 */
 	public void initDueDate(Date dueDate) {
 		this.dueDate = dueDate;
@@ -59,7 +60,6 @@ public class Task extends DataMap {
 		return assignee;
 	}
 	
-	//TODO need to listen change event
 	public void reassign(String assignee) {
 		this.assignee = assignee;
 	}

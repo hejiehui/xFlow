@@ -141,6 +141,8 @@ public class Xflow {
 
 	/**
 	 * Restore an xflow instance from a recorder
+	 * @param context execution context
+	 * @param flowRecorder recorder that used to restore a flow
 	 */
 	public void restore(XflowContext context, XflowRecorder flowRecorder) {
 		reqire(XflowStatus.CREATED);
@@ -316,8 +318,8 @@ public class Xflow {
 
 	/**
 	 * If assignee is null, it will return all task that is not assigned.
-	 * @param assignee
-	 * @return
+	 * @param assignee the person who has task assignment
+	 * @return all tasks that assignee needs to process. Include tasks from different task activity nodes.
 	 */
 	public List<Task> getTasks(String assignee) {
 		List<Task> taskList = new ArrayList<>();
@@ -329,8 +331,8 @@ public class Xflow {
 	}
 	
 	/**
-	 * Submit will not cause task activity fail. 
-	 * @param task
+	 * Submit a task. 
+	 * @param task the submitted task
 	 */
 	public void submit(Task task) {
 		reqire(XflowStatus.RUNNING);
