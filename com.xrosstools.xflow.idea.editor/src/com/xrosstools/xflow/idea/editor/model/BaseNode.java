@@ -35,6 +35,14 @@ public abstract class BaseNode extends Node<Link> implements PropertyConstants {
         this.id.set(id);
     }
 
+    public String getId() {
+        return id.get();
+    }
+
+    public String getDescription() {
+        return description.get();
+    }
+
     public abstract NodeType getType();
 
     public String getDisplayText() {

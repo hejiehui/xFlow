@@ -5,7 +5,9 @@
   <vendor email="he_jiehui@163.com" url="https://www.xrosstools.com">Xross Tools</vendor>
 
   <description><![CDATA[
-      <em>1.1.0</em>Support basic concept of behavior tree.<br>
+      Xflow is a workflow editor and engine..<br>
+      It does not require any backend server, neither app server or database .<br>
+      You can embed xflow into your own app.<br>
     ]]></description>
 
   <change-notes><![CDATA[
@@ -18,6 +20,7 @@
   <idea-version since-build="173.0"/>
 
   <depends>com.intellij.modules.lang</depends>
+  <depends>com.intellij.modules.java</depends>
   <depends>com.xrosstools.idea.gef</depends>
 
   <extensions defaultExtensionNs="com.intellij">
