@@ -60,7 +60,7 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 #### 缺省属性
 缺省属性由选中元素的种类来决定，由系统自动注入，用于构建xflow对应的运行时实例。
 
-##### 模型文件级属性（全局属性）
+##### 模型文件级属性
 仅包括可选的Description属性，既模型文件的全局描述。例子见上
 
 ##### xflow属性
@@ -73,6 +73,30 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
 #### 自定义属性
 自定义属性由用户自己提供，用于对业务逻辑进行配置。xflow模型文件，每个xflow模型，每个节点都可以增加任意多自定义属性。可以通过实现特定接口来获得这些属性。
+
+##### 全局属性接口
+
+    package com.xrosstools.xflow;
+    
+    public interface GlobalConfigAware {
+    	void initGlobalConfig(DataMap config);
+    }
+
+##### 流程属性接口
+    package com.xrosstools.xflow;
+    
+    public interface FlowConfigAware {
+    	void initFlowConfig(DataMap config);
+    }
+
+##### 节点属性接口
+
+    package com.xrosstools.xflow;
+    
+    public interface NodeConfigAware {
+    	void initNodeConfig(DataMap config);
+    }
+
 
 #### Id属性的唯一性
 xflow模型，节点和连线一般都包含Id属性，其中：
@@ -134,22 +158,31 @@ Auto activity是自动节点，当流程实例执行到该节点，会调用Auto
 
 <img width="1307" height="1187" alt="image" src="https://github.com/user-attachments/assets/e41182a7-4bf1-48c0-9b99-5289293adcba" />
 
-    public class TestAutoActivity extends TestAdapter implements AutoActivity, NodeConfigAware {
+    public class TestAutoActivity extends TestAdapter implements AutoActivity, NodeConfigAware, GlobalConfigAware {
     	public static final String PROP_KEY_COUNTER = "counter";
     	public static final String PROP_KEY_STEP = "step";
     
     	private int step;
+    	
+    	private DataMap config;
     	@Override
     	public void execute(XflowContext context) {
     		call(context);
     
     		AtomicInteger counter = context.get(PROP_KEY_COUNTER);
     		counter.addAndGet(step);
+    		
+    		context.copyFrom(config, "globalA", "globalB", "gBool");
     	}
     
     	@Override
     	public void initNodeConfig(DataMap config) {
     		step = config.get(PROP_KEY_STEP);
+    	}
+    
+    	@Override
+    	public void initGlobalConfig(DataMap config) {
+    		this.config = config;
     	}
     }
 
@@ -427,14 +460,17 @@ Parallel router是二选一路由节点，当流程实例执行到该节点，�
 
 其中模型文件对应属性又可称为全局属性，xflow属性可称为流程属性。
 
-### 数据类型
-目前支持String，Integer等基本数据类型和Date， Timeunit类型。
+每个属性都需要指定属性类型，目前属性类型支持String，Integer等基本数据类型和Date， Timeunit类型。
 
 ### 全局属性
 为模型文件级别公共属性，所有该模型文件中的xflow都可以获取。要创建，删除和修改全局属性可在编辑器空白处（非某个xlfow模型窗口中），右键单击即可调出
 
 例如：
 <img width="787" height="664" alt="image" src="https://github.com/user-attachments/assets/f09f4079-44f2-4936-8bbc-75fe8bfcc6f1" />
+
+选择属性对应的类型后，在对话框中输入属性名称，例如：
+
+<img width="441" height="156" alt="image" src="https://github.com/user-attachments/assets/75a24919-8bca-4e29-84e1-3b583ec3a26f" />
 
 ### 流程属性
 为该xflow特定属性，仅该xflow内部节点可以获取。要创建，删除和修改xflow属性可在xflow模型窗口空白处右键单击即可调出
@@ -461,9 +497,174 @@ Parallel router是二选一路由节点，当流程实例执行到该节点，�
 <img width="771" height="478" alt="image" src="https://github.com/user-attachments/assets/68ec9d86-8052-4bc0-a91d-8cc8b56664e1" />
 
 ## 帮助类
+在运行时，用户可以直接调用XflowFactioy完成读取模型文件，生成流程实例的工作。但为方便用户调用，避免对模型文件，流程和节点名称的硬编码，用户可以选择生成Helper类。
+
+首先选择该类对应的源文件目录或要覆盖的旧文件，再单击Helper按钮，输入名称即可，例如
+<img width="1308" height="904" alt="image" src="https://github.com/user-attachments/assets/b91f42bb-5a5a-47fa-a9a0-b2a6074acdc9" />
+
+由于unit_test.xflow中部分节点Id和Label配置无法生成符合Java语法的定义，下面以routes.xflow为例生成的helper。其中第一个流程parallel case1如下：
+
+<img width="1648" height="959" alt="image" src="https://github.com/user-attachments/assets/10145a70-5389-43ba-bfc4-865348e6fef5" />
+
+生成的代码如下：
+
+    package com.xrosstools.xflow.sample;
+    
+    import com.xrosstools.xflow.Xflow;
+    import com.xrosstools.xflow.XflowFactory;
+    
+    /**
+        IMPORTANT NOTE!
+        This is generated code based on Xross Flow model file "xflow/routes.xflow".
+        In case the model file changes, regenerate this file.
+        Do Not Modify It.
+    
+        
+    
+        Last generated time:
+        2025-08-03T14:20:25.236+08:00[Asia/Shanghai]
+    */
+    public class Routes {
+        
+        public static class ParallelCase1 {
+            /*  Node Names */
+            public static final String START = "start";
+    
+            public static final String END = "end";
+    
+            public static final String R1 = "R1";
+    
+            public static final String ABC_DEF = "a1";
+    
+            public static final String A3 = "a3";
+    
+            public static final String A2 = "a2";
+    
+            public static final String R2 = "R2";
+    
+            public static final String A4 = "a4";
+    
+            public static final String R3 = "R3";
+    
+            public static Xflow create() {
+                return load().create("parallel case1");
+            }
+        }
+        。。。
+        
+        private static volatile XflowFactory factory;
+        private static XflowFactory load()  {
+            if(factory == null) {
+                synchronized(Routes.class) {
+                    if(factory == null)
+                        factory = XflowFactory.load("xflow/routes.xflow");
+                }
+            }
+            return factory;
+        }
+    }
+
+### 代码结构
+
+* Helper类：模型文件对应Java类
+* 流程定义类：每个流程模型对应内部类
+* 节点名称常量：该流程内部每个节点名称定义。
+* create方法：流程实例构造方法
+* factory静态属性：工厂类实例
+* load方法： 工程类实例构造方法
+
+其中节点名常量由节点的Id和Label属性决定。如果没有配置Label属性，则常量名根据由Id产生，如果有Label属性，则由Label属性值产生。产生逻辑是将空格替换为下划线：_，再转大写。
 
 # 模型调用
-## 流程实例操作
+## maven依赖
+
+    <groupId>com.xrosstools</groupId>
+    <artifactId>xflow</artifactId>
+    <version>1.0.0</version>
+
+## 加载模型文件
+
+    XflowFactory factory = XflowFactory.load("xflow/unit_test.xflow");
+
+上面加载模型位于resources/xflow/unit_test.xflow。如果使用Helper，该步骤在load方法中调用。
+
+## 创建流程上下文
+XflowContext提供流程实例启动和后继运行所需数据上下文，该类继承自DataMap，并包括父流程活动令牌和当前流程实例，定义如下：
+
+    package com.xrosstools.xflow;
+    
+    public class XflowContext extends DataMap {
+    	private ActiveToken parentToken;
+    	private Xflow flow;
+    
+    	public void setFlow(Xflow flow) {
+    		this.flow = flow;
+    	}
+    	
+    	public Xflow getFlow() {
+    		return flow;
+    	}
+    
+    	public ActiveToken getParentToken() {
+    		return parentToken;
+    	}
+    
+    	public void setParentToken(ActiveToken parentToken) {
+    		this.parentToken = parentToken;
+    	}
+    }
+
+DataMap是一个通用数据容器类，内部通过ConcurrentHashMap存储数据。
+
+XflowContext创建示例：
+
+    XflowContext context = new XflowContext();
+    context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
+
+## 创建流程实例
+用流程id调用XflowFactory.create方法来创建流程实例。
+
+    Xflow f = factory.create("auto activity");
+
+推荐使用生成的Helper类，例如
+
+    Xflow f = UnitTest.AutoActivity.create();
+
+## 启动流程实例
+用XflowContext实例去调用Xflow的start方法来启动流程实例。
+
+    f.start(context);
+
+## 查询流程实例状态
+流程实例状态通过以下几个方法进行查询：
+* isRunning：是否还在运行
+* isSuspended：是否处于暂停状态
+* isEnded：实例是否结束，当状态处于SUCCEED，FAILED或ABORTED时判断为结束
+* isFailed：流程实例是否失败，既无任何活动节点，也没到达结束节点
+* isAbort：是否处于放弃状态，该状态由人为调用abort方法触发
+* getAbortReason：返回abort原因
+
+例如：
+
+    f.isRunning();
+    f.isSuspended();
+    f.isEnded();
+    f.isFailed();
+    f.isAbort();
+
+## 改变流程实例状态
+在流程实例生命周期内，其状态可由下列方法改变：
+* suspend：暂停流程实例运行，由用户决定何时调用。当前正在执行的节点不受影响，但所有当前执行节点完成后，后继节点进入等待状态
+* resume：恢复流程实例运行，由用户决定何时调用。所有处于等待状态的节点将被调度执行
+* succeed：流程成功结束，当流程实例抵达end节点时由系统自动调用
+* abort：放弃实例继续执行，要提供放弃原因
+
+例如：
+    
+    f.suspend();
+    f.resume();
+    f.abort(reason);
+
 ## 节点操作
 ## Spring支持
 ## 持久化
