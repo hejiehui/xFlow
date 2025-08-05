@@ -31,7 +31,6 @@ public class XflowDiagramFactory implements PropertyConstants {
 
     private static final String NAME = PROP_ID.toLowerCase();
     private static final String DESCRIPTION = PROP_DESCRIPTION.toLowerCase();
-    private static final String EVALUATOR = PROP_EVALUATOR.toLowerCase();
     private static final String LISTENER = PROP_LISTENER.toLowerCase();
 
     private static final String NODES = "nodes";
@@ -71,7 +70,6 @@ public class XflowDiagramFactory implements PropertyConstants {
         XflowDiagram diagram = new XflowDiagram();
 
         diagram.setPropertyValue(PROP_DESCRIPTION, getChildNodeText(root, DESCRIPTION));
-        diagram.setPropertyValue(PROP_EVALUATOR, getAttribute(root, EVALUATOR));
         readProperties(root, diagram);
 
         diagram.getChildren().addAll(readFlows(getValidChildNodes(root, FLOW)));
@@ -161,7 +159,6 @@ public class XflowDiagramFactory implements PropertyConstants {
             doc.appendChild(root);
 
             root.appendChild(createNode(doc, DESCRIPTION, diagram.getDescription()));
-            root.setAttribute(EVALUATOR, diagram.getEvaluator());
 
             Element propertiesNode = createNode(doc, root, PROPERTIES);
             propertyAccessor.writeProperties(doc, propertiesNode, diagram);
