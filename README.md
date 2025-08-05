@@ -769,6 +769,39 @@ xflow通过下列两个方法获取子流程状态
 * getSubflow(nodeId)：获取给定子流程节点对应子流程实例
 
 ## Spring支持
+用户可以通过设置XflowSpring来支持Spring，具体有两种方式。
+
+方式一，定义返回XflowSpring实例的Bean工厂方法。例如：
+
+	@Configuration
+	@ComponentScan
+	public class SpringBeanFactoryTest extends TestAdapter {
+	
+	    @Bean
+	    XflowSpring createFactory() {
+	    	return new XflowSpring();
+	    }
+	    
+	    @BeforeClass
+	    public static void setup() throws Exception {
+	        ApplicationContext context = new AnnotationConfigApplicationContext(SpringBeanFactoryTest.class);
+	    }
+
+案例代码参考 [SpringBeanFactoryTest](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/spring/SpringBeanFactoryTest.java)
+
+方式二，手工初始化XflowSpring类。例如：
+
+	@Configuration
+	@ComponentScan
+	public class SpringDeclareTest extends TestAdapter {
+	    @BeforeClass
+	    public static void setup() throws Exception {
+	        ApplicationContext context = new AnnotationConfigApplicationContext(SpringDeclareTest.class);
+	        //The following can be removed. Because spring will auto find this class
+	        XflowSpring.enable(context);
+		}
+	    
+案例代码参考 [SpringDeclareTest](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/spring/SpringDeclareTest.java)
 
 ## 监听器
 XflowListener定义了流程实例监听器所记录的事件，主要分为
