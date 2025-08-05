@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class Xflow {
 	private String id;
+	private String instanceId;
 	private Map<String, Node> nodes = new HashMap<String, Node>();
 	private XflowListener listener;
 
@@ -51,6 +52,14 @@ public class Xflow {
 		return id;
 	}
 	
+	public String getInstanceId() {
+		return instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
+	}
+
 	public XflowContext getContext() {
 		return context;
 	}
@@ -247,8 +256,16 @@ public class Xflow {
 				XflowStatus.ABORTED == cur;
 	}
 	
+	public boolean isSucced() {
+		return XflowStatus.SUCCEED == statusRef.get();
+	}
+	
 	public boolean isFailed() {
 		return statusRef.get() == XflowStatus.FAILED;
+	}
+	
+	public boolean isAbort() {
+		return XflowStatus.ABORTED == statusRef.get();
 	}
 
 	public void checkStatus() {
@@ -257,10 +274,6 @@ public class Xflow {
 
 		if(statusRef.compareAndSet(XflowStatus.RUNNING, XflowStatus.FAILED))
 			listener.flowFailed(id, context);
-	}
-	
-	public boolean isAbort() {
-		return XflowStatus.ABORTED == statusRef.get();
 	}
 	
 	public String getAbortReason() {

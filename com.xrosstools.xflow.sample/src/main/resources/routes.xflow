@@ -10,7 +10,7 @@
    <start id="start" location="43,272"/>
    <end id="end" location="828,311"/>
    <parallel_router id="R1" location="211,265"/>
-   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.TestAutoActivity" location="385,129">
+   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.TestAutoActivity" label="abc def" location="385,129">
     <properties>
      <property key="step" type="Integer" value="10"/>
     </properties>
@@ -98,31 +98,31 @@
      <property key="quantity field" type="String" value="counter"/>
     </properties>
    </binary_router>
-   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="369,116">
+   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a2" location="369,116">
     <properties/>
    </auto_activity>
    <parallel_router id="R2" location="276,213"/>
    <parallel_router id="R3" location="289,461"/>
-   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" location="367,284">
+   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a3" location="367,284">
     <properties/>
    </auto_activity>
-   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" location="359,385">
+   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a4" location="359,385">
     <properties/>
    </auto_activity>
-   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" location="364,507">
+   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a5" location="364,507">
     <properties/>
    </auto_activity>
-   <auto_activity id="6" implementation="com.xrosstools.xflow.sample.TestAddOne" location="571,338">
+   <auto_activity id="6" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a6" location="571,338">
     <properties/>
    </auto_activity>
-   <auto_activity id="7" implementation="com.xrosstools.xflow.sample.TestAddOne" location="561,469">
+   <auto_activity id="7" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a7" location="561,469">
     <properties/>
    </auto_activity>
    <parallel_router id="R5" location="714,288"/>
-   <auto_activity id="8" implementation="com.xrosstools.xflow.sample.TestAddOne" location="782,286">
+   <auto_activity id="8" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a8" location="782,286">
     <properties/>
    </auto_activity>
-   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="82,301">
+   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a1" location="82,301">
     <properties/>
    </auto_activity>
    <end id="end" location="1032,303"/>
@@ -172,10 +172,10 @@
    </binary_router>
    <end id="end" location="797,303"/>
    <parallel_router id="R3" location="436,285"/>
-   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="499,211">
+   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a3" location="499,211">
     <properties/>
    </auto_activity>
-   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="499,360">
+   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a4" location="499,360">
     <properties/>
    </auto_activity>
    <parallel_router id="R4" location="638,288"/>
@@ -261,26 +261,27 @@
    <inclusive_router id="R1" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="182,217">
     <properties/>
    </inclusive_router>
-   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="271,117">
+   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a1" location="271,117">
     <properties/>
    </auto_activity>
-   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="289,373">
+   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a2" location="289,373">
+    <description/>
     <properties/>
    </auto_activity>
    <inclusive_router id="R2" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="464,362">
     <properties/>
    </inclusive_router>
-   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" location="512,258">
+   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a3" location="512,258">
     <properties/>
    </auto_activity>
-   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" location="534,422">
+   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a4" location="534,422">
     <properties/>
    </auto_activity>
    <inclusive_router id="R3" location="739,249">
     <properties/>
    </inclusive_router>
    <end id="end" location="975,270"/>
-   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" location="812,256">
+   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a5" location="812,256">
     <properties/>
    </auto_activity>
   </nodes>
@@ -393,58 +394,58 @@
    <exclusive_router id="R1" implementation="com.xrosstools.xflow.sample.TestExclusiveRouter" location="105,272">
     <properties/>
    </exclusive_router>
-   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" location="352,67">
+   <auto_activity id="1" implementation="com.xrosstools.xflow.sample.TestAddOne" label="ax1" location="353,67">
     <properties/>
    </auto_activity>
-   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" location="332,247">
+   <auto_activity id="2" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a2" location="332,247">
     <description/>
     <properties/>
    </auto_activity>
-   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" location="349,548">
+   <auto_activity id="4" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a4" location="349,548">
     <properties/>
    </auto_activity>
    <parallel_router id="R2" location="296,133"/>
    <parallel_router id="R3" location="482,170"/>
-   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" location="614,80">
+   <auto_activity id="5" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a5" location="614,80">
     <properties/>
    </auto_activity>
-   <auto_activity id="7" implementation="com.xrosstools.xflow.sample.TestAddOne" location="612,246">
+   <auto_activity id="7" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a7" location="612,246">
     <properties/>
    </auto_activity>
-   <auto_activity id="6" implementation="com.xrosstools.xflow.sample.TestAddOne" location="616,170">
+   <auto_activity id="6" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a6" location="616,170">
     <properties/>
    </auto_activity>
    <parallel_router id="R4" location="767,179"/>
-   <auto_activity id="11" implementation="com.xrosstools.xflow.sample.TestAddOne" location="843,174">
+   <auto_activity id="11" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a11" location="843,174">
     <properties/>
    </auto_activity>
    <inclusive_router id="R5" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="246,486">
     <properties/>
    </inclusive_router>
-   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" location="351,416">
+   <auto_activity id="3" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a3" location="351,416">
     <properties/>
    </auto_activity>
    <inclusive_router id="R6" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="496,491">
     <properties/>
    </inclusive_router>
-   <auto_activity id="10" implementation="com.xrosstools.xflow.sample.TestAddOne" location="580,539">
+   <auto_activity id="10" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a10" location="580,539">
     <properties/>
    </auto_activity>
    <parallel_router id="R8" location="758,495"/>
-   <auto_activity id="12" implementation="com.xrosstools.xflow.sample.TestAddOne" location="815,417">
+   <auto_activity id="12" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a12" location="815,417">
     <properties/>
    </auto_activity>
-   <auto_activity id="13" implementation="com.xrosstools.xflow.sample.TestAddOne" location="838,565">
+   <auto_activity id="13" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a13" location="838,565">
     <properties/>
    </auto_activity>
    <parallel_router id="R9" location="960,514"/>
    <exclusive_router id="R10" location="1035,293">
     <properties/>
    </exclusive_router>
-   <auto_activity id="14" implementation="com.xrosstools.xflow.sample.TestAddOne" location="1096,292">
+   <auto_activity id="14" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a14" location="1096,292">
     <properties/>
    </auto_activity>
-   <auto_activity id="9" implementation="com.xrosstools.xflow.sample.TestAddOne" location="582,411">
+   <auto_activity id="9" implementation="com.xrosstools.xflow.sample.TestAddOne" label="a9" location="582,411">
     <properties/>
    </auto_activity>
    <inclusive_router id="R7" location="695,497">

@@ -49,7 +49,7 @@ public class TestAdapter {
 	public static final String taskSubmitFailed = "taskSubmitFailed";
 	public static final String mergeSubflowFailed = "mergeSubflowFailed";
 
-	public static void injectSuspend(XflowContext context) {
+	public static void injectSuspend(final XflowContext context) {
 		context.put(INTERNAL_TASK, new Runnable() {			
 			@Override
 			public void run() {
@@ -59,7 +59,7 @@ public class TestAdapter {
 		});
 	}
 
-	public static void injectSuspend(XflowContext context, String callback) {
+	public static void injectSuspend(final XflowContext context, final String callback) {
 		context.put(CALL_BACK, callback);
 		context.put(FLOW_TASK, new Runnable() {			
 			@Override
@@ -70,7 +70,7 @@ public class TestAdapter {
 		});
 	}
 
-	public static void injectSuspend(XflowContext context, String callback, String nodeId) {
+	public static void injectSuspend(final XflowContext context, final String callback, final String nodeId) {
 		context.put(CALL_BACK, callback);
 		context.put(nodeId, new Runnable() {			
 			@Override
@@ -81,7 +81,7 @@ public class TestAdapter {
 		});
 	}
 
-	public static void injectException(XflowContext context, Throwable e) {
+	public static void injectException(final XflowContext context, final Throwable e) {
 		context.put(INTERNAL_TASK, new Runnable() {			
 			@Override
 			public void run() {
@@ -90,7 +90,7 @@ public class TestAdapter {
 		});
 	}
 	
-	public static void restoreNormal(XflowContext context) {
+	public static void restoreNormal(final XflowContext context) {
 		context.put(INTERNAL_TASK, new Runnable() {			
 			@Override
 			public void run() {
@@ -98,7 +98,7 @@ public class TestAdapter {
 		});
 	}
 	
-	public static void injectWait(XflowContext context, long dur) {
+	public static void injectWait(final XflowContext context, final long dur) {
 		context.put(INTERNAL_TASK, new Runnable() {			
 			@Override
 			public void run() {

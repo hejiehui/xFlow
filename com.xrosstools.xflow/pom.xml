@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xrosstools</groupId>
   <artifactId>xflow</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.2</version>
     <name>xross flow</name>
     <description>The runtime for xross flow model</description>
     <url>https://github.com/hejiehui/xFlow/tree/master/com.xrosstools.xflow</url>

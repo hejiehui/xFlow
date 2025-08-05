@@ -17,6 +17,7 @@ import com.xrosstools.xflow.EventSpec;
 import com.xrosstools.xflow.Task;
 import com.xrosstools.xflow.Xflow;
 import com.xrosstools.xflow.XflowContext;
+import com.xrosstools.xflow.XflowStatus;
 
 public class NormalTest {
 	@Test
@@ -25,9 +26,17 @@ public class NormalTest {
 		XflowContext context = new XflowContext();
 		context.put(TestAutoActivity.PROP_KEY_COUNTER, new AtomicInteger(10));
 		f.start(context);
+		String instId = "abc";
+		f.setInstanceId(instId);
+		assertEquals(instId, f.getInstanceId());
 		waitToEnd(f);
+		assertTrue(f.isSucced());
+		assertTrue(f.getStatus() == XflowStatus.SUCCEED);
 		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
 		assertEquals(20, counter.get());
+		assertEquals(100, (int)context.get("globalB"));
+		assertEquals("abc", (String)context.get("globalA"));
+		assertTrue(context.get("gBool"));
 	}
 
 	@Test
