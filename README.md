@@ -171,8 +171,9 @@ Auto activity是自动节点，当流程实例执行到该节点，会调用Auto
     
     		AtomicInteger counter = context.get(PROP_KEY_COUNTER);
     		counter.addAndGet(step);
-    		
-    		context.copyFrom(config, "globalA", "globalB", "gBool");
+
+      		if(config.contains("globalA"))
+    			context.copyFrom(config, "globalA", "globalB", "gBool");
     	}
     
     	@Override
@@ -259,7 +260,7 @@ Event activity是事件节点，当流程实例执行到该节点，会调用Eve
     public interface EventActivity {
     	EventSpec specify(XflowContext context);
     
-    	void notify(XflowContext context, Event event);
+    	void notify(XflowContext context, EventSpec spec, Event event);
     }
 
 例如：
@@ -276,7 +277,7 @@ Event activity是事件节点，当流程实例执行到该节点，会调用Eve
     	}
     
     	@Override
-    	public void notify(XflowContext context, Event event) {
+    	public void notify(XflowContext context, EventSpec spec, Event event) {
     		call(context);
     		if(!event.getId().equals(eventId))
     			throw new IllegalArgumentException();
@@ -580,7 +581,7 @@ Parallel router是二选一路由节点，当流程实例执行到该节点，�
 
     <groupId>com.xrosstools</groupId>
     <artifactId>xflow</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.3</version>
 
 ## 加载模型文件
 
@@ -637,19 +638,23 @@ XflowContext创建示例：
 
 ## 查询流程实例状态
 流程实例状态通过以下几个方法进行查询：
+* getStatus：获得当前流程实例的状态
 * isRunning：是否还在运行
 * isSuspended：是否处于暂停状态
 * isEnded：实例是否结束，当状态处于SUCCEED，FAILED或ABORTED时判断为结束
+* isSucceed：流程实例是否成功，既流程执行抵达结束节点
 * isFailed：流程实例是否失败，既无任何活动节点，也没到达结束节点
 * isAbort：是否处于放弃状态，该状态由人为调用abort方法触发
 * getAbortReason：返回abort原因
 
 例如：
 
+    f.getStatus();
     f.isRunning();
     f.isSuspended();
     f.isEnded();
-    f.isFailed();
+    f.isSucced()；
+1    f.isFailed();
     f.isAbort();
 
 ## 改变流程实例状态
@@ -665,9 +670,112 @@ XflowContext创建示例：
     f.resume();
     f.abort(reason);
 
+## 流程持久化
+虽然Xflow不依赖数据库和第三方服务器，流程实例状态保存在内存，但对于有需要的场景，xflow也提供持久化的支持。主要是下面三个功能
+
+### 流程实例Id
+Xflow提供instanceId的getter和setter，以方便用户记录流程实例Id。该Id由用户负责提供。
+
+### 保存流程实例
+流程实例可以通过以下方法进行保存，保存前需要流程进入暂停状态，并且无活跃节点，否则报错
+
+    public XflowRecorder specify()
+
+例如：
+
+    XflowRecorder recorder = f.specify();
+
+在获取XflowRecorder，用户可以选择任意方式对其进行持久化。
+
+注意流程实例使用的流程上下文XflowContext需用户自行持久化。
+
+### 恢复流程实例
+用户可以使用XflowRecorder来恢复流程实例，方法如下：
+
+    public void restore(XflowContext context, XflowRecorder flowRecorder)
+
+例如：
+
+		f = UnitTest.AutoActivity.create();
+		f.restore(context, recorder);
+
+注意原实例使用的流程上下文XflowContext需用户自行读取或创建。
+
 ## 节点操作
+对节点的操作基本都通过Xflow类代理。用户无法直接操作节点实例。
+
+### 查询状态
+* getActiveNodeIds：获取当前活跃节点列表
+* getFailedNodeIds：获取当前失败节点列表
+* getPendingNodeIds: 获取流程暂停后所有待执行节点列表
+* isActive(nodeId)：查询给定节点是否活跃
+* isFailed(nodeId)：查询给定节点是否失败
+* getFailure(nodeId)：查询给定节点失败报错
+
+例如：
+
+    List<String> ids = subflow.getFailedNodeIds();
+    List<String> ids = f.getActiveNodeIds();
+    f.isActive(nodeId);
+    f.isFailed(nodeId);
+    Throwable e = f.getFailure(nodeId);
+
+### 重试
+当节点执行失败后，可以调用retry操作进行重试。
+
+例如：
+
+    f.retry(nodeId);
+
+## 事件处理
+当流程实例中存在事件活动，在执行到事件活动时，该节点会保持活跃，等待用户提交事件。具体分为查询和提交两部分：
+
+### 查询事件规格
+通过getEventSpecs方法来获取当前实例所有需要提交的事件规格（因可能存在多个事件节点）。或者通过getEventSpec获取给定事件节点的事件规范。
+
+EventSpec本身是DataMap，用户创建时可以设置相关数据。
+
+例如：
+    
+    List<EventSpec> specs = f.getEventSpecs();
+    EventSpec spec = f.getEventSpec("event activity");
+
+EventSpec包含事件节点Id，事件Id和可选的截止时间
+
+### 通知事件发生
+通过notify方法来提交事件
+
+例如：
+
+    Event event = specs.get(0).create();
+    f.notify(event);
+
+## 任务处理
+当流程实例中存在任务活动，在执行到任务活动时，该节点会保持活跃，等待用户提交任务。具体分为查询和提交两部分：
+
+### 查询任务
+可以从任务负责人和任务节点两个维度查询任务：
+* getTasks：按照给定的任务assignee来查找所有当前该处理任务
+* getNodeTasks：按照给定的任务节点名来查找所有当前节点该处理的任务
+
+例如：
+
+    List<Task> tasks = f.getTasks("Jerry");
+    List<Task> nodeTasks = f.getNodeTasks("aaaabbb");
+
+## 查询子流程
+xflow通过下列两个方法获取子流程状态
+* getSubflowContext(nodeId)：获取给定子流程节点所使用上下文
+* getSubflow(nodeId)：获取给定子流程节点对应子流程实例
+
 ## Spring支持
-## 持久化
+
 ## 监听器
+XflowListener定义了流程实例监听器所记录的事件，主要分为
+* 流程实例生命周期事件，如创建，启动，暂停等
+* 节点活动状态如开始，成功，失败，重试等
+* 节点操作如事件提交，任务提交和子流程提交等
 
+具体可参考代码：[XflowListener](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowListener.java)
 
+用户可以继承XflowListenerAdapter并覆盖感兴趣的方法来加速开发自己的监听器。XflowSystemOutListener是XflowListener的一个简单实现，方便用户项目初期进行模型调试。
