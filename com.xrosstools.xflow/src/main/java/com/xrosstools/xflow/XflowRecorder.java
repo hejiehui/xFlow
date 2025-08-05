@@ -3,6 +3,8 @@ package com.xrosstools.xflow;
 import java.util.List;
 
 public class XflowRecorder {
+	private String instanceId;
+	
 	private List<RouteResult> routeResults;
 	
 	private List<ActiveTokenRecord> tokenRecorders;
@@ -11,9 +13,18 @@ public class XflowRecorder {
 	
 	private List<EventSpec> eventSpecs;
 	
-	public XflowRecorder(List<RouteResult> routeResults, List<ActiveTokenRecord> tokenRecorders) {
+	public XflowRecorder(String instanceId, List<RouteResult> routeResults, List<ActiveTokenRecord> tokenRecorders) {
+		this.instanceId = instanceId;
 		this.routeResults = routeResults;
 		this.tokenRecorders = tokenRecorders;
+	}
+
+	public String getInstanceId() {
+		return instanceId;
+	}
+
+	public void setInstanceId(String instanceId) {
+		this.instanceId = instanceId;
 	}
 
 	public List<RouteResult> getRouteResults() {

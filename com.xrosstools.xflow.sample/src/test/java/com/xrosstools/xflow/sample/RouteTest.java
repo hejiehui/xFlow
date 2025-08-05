@@ -189,6 +189,7 @@ public class RouteTest extends TestAdapter {
 			if(i > 1000) {
 				i = 0;
 				System.out.println(f.getActiveNodeIds());
+				f.getFailure("a1").printStackTrace();;
 			}
 		}
 	}

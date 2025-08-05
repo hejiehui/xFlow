@@ -48,7 +48,7 @@ public class EventActivityNode extends Node {
 
 			List<ActiveToken> nextTokens = next(getToken());
 			try {
-				activity.notify(context, event);
+				activity.notify(context, getEventSpec(),  event);
 				eventIdRef.set(null);
 				succeed(nextTokens);
 			} catch (Throwable e) {

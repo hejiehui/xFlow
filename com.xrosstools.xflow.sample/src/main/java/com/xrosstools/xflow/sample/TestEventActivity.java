@@ -17,7 +17,7 @@ public class TestEventActivity extends TestAdapter implements EventActivity, Nod
 	}
 
 	@Override
-	public void notify(XflowContext context, Event event) {
+	public void notify(XflowContext context, EventSpec spec, Event event) {
 		call(context);
 		if(!event.getId().equals(eventId))
 			throw new IllegalArgumentException();

@@ -30,13 +30,13 @@ public class NormalTest {
 		f.setInstanceId(instId);
 		assertEquals(instId, f.getInstanceId());
 		waitToEnd(f);
-		assertTrue(f.isSucced());
+		assertTrue(f.isSucceed());
 		assertTrue(f.getStatus() == XflowStatus.SUCCEED);
 		AtomicInteger counter = context.get(TestAutoActivity.PROP_KEY_COUNTER);
 		assertEquals(20, counter.get());
 		assertEquals(100, (int)context.get("globalB"));
 		assertEquals("abc", (String)context.get("globalA"));
-		assertTrue(context.get("gBool"));
+		assertTrue((boolean)context.get("gBool"));
 	}
 
 	@Test
@@ -47,6 +47,10 @@ public class NormalTest {
 		sleep();
 		List<Task> tasks = f.getTasks("Jerry");
 		assertEquals(5, tasks.size());
+		
+		List<Task> nodeTasks = f.getNodeTasks("aaaabbb");
+		assertEquals(5, nodeTasks.size());
+		
 		FeedbackTask task = (FeedbackTask)tasks.get(0);
 		task.setFeedback("NO");
 		f.submit(task);
@@ -71,6 +75,7 @@ public class NormalTest {
 		sleep();
 		List<EventSpec> specs = f.getEventSpecs();
 		assertEquals(1, specs.size());
+		assertEquals(specs.get(0), f.getEventSpec("event activity"));
 		
 		Event event = specs.get(0).create();
 		f.notify(event);

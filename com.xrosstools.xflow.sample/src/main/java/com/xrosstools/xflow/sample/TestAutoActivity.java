@@ -22,7 +22,8 @@ public class TestAutoActivity extends TestAdapter implements AutoActivity, NodeC
 		AtomicInteger counter = context.get(PROP_KEY_COUNTER);
 		counter.addAndGet(step);
 		
-		context.copyFrom(config, "globalA", "globalB", "gBool");
+		if(config.contains("globalA"))
+			context.copyFrom(config, "globalA", "globalB", "gBool");
 	}
 
 	@Override

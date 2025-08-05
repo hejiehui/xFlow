@@ -3,10 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="0589550a-139a-49fd-b56b-df3926cc66be" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/com.xrosstools.xflow.idea.editor/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/com.xrosstools.xflow.idea.editor/META-INF/plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/META-INF/plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagram.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/java/com/xrosstools/xflow/sample/TestEventActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/main/java/com/xrosstools/xflow/sample/TestEventActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/NormalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/NormalTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/EventActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/EventActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/EventActivityNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/EventActivityNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/Xflow.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/Xflow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowRecorder.java" beforeDir="false" afterPath="$PROJECT_DIR$/../com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowRecorder.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="49" lean-forward="true" selection-start-line="7" selection-start-column="49" selection-end-line="7" selection-end-column="49" />
+            <state relative-caret-position="437">
+              <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -41,7 +45,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
+            <state relative-caret-position="2622">
               <caret line="161" selection-start-line="161" selection-end-line="161" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -221,9 +225,8 @@
     <option name="FILTER_DEBUG" value="true" />
     <option name="CUSTOM_FILTER" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="213" />
-    <option name="y" value="65" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-7" />
     <option name="width" value="1734" />
     <option name="height" value="1399" />
   </component>
@@ -233,6 +236,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -261,11 +265,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1754373918200" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1754387315452" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../xcommon/com.xrosstools.idea.gef/com.xrosstools.idea.gef.jar!/" />
     <property name="project.structure.last.edited" value="SDKs" />
@@ -335,10 +338,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="213" y="65" width="1734" height="1399" extended-state="1" />
+    <frame x="-7" y="0" width="1734" height="1399" extended-state="0" />
     <layout>
       <window_info id="BPMN Editor" order="0" weight="0.3297491" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3255675" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3297491" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -349,7 +352,7 @@
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32964426" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info anchor="bottom" id="Debug" order="4" visible="true" weight="0.30671936" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.30671936" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" />
@@ -690,6 +693,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagram.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#372#373#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2622">
+          <caret line="161" selection-start-line="161" selection-end-line="161" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/BaseNode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
@@ -744,33 +774,6 @@
             <element signature="e#1519#1520#0" expanded="true" />
             <element signature="e#1550#1551#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagramFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="161" selection-start-line="161" selection-end-line="161" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/xrosstools/xflow/idea/editor/model/XflowDiagram.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-          <folding>
-            <element signature="e#372#373#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="49" lean-forward="true" selection-start-line="7" selection-start-column="49" selection-end-line="7" selection-end-column="49" />
         </state>
       </provider>
     </entry>

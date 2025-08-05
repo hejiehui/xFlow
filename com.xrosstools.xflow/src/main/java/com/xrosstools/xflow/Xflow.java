@@ -123,7 +123,7 @@ public class Xflow {
 		for(ActiveToken token: pendingNodes)
 			tokenRecorders.add(new ActiveTokenRecord(token.getNode().getId(), specifyToken(routeResults, token)));
 
-		XflowRecorder flowRecorder = new XflowRecorder(routeResults, tokenRecorders);
+		XflowRecorder flowRecorder = new XflowRecorder(instanceId, routeResults, tokenRecorders);
 		
 		flowRecorder.setEventSpecs(eventSpecs);
 		flowRecorder.setTasks(tasks);
@@ -159,6 +159,7 @@ public class Xflow {
 		if(flowRecorder.getTokenRecorders().isEmpty())
 			throw new IllegalArgumentException("There is no active node to be restored");
 		
+		instanceId = flowRecorder.getInstanceId();
 		this.context = context;
 		context.setFlow(this);
 
@@ -256,7 +257,7 @@ public class Xflow {
 				XflowStatus.ABORTED == cur;
 	}
 	
-	public boolean isSucced() {
+	public boolean isSucceed() {
 		return XflowStatus.SUCCEED == statusRef.get();
 	}
 	
@@ -324,6 +325,7 @@ public class Xflow {
 	public Xflow getSubflow(String nodeId) {
 		return getSubflowContext(nodeId).getFlow();
 	}
+
 	public void mergeSubflow(String nodeId) {
 		reqire(XflowStatus.RUNNING);
 		((SubflowActivityNode)nodes.get(nodeId)).mergeSubflow();
@@ -343,6 +345,11 @@ public class Xflow {
 		return taskList;
 	}
 	
+	public List<Task> getNodeTasks(String nodeId) {
+		TaskActivityNode node = (TaskActivityNode)nodes.get(nodeId);
+		return node.getTasks();
+	}
+	
 	/**
 	 * Submit a task. 
 	 * @param task the submitted task
@@ -356,6 +363,11 @@ public class Xflow {
 		((TaskActivityNode)node).submit(context, task);
 	}
 	
+	public EventSpec getEventSpec(String nodeId) {
+		EventActivityNode node = (EventActivityNode)nodes.get(nodeId);
+		return node.getEventSpec();
+	}
+
 	public List<EventSpec> getEventSpecs() {
 		List<EventSpec> eventSpecs = new ArrayList<>();
 		for(Node node: nodes.values()) {
