@@ -171,8 +171,9 @@ Auto activity是自动节点，当流程实例执行到该节点，会调用Auto
     
     		AtomicInteger counter = context.get(PROP_KEY_COUNTER);
     		counter.addAndGet(step);
-    		
-    		context.copyFrom(config, "globalA", "globalB", "gBool");
+
+      		if(config.contains("globalA"))
+    			context.copyFrom(config, "globalA", "globalB", "gBool");
     	}
     
     	@Override
