@@ -4,11 +4,15 @@ import java.lang.reflect.Method;
 
 import com.xrosstools.xflow.AutoActivity;
 import com.xrosstools.xflow.BinaryRouter;
+import com.xrosstools.xflow.DataMap;
 import com.xrosstools.xflow.ExclusiveRouter;
+import com.xrosstools.xflow.FlowConfigAware;
+import com.xrosstools.xflow.GlobalConfigAware;
 import com.xrosstools.xflow.InclusiveRouter;
+import com.xrosstools.xflow.NodeConfigAware;
 import com.xrosstools.xflow.XflowContext;
 
-public class MethodWrapper {
+public class MethodWrapper implements GlobalConfigAware, FlowConfigAware, NodeConfigAware {
 	public final Class<?>[] parameterClasses = new Class[] {XflowContext.class};
 
 	protected Object instance;
@@ -47,5 +51,23 @@ public class MethodWrapper {
 		public String route(XflowContext context) {
 			return (String)invoke(context);
 		}
+	}
+
+	@Override
+	public void initNodeConfig(DataMap config) {
+		if(instance instanceof NodeConfigAware)
+			((NodeConfigAware)instance).initNodeConfig(config);
+	}
+
+	@Override
+	public void initFlowConfig(DataMap config) {
+		if(instance instanceof FlowConfigAware)
+			((FlowConfigAware)instance).initFlowConfig(config);
+	}
+
+	@Override
+	public void initGlobalConfig(DataMap config) {
+		if(instance instanceof GlobalConfigAware)
+			((GlobalConfigAware)instance).initGlobalConfig(config);
 	}
 }

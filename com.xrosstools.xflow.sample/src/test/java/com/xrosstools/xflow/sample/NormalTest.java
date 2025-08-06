@@ -247,6 +247,54 @@ public class NormalTest {
 		assertTrue(f.isFailed());
 	}
 
+	@Test
+	public void testMethodReferenceTrue() throws Exception {
+		for(int i = 1; i <= 3; i++) {
+			Xflow f = UnitTest.MethodReference.create();
+			XflowContext context = new XflowContext();
+
+			context.put(TestMethod.KEY_COUNTER, new AtomicInteger(10));
+			context.put(TestMethod.KEY_RESULT, true);
+
+			//p1, p2, p3
+			context.put(TestMethod.KEY_PATH, "p" + i);
+
+			f.start(context);
+			waitToEnd(f);
+
+			AtomicInteger counter = context.get(TestMethod.KEY_COUNTER);
+			assertEquals(10 + i, counter.get());
+			assertEquals("def", context.get("flowString"));
+			assertEquals("abc", context.get("globalA"));
+		}
+	}
+
+	@Test
+	public void testMethodReferenceFalse() throws Exception {
+		Map<String, Integer> data = new HashMap<>();
+		data.put("p1,p2", 10+4+5);
+		data.put("p1,p3", 10+4+6);
+		data.put("p3,p2", 10+5+6);
+//		data.put("", 40);
+		for(String pathes: data.keySet()) {
+			int value = data.get(pathes);
+			Xflow f = UnitTest.MethodReference.create();
+
+			XflowContext context = new XflowContext();
+			context.put(TestMethod.KEY_COUNTER, new AtomicInteger(10));
+			context.put(TestMethod.KEY_RESULT, false);
+			context.put(TestMethod.KEY_PATHES, pathes);
+
+			f.start(context);
+			waitToEnd(f);
+
+			AtomicInteger counter = context.get(TestMethod.KEY_COUNTER);
+			assertEquals(value, counter.get());
+			assertEquals("def", context.get("flowString"));
+			assertEquals("abc", context.get("globalA"));
+		}
+	}
+
 	private void sleep1() throws Exception {
 		Thread.sleep(1);
 	}

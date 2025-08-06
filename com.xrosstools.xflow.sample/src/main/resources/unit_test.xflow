@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xflow evaluator="">
+<xflow>
  <description/>
  <properties>
   <property key="globalB" type="Integer" value="100"/>
@@ -35,9 +35,9 @@
    <property key="assignee" type="String" value="Jerry"/>
   </properties>
   <nodes>
-   <start id="start" location="61,157"/>
-   <end id="end" location="414,148"/>
-   <task_activity id="aaaabbb" implementation="com.xrosstools.xflow.sample.TestTaskActivity" label="" location="202,204">
+   <start id="start" location="99,193"/>
+   <end id="end" location="497,198"/>
+   <task_activity id="aaaabbb" implementation="com.xrosstools.xflow.sample.TestTaskActivity" label="" location="258,183">
     <properties>
      <property key="count" type="Integer" value="5"/>
     </properties>
@@ -114,7 +114,7 @@
   <description/>
   <properties/>
   <nodes>
-   <start id="start" location="49,280"/>
+   <start id="start" location="53,275"/>
    <end id="end" location="625,273"/>
    <inclusive_router id="r1" implementation="com.xrosstools.xflow.sample.TestInclusiveRouter" location="177,263">
     <properties/>
@@ -317,6 +317,72 @@
    <link default_link="false" id="1" source_index="8" style="VERTICAL_RIGHT_ANGLE" target_index="15"/>
    <link id="1" source_index="9" style="VERTICAL_RIGHT_ANGLE" target_index="16"/>
    <link id="1" source_index="10" style="VERTICAL_RIGHT_ANGLE" target_index="18"/>
+  </links>
+ </flow>
+ <flow id="method reference" listener="">
+  <description/>
+  <properties>
+   <property key="flowString" type="String" value="def"/>
+  </properties>
+  <nodes>
+   <start id="start" location="69,272"/>
+   <end id="end" location="718,346"/>
+   <binary_router id="r1" implementation="com.xrosstools.xflow.sample.TestMethod::binaryRoute" location="189,262">
+    <properties/>
+   </binary_router>
+   <exclusive_router id="r2" implementation="com.xrosstools.xflow.sample.TestMethod::exclusiveRoute" location="309,178">
+    <properties/>
+   </exclusive_router>
+   <inclusive_router id="r3" implementation="com.xrosstools.xflow.sample.TestMethod::inclusiveRoute" location="303,452">
+    <properties/>
+   </inclusive_router>
+   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.TestMethod::autoActivityExecute" location="389,77">
+    <properties>
+     <property key="step" type="Integer" value="1"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a2" implementation="com.xrosstools.xflow.sample.TestMethod::autoActivityExecute" location="387,179">
+    <properties>
+     <property key="step" type="Integer" value="2"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a3" implementation="com.xrosstools.xflow.sample.TestMethod::autoActivityExecute" location="391,300">
+    <properties>
+     <property key="step" type="Integer" value="3"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a4" implementation="com.xrosstools.xflow.sample.TestMethod::autoActivityExecute" location="398,389">
+    <properties>
+     <property key="step" type="Integer" value="4"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a5" implementation="com.xrosstools.xflow.sample.TestMethod::autoActivityExecute" location="396,482">
+    <properties>
+     <property key="step" type="Integer" value="5"/>
+    </properties>
+   </auto_activity>
+   <auto_activity id="a6" implementation="com.xrosstools.xflow.sample.TestMethod::autoActivityExecute" location="394,567">
+    <properties>
+     <property key="step" type="Integer" value="6"/>
+    </properties>
+   </auto_activity>
+  </nodes>
+  <links>
+   <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
+   <link id="true" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="3"/>
+   <link id="false" source_index="2" style="VERTICAL_RIGHT_ANGLE" target_index="4"/>
+   <link id="p1" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="5"/>
+   <link id="p2" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="6"/>
+   <link id="p3" source_index="3" style="VERTICAL_RIGHT_ANGLE" target_index="7"/>
+   <link default_link="false" id="p1" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="8"/>
+   <link default_link="false" id="p2" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="9"/>
+   <link default_link="false" id="p3" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="10"/>
+   <link source_index="5" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link source_index="6" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link source_index="7" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link source_index="8" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link source_index="9" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link source_index="10" style="HORIZONTAL_LIGHTNING" target_index="1"/>
   </links>
  </flow>
  <flow id="change source test" listener="">

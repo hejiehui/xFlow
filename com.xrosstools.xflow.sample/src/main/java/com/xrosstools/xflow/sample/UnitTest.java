@@ -76,6 +76,12 @@ public class UnitTest {
         }
     }
 
+    public static class MethodReference {
+        public static Xflow create() {
+            return load().create("method reference");
+        }
+    }
+    
     private static volatile XflowFactory factory;
     private static XflowFactory load()  {
         if(factory == null) {
