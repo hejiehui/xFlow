@@ -97,6 +97,22 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
     	void initNodeConfig(DataMap config);
     }
 
+#### 设置Implementation属性
+大多数活动节点和路由节点都包含Implementation属性，用于指向用户实现的业务逻辑。Implementation属性既可以在属性窗口直接输入，也可以右键点击节点，选择Assign Implementation，在对话框中选择所需实现类。
+
+<img width="598" height="450" alt="image" src="https://github.com/user-attachments/assets/33c50214-fadc-41bd-aa90-bda1209af345" />
+
+当Implementation属性设置好以后，可以通过右键菜单进行更改，或者跳转到相关实现类。
+
+对于自动节点，二选一，多选一和多选多节点来说，除了可以实现相关接口，还可以指定某个方法作为实现，例如
+
+<img width="740" height="495" alt="image" src="https://github.com/user-attachments/assets/2027c852-98f7-4df6-b7e8-41e43805f719" />
+
+在类或方法上查找引用，可以定位到模型文件的引用。例如：
+
+<img width="1161" height="955" alt="image" src="https://github.com/user-attachments/assets/1dad28c7-39fa-407d-b412-1a1ad9437499" />
+
+xflow支持在类和方法重命名时自动修改模型。
 
 #### Id属性的唯一性
 xflow模型，节点和连线一般都包含Id属性，其中：
@@ -124,6 +140,7 @@ xflow模型，节点和连线一般都包含Id属性，其中：
 在节点处于活跃状态的时候，如果节点执行失败，节点将保持活跃，并进入失败状态，可以通过retry进行重试
 
 # 节点
+
 ## 开始结束节点
 Start和End节点分别为开始和结束节点。
 
@@ -769,6 +786,39 @@ xflow通过下列两个方法获取子流程状态
 * getSubflow(nodeId)：获取给定子流程节点对应子流程实例
 
 ## Spring支持
+用户可以通过设置XflowSpring来支持Spring，具体有两种方式。
+
+方式一，定义返回XflowSpring实例的Bean工厂方法。例如：
+
+	@Configuration
+	@ComponentScan
+	public class SpringBeanFactoryTest extends TestAdapter {
+	
+	    @Bean
+	    XflowSpring createFactory() {
+	    	return new XflowSpring();
+	    }
+	    
+	    @BeforeClass
+	    public static void setup() throws Exception {
+	        ApplicationContext context = new AnnotationConfigApplicationContext(SpringBeanFactoryTest.class);
+	    }
+
+案例代码参考 [SpringBeanFactoryTest](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/spring/SpringBeanFactoryTest.java)
+
+方式二，手工初始化XflowSpring类。例如：
+
+	@Configuration
+	@ComponentScan
+	public class SpringDeclareTest extends TestAdapter {
+	    @BeforeClass
+	    public static void setup() throws Exception {
+	        ApplicationContext context = new AnnotationConfigApplicationContext(SpringDeclareTest.class);
+	        //The following can be removed. Because spring will auto find this class
+	        XflowSpring.enable(context);
+		}
+	    
+案例代码参考 [SpringDeclareTest](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/spring/SpringDeclareTest.java)
 
 ## 监听器
 XflowListener定义了流程实例监听器所记录的事件，主要分为
