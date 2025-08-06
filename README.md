@@ -108,7 +108,11 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
 <img width="740" height="495" alt="image" src="https://github.com/user-attachments/assets/2027c852-98f7-4df6-b7e8-41e43805f719" />
 
+在类或方法上查找引用，可以定位到模型文件的引用。例如：
 
+<img width="1161" height="955" alt="image" src="https://github.com/user-attachments/assets/1dad28c7-39fa-407d-b412-1a1ad9437499" />
+
+xflow支持在类和方法重命名时自动修改模型。
 
 #### Id属性的唯一性
 xflow模型，节点和连线一般都包含Id属性，其中：
