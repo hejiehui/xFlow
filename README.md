@@ -14,11 +14,11 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
 ## 安装
 ### 插件市场安装
-正常来说在IDEA插件市场输入xross workflow即可，但目前IDEA的插件市场存在一些问题，导致某些版本的IDEA无法兼容xflow插件。该问题还没有完全解决。因此当前只能从github手动下载xflow安装包。
+在IDEA插件市场输入xross workflow即可，但目前IDEA的插件市场存在一些问题，导致某些版本的IDEA无法兼容xflow插件。该问题还没有完全解决。因此当前只能从github手动下载xflow安装包。
 
 ### 手动安装
 下载后直接拖入IDEA即可。xflow依赖
-[插件]()
+[插件安装包](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.idea.editor/com.xrosstools.xflow.idea.editor.zip)
 
 ## 创建模型
 ### 创建xflow模型文件
@@ -598,7 +598,7 @@ Parallel router是二选一路由节点，当流程实例执行到该节点，�
 
     <groupId>com.xrosstools</groupId>
     <artifactId>xflow</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
 ## 加载模型文件
 
