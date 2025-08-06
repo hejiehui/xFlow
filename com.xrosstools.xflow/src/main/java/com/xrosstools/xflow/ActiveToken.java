@@ -64,7 +64,7 @@ public class ActiveToken implements Runnable {
 			}
 		} while(!node.start(this));
 
-		node.handle(node, node.isSinglePhased());
+		node.handle(node.isSinglePhased());
 	}
 
 	public XflowContext getContext() {

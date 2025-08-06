@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public abstract class Node implements NodeHandler {
+public abstract class Node {
 	private final static Link[] EMPTY = new Link[0];
 	private Object configurable;
 	private String id;
@@ -15,6 +15,8 @@ public abstract class Node implements NodeHandler {
 	private XflowListener listener;
 	
 	public abstract boolean isSinglePhased();
+	
+	public abstract List<ActiveToken> handle(ActiveToken token);
 	
 	public Node(String id) {
 		this(id, null);
@@ -190,14 +192,14 @@ public abstract class Node implements NodeHandler {
 	public void retry() {
 		assertToken();
 		getToken().clearFailure();
-		handle(this, isSinglePhased());
+		handle(isSinglePhased());
 	}
 	
-	public void handle(NodeHandler handle, boolean isLastPhase) {
+	public void handle(boolean isLastPhase) {
 		assertToken();
 
 		try {
-			List<ActiveToken> nextTokens = handle.handle(getToken());
+			List<ActiveToken> nextTokens = handle(getToken());
 			if(isLastPhase)
 				succeed(nextTokens);
 		} catch(Throwable e) {
