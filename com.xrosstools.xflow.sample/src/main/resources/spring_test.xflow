@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xflow evaluator="">
+<xflow>
  <description/>
- <properties/>
+ <properties>
+  <property key="global var 1" type="String" value=""/>
+  <property key="gobal var 2" type="String" value=""/>
+ </properties>
  <flow id="auto activity" listener="">
   <description/>
-  <properties/>
+  <properties>
+   <property key="flow var 2" type="String" value=""/>
+   <property key="flow var 1" type="String" value=""/>
+  </properties>
   <nodes>
    <start id="start" location="92,212"/>
    <end id="end" location="610,213"/>
-   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.spring.TestSpringAutoActivity" label="bbb" location="308,216">
+   <auto_activity id="a1" implementation="com.xrosstools.xflow.sample.spring.TestSpringAutoActivity" label="bbb" location="335,191">
     <properties/>
    </auto_activity>
   </nodes>
