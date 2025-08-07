@@ -4,7 +4,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.xrosstools.idea.gef.ContentChangeListener;
 import com.xrosstools.idea.gef.actions.AbstractCodeGenerator;
+import com.xrosstools.idea.gef.util.PropertyEntrySource;
 import com.xrosstools.xflow.idea.editor.model.BaseNode;
+import com.xrosstools.xflow.idea.editor.model.PropertyConstants;
 import com.xrosstools.xflow.idea.editor.model.Xflow;
 import com.xrosstools.xflow.idea.editor.model.XflowDiagram;
 
@@ -12,8 +14,12 @@ import java.time.ZonedDateTime;
 
 import static com.xrosstools.idea.gef.actions.CodeGenHelper.*;
 
-public class GenerateHelperAction extends AbstractCodeGenerator implements ContentChangeListener<XflowDiagram> {
+public class GenerateHelperAction extends AbstractCodeGenerator implements PropertyConstants, ContentChangeListener<XflowDiagram> {
     public static final String GENERATE_HELPER = "Helper";
+
+    private static final String DIAGRAM_PROPERTY_COMMENTS =
+            "    //Diagram level user defined properties\n";
+
     private static final String CREATE_XFLOW =
             "    public static class %s {\n" +//Model name, constants
             "%s" +
@@ -25,11 +31,17 @@ public class GenerateHelperAction extends AbstractCodeGenerator implements Conte
     private static final String FLOW_COMMENTS =
             "    //%s\n";
 
+    private static final String FLOW_PROPERTY_COMMENTS =
+            "        //Xflow level user defined properties\n";
+
     private static final String INVALID_FLOW_NAME =
             "    /*  Error!!! No. %d flow's name is empty. */\n";
 
     private static final String CONSTANT_COMMENTS =
             "        //%s\n";
+
+    private static final String DIAGRAM_CONSTANT_DEF =
+            "    public static final String %s = \"%s\";\n\n";
 
     private static final String CONSTANT_DEF =
             "        public static final String %s = \"%s\";\n\n";//label = "Id"
@@ -75,6 +87,8 @@ public class GenerateHelperAction extends AbstractCodeGenerator implements Conte
     private StringBuffer generateBody() {
         StringBuffer constants = new StringBuffer();
 
+        constants.append(generateProperties(DIAGRAM_PROPERTY_COMMENTS, DIAGRAM_CONSTANT_DEF, diagram));
+
         int i = 0;
         for(Xflow xflow: diagram.getChildren()) {
             i++;
@@ -83,6 +97,8 @@ public class GenerateHelperAction extends AbstractCodeGenerator implements Conte
                 constants.append(String.format(INVALID_FLOW_NAME, i));
                 continue;
             }
+
+            buf.append(generateProperties(FLOW_PROPERTY_COMMENTS, CONSTANT_DEF, xflow));
 
             int k = 0;
             buf.append(NODE_DEF_HEADER);
@@ -104,6 +120,24 @@ public class GenerateHelperAction extends AbstractCodeGenerator implements Conte
         }
 
         return constants;
+    }
+
+    private String generateProperties(String comments, String template, PropertyEntrySource source) {
+        StringBuffer properties = new StringBuffer();
+
+        if(source.keySet(PROPERTIES_CATEGORY).size() == 0)
+            return "";
+
+        properties.append(comments);
+        for(String propName: source.keySet(PROPERTIES_CATEGORY))
+            appendProperty(properties,template, propName);
+        return properties.toString();
+    }
+
+    private void appendProperty(StringBuffer buf, String template, String id) {
+        String label = id.contains(" ") ? id.replace(' ', '_') : id;
+
+        buf.append(String.format(template, label.toUpperCase(), id));
     }
 
     private void appendLabelId(StringBuffer buf, String label, String id) {

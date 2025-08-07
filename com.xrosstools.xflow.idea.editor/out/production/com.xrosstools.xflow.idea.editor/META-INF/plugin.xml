@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.xrosstools.xflow.editor</id>
   <name>Xross Workflow Editor</name>
-  <version>1.1.1</version>
+  <version>1.2.1</version>
   <vendor email="he_jiehui@163.com" url="https://www.xrosstools.com">Xross Tools</vendor>
 
   <description><![CDATA[
@@ -11,6 +11,7 @@
     ]]></description>
 
   <change-notes><![CDATA[
+      <em>1.2.0</em>Support generate global and flow level used defined variable.<br>
       <em>1.1.1</em>Remove evaluator property from diagram.<br>
       <em>1.1.0</em>Support method reference.<br>
       <em>1.0.0</em>Initial version of workflow editor.<br>
