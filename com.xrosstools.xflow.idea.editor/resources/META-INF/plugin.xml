@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.xrosstools.xflow.editor</id>
   <name>Xross Workflow Editor</name>
-  <version>1.2.1</version>
+  <version>1.2.0</version>
   <vendor email="he_jiehui@163.com" url="https://www.xrosstools.com">Xross Tools</vendor>
 
   <description><![CDATA[
