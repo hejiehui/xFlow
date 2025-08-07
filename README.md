@@ -14,11 +14,17 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
 ## 安装
 ### 插件市场安装
-在IDEA插件市场输入xross workflow即可，但目前IDEA的插件市场存在一些问题，导致某些版本的IDEA无法兼容xflow插件。该问题还没有完全解决。因此当前只能从github手动下载xflow安装包。
+在IDEA插件市场输入xross workflow即可。xflow依赖Xross Tools Graphic Edit Framework 1.4.1版本，注意同步更新。
 
 ### 手动安装
-下载后直接拖入IDEA即可。xflow依赖
+可以从github下载，直接拖入IDEA即可。
 [插件安装包](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.idea.editor/com.xrosstools.xflow.idea.editor.zip)
+
+### maven依赖
+
+    <groupId>com.xrosstools</groupId>
+    <artifactId>xflow</artifactId>
+    <version>1.0.5</version>
 
 ## 创建模型
 ### 创建xflow模型文件
@@ -520,73 +526,58 @@ Parallel router是二选一路由节点，当流程实例执行到该节点，�
 首先选择该类对应的源文件目录或要覆盖的旧文件，再单击Helper按钮，输入名称即可，例如
 <img width="1308" height="904" alt="image" src="https://github.com/user-attachments/assets/b91f42bb-5a5a-47fa-a9a0-b2a6074acdc9" />
 
-由于unit_test.xflow中部分节点Id和Label配置无法生成符合Java语法的定义，下面以routes.xflow为例生成的helper。其中第一个流程parallel case1如下：
+以spring_test.xflow为例生成的helper：
 
-<img width="1648" height="959" alt="image" src="https://github.com/user-attachments/assets/10145a70-5389-43ba-bfc4-865348e6fef5" />
+<img width="1301" height="1214" alt="image" src="https://github.com/user-attachments/assets/77c86b54-f871-492d-918c-c5038631c11b" />
 
-生成的代码如下：
 
-    package com.xrosstools.xflow.sample;
-    
-    import com.xrosstools.xflow.Xflow;
-    import com.xrosstools.xflow.XflowFactory;
-    
-    /**
-        IMPORTANT NOTE!
-        This is generated code based on Xross Flow model file "xflow/routes.xflow".
-        In case the model file changes, regenerate this file.
-        Do Not Modify It.
-    
-        
-    
-        Last generated time:
-        2025-08-03T14:20:25.236+08:00[Asia/Shanghai]
-    */
-    public class Routes {
-        
-        public static class ParallelCase1 {
-            /*  Node Names */
-            public static final String START = "start";
-    
-            public static final String END = "end";
-    
-            public static final String R1 = "R1";
-    
-            public static final String ABC_DEF = "a1";
-    
-            public static final String A3 = "a3";
-    
-            public static final String A2 = "a2";
-    
-            public static final String R2 = "R2";
-    
-            public static final String A4 = "a4";
-    
-            public static final String R3 = "R3";
-    
-            public static Xflow create() {
-                return load().create("parallel case1");
-            }
-        }
-        。。。
-        
-        private static volatile XflowFactory factory;
-        private static XflowFactory load()  {
-            if(factory == null) {
-                synchronized(Routes.class) {
-                    if(factory == null)
-                        factory = XflowFactory.load("xflow/routes.xflow");
-                }
-            }
-            return factory;
-        }
-    }
+生成的代码主体部分如下：
+
+	public class SpringTest {
+	    
+	    //Diagram level user defined properties
+	    public static final String GLOBAL_VAR_1 = "global var 1";
+	
+	    public static final String GOBAL_VAR_2 = "gobal var 2";
+	
+	    public static class AutoActivity {
+	        //Xflow level user defined properties
+	        public static final String FLOW_VAR_2 = "flow var 2";
+	
+	        public static final String FLOW_VAR_1 = "flow var 1";
+	
+	        /*  Node Names */
+	        public static final String START = "start";
+	
+	        public static final String END = "end";
+	
+	        public static final String BBB = "a1";
+	
+	        public static Xflow create() {
+	            return load().create("auto activity");
+	        }
+	    }
+	
+	
+	    private static volatile XflowFactory factory;
+	    private static XflowFactory load()  {
+	        if(factory == null) {
+	            synchronized(SpringTest.class) {
+	                if(factory == null)
+	                    factory = XflowFactory.load("spring_test.xflow");
+	            }
+	        }
+	        return factory;
+	    }
+	}
 
 ### 代码结构
 
 * Helper类：模型文件对应Java类
+* 全局自定义配置名定义：变量名对应的常量
 * 流程定义类：每个流程模型对应内部类
-* 节点名称常量：该流程内部每个节点名称定义。
+* 流程自定义配置名定义：变量名对应的常量
+* 节点名称常量：该流程内部每个节点名称定义
 * create方法：流程实例构造方法
 * factory静态属性：工厂类实例
 * load方法： 工程类实例构造方法
@@ -594,15 +585,10 @@ Parallel router是二选一路由节点，当流程实例执行到该节点，�
 其中节点名常量由节点的Id和Label属性决定。如果没有配置Label属性，则常量名根据由Id产生，如果有Label属性，则由Label属性值产生。产生逻辑是将空格替换为下划线：_，再转大写。
 
 # 模型调用
-## maven依赖
-
-    <groupId>com.xrosstools</groupId>
-    <artifactId>xflow</artifactId>
-    <version>1.0.4</version>
 
 ## 加载模型文件
 
-    XflowFactory factory = XflowFactory.load("xflow/unit_test.xflow");
+    XflowFactory factory = XflowFactory.load("unit_test.xflow");
 
 上面加载模型位于resources/xflow/unit_test.xflow。如果使用Helper，该步骤在load方法中调用。
 
