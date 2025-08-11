@@ -366,6 +366,12 @@
      <property key="step" type="Integer" value="6"/>
     </properties>
    </auto_activity>
+   <inclusive_router id="r5" location="585,492">
+    <properties/>
+   </inclusive_router>
+   <exclusive_router id="r4" location="586,178">
+    <properties/>
+   </exclusive_router>
   </nodes>
   <links>
    <link source_index="0" style="HORIZONTAL_LIGHTNING" target_index="2"/>
@@ -377,17 +383,21 @@
    <link default_link="false" id="p1" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="8"/>
    <link default_link="false" id="p2" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="9"/>
    <link default_link="false" id="p3" source_index="4" style="VERTICAL_RIGHT_ANGLE" target_index="10"/>
-   <link source_index="5" style="HORIZONTAL_LIGHTNING" target_index="1"/>
-   <link source_index="6" style="HORIZONTAL_LIGHTNING" target_index="1"/>
-   <link source_index="7" style="HORIZONTAL_LIGHTNING" target_index="1"/>
-   <link source_index="8" style="HORIZONTAL_LIGHTNING" target_index="1"/>
-   <link source_index="9" style="HORIZONTAL_LIGHTNING" target_index="1"/>
-   <link source_index="10" style="HORIZONTAL_LIGHTNING" target_index="1"/>
+   <link source_index="5" style="HORIZONTAL_RIGHT_ANGLE" target_index="12"/>
+   <link source_index="6" style="HORIZONTAL_RIGHT_ANGLE" target_index="12"/>
+   <link source_index="7" style="HORIZONTAL_RIGHT_ANGLE" target_index="12"/>
+   <link source_index="8" style="HORIZONTAL_RIGHT_ANGLE" target_index="11"/>
+   <link source_index="9" style="HORIZONTAL_RIGHT_ANGLE" target_index="11"/>
+   <link source_index="10" style="HORIZONTAL_RIGHT_ANGLE" target_index="11"/>
+   <link default_link="false" source_index="11" style="VERTICAL_RIGHT_ANGLE" target_index="1"/>
+   <link source_index="12" style="VERTICAL_RIGHT_ANGLE" target_index="1"/>
   </links>
  </flow>
  <flow id="change source test" listener="">
   <description/>
-  <properties/>
+  <properties>
+   <property key="abc" type="String" value="123"/>
+  </properties>
   <nodes>
    <auto_activity location="354,279">
     <properties/>
