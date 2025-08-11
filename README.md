@@ -24,7 +24,7 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
     <groupId>com.xrosstools</groupId>
     <artifactId>xflow</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
 ## 创建模型
 ### 创建xflow模型文件
