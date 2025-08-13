@@ -720,6 +720,16 @@ Xflow提供instanceId的getter和setter，以方便用户记录流程实例Id。
 
 注意原实例使用的流程上下文XflowContext需用户自行读取或创建。
 
+## 流程引擎关闭
+
+流程引擎已经设置了shutdown hook，但用户如果不愿等待，也可以在应用退出前手工调用：
+
+	XflowEngine.shutdown();
+
+ 调用成功会打印：
+ 
+ 	Shutdown XflowEngine
+
 ## 节点操作
 对节点的操作基本都通过Xflow类代理。用户无法直接操作节点实例。
 
@@ -831,3 +841,27 @@ XflowListener定义了流程实例监听器所记录的事件，主要分为
 具体可参考代码：[XflowListener](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowListener.java)
 
 用户可以继承XflowListenerAdapter并覆盖感兴趣的方法来加速开发自己的监听器。XflowSystemOutListener是XflowListener的一个简单实现，方便用户项目初期进行模型调试。
+
+# FAQ
+
+## 常见异常
+
+### Exception in thread "main" java.lang.IllegalArgumentException: class name is empty.
+有节点的implementation属性没设置
+
+### Exception in thread "main" java.lang.IllegalArgumentException: Node id : "null" is duplicated
+有2个或以上节点的id值没设置
+
+### Exception in thread "main" java.lang.NullPointerException
+一般初始化时发生，主要是全局，流程或节点的config里面没有对应的值
+
+## 常见问题
+
+### 流程没按照预期执行
+可能原因如下
+
+#### 流程节点报错
+这时可以通过查询错误节点来定位，通过getFailure来确定具体错误，再retry
+
+#### 路由节点没有配对
+比如支持并发的多选多或并发节点没有对应的路由节点来同步等待并发流程终结
