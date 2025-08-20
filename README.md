@@ -7,8 +7,19 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
 <img width="1436" height="1160" alt="image" src="https://github.com/user-attachments/assets/ab3686c2-00fd-417c-a8b5-d4621b486d0e" />
 
+## 技术支持
+QQ x-series支持群：146746429
+
+![Tech Support](https://static001.geekbang.org/infoq/0f/0f13df5473cd9dbb337df07910a8ce5d.png)
+
+## 联系方式
+微信：hejiehui76
+
+e-mail 常用: he_jiehui@163.com
 
 # 快速体验
+
+[Xflow 4分钟演示](https://www.bilibili.com/video/BV1mVt9znEjU/?vd_source=a301674062754d297fd0a44e8998ad4c)
 
 # 编辑器使用教程
 
@@ -24,7 +35,7 @@ xflow支持丰富的活动节点和路由节点，支持子图调用，监听器
 
     <groupId>com.xrosstools</groupId>
     <artifactId>xflow</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
 
 ## 创建模型
 ### 创建xflow模型文件
@@ -709,6 +720,16 @@ Xflow提供instanceId的getter和setter，以方便用户记录流程实例Id。
 
 注意原实例使用的流程上下文XflowContext需用户自行读取或创建。
 
+## 流程引擎关闭
+
+流程引擎已经设置了shutdown hook，但用户如果不愿等待，也可以在应用退出前手工调用：
+
+	XflowEngine.shutdown();
+
+ 调用成功会打印：
+ 
+ 	Shutdown XflowEngine
+
 ## 节点操作
 对节点的操作基本都通过Xflow类代理。用户无法直接操作节点实例。
 
@@ -820,3 +841,27 @@ XflowListener定义了流程实例监听器所记录的事件，主要分为
 具体可参考代码：[XflowListener](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowListener.java)
 
 用户可以继承XflowListenerAdapter并覆盖感兴趣的方法来加速开发自己的监听器。XflowSystemOutListener是XflowListener的一个简单实现，方便用户项目初期进行模型调试。
+
+# FAQ
+
+## 常见异常
+
+### Exception in thread "main" java.lang.IllegalArgumentException: class name is empty.
+有节点的implementation属性没设置
+
+### Exception in thread "main" java.lang.IllegalArgumentException: Node id : "null" is duplicated
+有2个或以上节点的id值没设置
+
+### Exception in thread "main" java.lang.NullPointerException
+一般初始化时发生，主要是全局，流程或节点的config里面没有对应的值
+
+## 常见问题
+
+### 流程没按照预期执行
+可能原因如下
+
+#### 流程节点报错
+这时可以通过查询错误节点来定位，通过getFailure来确定具体错误，再retry
+
+#### 路由节点没有配对
+比如支持并发的多选多或并发节点没有对应的路由节点来同步等待并发流程终结
