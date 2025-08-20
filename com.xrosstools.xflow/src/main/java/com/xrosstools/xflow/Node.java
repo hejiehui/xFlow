@@ -3,6 +3,7 @@ package com.xrosstools.xflow;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class Node {
@@ -12,6 +13,12 @@ public abstract class Node {
 	private int inputCount;
 	private Link[] outputs = EMPTY;
 	private AtomicReference<ActiveToken> tokenRef = new AtomicReference<>();
+	private AtomicLong executionCountRef = new AtomicLong();
+
+	private AtomicLong lastStartTimeRef = new AtomicLong();
+	private AtomicLong lastSucceedTimeRef = new AtomicLong();
+	private AtomicLong lastFailedTimeRef = new AtomicLong();
+	
 	private XflowListener listener;
 	
 	public abstract boolean isSinglePhased();
@@ -50,6 +57,22 @@ public abstract class Node {
 		return token != null && token.getFailure() != null;
 	}
 	
+	public long getExecutionCount() {
+		return executionCountRef.get();
+	}
+	
+	public long getLastStartTime() {
+		return lastStartTimeRef.get();
+	}
+	
+	public long getLastSucceedTime() {
+		return lastSucceedTimeRef.get();
+	}
+	
+	public long getLastFailedTime() {
+		return lastFailedTimeRef.get();
+	}
+	
 	public Throwable getFailure() {
 		ActiveToken token = getToken();
 		return token == null ? null : token.getFailure();
@@ -85,6 +108,9 @@ public abstract class Node {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		
+		executionCountRef.incrementAndGet();
+		setTime(lastStartTimeRef);
 
 		return true;
 	}
@@ -138,6 +164,7 @@ public abstract class Node {
 		token.setFailure(null);
 		
 		releaseToken();
+		setTime(lastSucceedTimeRef);
 		try {
 			listener.nodeSucceed(id, token.getContext());
 		} catch (Throwable e) {
@@ -162,6 +189,7 @@ public abstract class Node {
 	public void failed(Throwable ex) {
 		ActiveToken token = getToken();
 		token.setFailure(ex);
+		setTime(lastFailedTimeRef);
 
 		try {
 			listener.nodeFailed(id, token.getContext(), ex);
@@ -206,5 +234,9 @@ public abstract class Node {
 			failed(e);
 			throw e;
 		}
+	}
+	
+	private void setTime(AtomicLong timer) {
+		timer.set(System.currentTimeMillis());
 	}
 }

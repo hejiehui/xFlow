@@ -28,9 +28,14 @@ public class Xflow {
 	
 	private XflowContext context;
 	private AtomicReference<XflowStatus> statusRef = new AtomicReference<>(XflowStatus.CREATED);
+
+	private AtomicLong startTimeRef = new AtomicLong();
+	private AtomicLong endTimeRef = new AtomicLong();
+
 	private AtomicReference<String> reasonRef = new AtomicReference<>();
 	private AtomicLong ticksRef = new AtomicLong(0);
-	private AtomicLong lastTickTimeRef = new AtomicLong(-1);
+	private AtomicLong lastTickTimeNanoRef = new AtomicLong(-1);
+	private AtomicLong lastTickTimeMsRef = new AtomicLong(-1);
 	
 	public Xflow(XflowFactory factory, String flowId, List<Node> nodeList, XflowListener listener) {
 		this.id = flowId;
@@ -59,6 +64,10 @@ public class Xflow {
 	public void setInstanceId(String instanceId) {
 		this.instanceId = instanceId;
 	}
+	
+	public String toString() {
+		return String.format("%s[%s]", id, instanceId);
+	}
 
 	public XflowContext getContext() {
 		return context;
@@ -82,6 +91,7 @@ public class Xflow {
 				changeTo(XflowStatus.CREATED, XflowStatus.RUNNING);
 				XflowEngine.submit(context, node);
 				listener.flowStarted(getId(), context);
+				setTime(startTimeRef);
 				return;
 			}
 
@@ -99,7 +109,7 @@ public class Xflow {
 		if(context.getParentToken() != null)
 			throw new IllegalStateException("Specify is not supported for subflow");
 
-		long lastTick = lastTickTimeRef.get();
+		long lastTick = lastTickTimeNanoRef.get();
 		
 		List<Task> tasks = new ArrayList<>();
 		List<EventSpec> eventSpecs = new ArrayList<>();
@@ -128,7 +138,7 @@ public class Xflow {
 		flowRecorder.setEventSpecs(eventSpecs);
 		flowRecorder.setTasks(tasks);
 
-		if(lastTick != lastTickTimeRef.get())
+		if(lastTick != lastTickTimeNanoRef.get())
 			throw new IllegalStateException("Running node detected during specifying.");
 
 		return flowRecorder;
@@ -213,12 +223,14 @@ public class Xflow {
 
 	public void succeed() {
 		changeTo(XflowStatus.RUNNING, XflowStatus.SUCCEED);
+		setTime(endTimeRef);
 		listener.flowSucceed(id, context);
 	}
 	
 	public void abort(String reason) {
 		reasonRef.set(reason);
 		changeTo(XflowStatus.RUNNING, XflowStatus.ABORTED);
+		setTime(endTimeRef);
 		listener.flowAborted(id, context, reason);
 	}
 
@@ -268,13 +280,23 @@ public class Xflow {
 	public boolean isAbort() {
 		return XflowStatus.ABORTED == statusRef.get();
 	}
+	
+	public long getStartTime() {
+		return startTimeRef.get();
+	}
+	
+	public long getEndTime() {
+		return endTimeRef.get();
+	}
 
 	public void checkStatus() {
 		if(!isRunning() || ticksRef.get() > 0)
 			return;
 
-		if(statusRef.compareAndSet(XflowStatus.RUNNING, XflowStatus.FAILED))
+		if(statusRef.compareAndSet(XflowStatus.RUNNING, XflowStatus.FAILED)) {
+			setTime(endTimeRef);
 			listener.flowFailed(id, context);
+		}
 	}
 	
 	public String getAbortReason() {
@@ -306,6 +328,14 @@ public class Xflow {
 		return ids;
 	}
 
+	public List<String> getExecutedNodeIds() {
+		List<String> ids = new ArrayList<>();
+		for(Node node: nodes.values())
+			if(node.getExecutionCount() > 0)
+				ids.add(node.getId());
+		return ids;
+	}
+
 	public boolean isActive(String nodeId) {
 		return nodes.get(nodeId).isActive();
 	}
@@ -316,6 +346,22 @@ public class Xflow {
 	
 	public Throwable getFailure(String nodeId) {
 		return nodes.get(nodeId).getFailure();
+	}
+	
+	public long getExecutionCount(String nodeId) {
+		return nodes.get(nodeId).getExecutionCount();
+	}
+	
+	public long getLastStartTime(String nodeId) {
+		return nodes.get(nodeId).getLastStartTime();
+	}
+	
+	public long getLastSucceedTime(String nodeId) {
+		return nodes.get(nodeId).getLastSucceedTime();
+	}
+	
+	public long getLastFailedTime(String nodeId) {
+		return nodes.get(nodeId).getLastFailedTime();
 	}
 	
 	public XflowContext getSubflowContext(String nodeId) {
@@ -403,7 +449,8 @@ public class Xflow {
 	}
 	
 	public void tick() {
-		lastTickTimeRef.set(System.nanoTime());
+		lastTickTimeNanoRef.set(System.nanoTime());
+		lastTickTimeMsRef.set(System.currentTimeMillis());
 		ticksRef.incrementAndGet();
 	}
 	
@@ -411,7 +458,11 @@ public class Xflow {
 		return ticksRef.decrementAndGet();
 	}
 
-	public long getTicks() {
-		return ticksRef.get();
+	public long getLastTickTime() {
+		return lastTickTimeMsRef.get();
+	}
+	
+	private void setTime(AtomicLong timer) {
+		timer.set(System.currentTimeMillis());
 	}
 }
