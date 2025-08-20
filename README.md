@@ -35,7 +35,7 @@ e-mail 常用: he_jiehui@163.com
 
     <groupId>com.xrosstools</groupId>
     <artifactId>xflow</artifactId>
-    <version>1.0.6</version>
+    <version>1.1.0</version>
 
 ## 创建模型
 ### 创建xflow模型文件
@@ -841,6 +841,53 @@ XflowListener定义了流程实例监听器所记录的事件，主要分为
 具体可参考代码：[XflowListener](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow/src/main/java/com/xrosstools/xflow/XflowListener.java)
 
 用户可以继承XflowListenerAdapter并覆盖感兴趣的方法来加速开发自己的监听器。XflowSystemOutListener是XflowListener的一个简单实现，方便用户项目初期进行模型调试。
+
+# 实例监控台
+为方便用户调试xflow，用户可以使用XflowMonitor（xflow 1.1.0开始）监控xflow实例。只需要将流程实例添加到XflowMonitor即可
+
+	XflowMonitor monitor = new XflowMonitor(1000);	
+ 	//Create flow instance
+  	...
+ 	monitor.addInstance(f);
+
+
+<img width="1085" height="592" alt="image" src="https://github.com/user-attachments/assets/8326bd08-634f-454c-b270-7a02119d9b3e" />
+
+[代码示例](https://github.com/hejiehui/xFlow/blob/main/com.xrosstools.xflow.sample/src/test/java/com/xrosstools/xflow/sample/XflowMonitorTest.java)如下：
+
+	public class XflowMonitorTest {
+	    public static void main(String[] args) {
+	        SwingUtilities.invokeLater(() -> {
+	            try {
+	                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	            
+	            XflowMonitor monitor = new XflowMonitor(1000);
+	            monitor.setVisible(true);
+	            
+	            Xflow f = UnitTest.WaitActivity.create();
+	            f.setInstanceId("abc");
+	    		XflowContext context = new XflowContext();
+	    		context.put("para1", "abc");
+	    		context.put("para2", 123);
+	    		context.put("para3", 23.456);
+	    		f.start(context);
+	    		monitor.addInstance(f);
+	    		
+	    		f = UnitTest.TaskActivity.create();
+	            f.setInstanceId("123");
+	    		context = new XflowContext();
+	    		context.put("para4", "abc");
+	    		context.put("para5", 123);
+	    		context.put("para6", 23.456);
+	    		f.start(context);
+	    		monitor.addInstance(f);
+	
+	        });
+	    }
+	}
 
 # FAQ
 
